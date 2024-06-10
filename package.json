@@ -1,0 +1,96 @@
+{
+  "name": "vue-3-slick-carousel",
+  "version": "1.0.0",
+  "description": "Vue Slick Carousel for Vue 3",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.mjs",
+  "umd:main": "dist/index.umd.js",
+  "unpkg": "dist/index.umd.js",
+  "jsdelivr": "dist/index.umd.js",
+  "jsnext:main": "dist/index.es.mjs",
+  "source": "lib/index.ts",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.mjs",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --p ./tsconfig.build.json && vite build",
+    "preview": "vite preview",
+    "prepare": "husky",
+    "clean": "rimraf dist",
+    "type": "tsc --noEmit",
+    "prepublish": "npm run build",
+    "lint": "eslint 'src/**/*.{js,ts,vue}' --fix",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"**/*.{json,js,ts,vue,html,css,scss}\""
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --quiet --cache --fix"
+    ],
+    "*.{json,js,ts,vue,html}": [
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctfdavis/vue-3-slick-carousel.git"
+  },
+  "keywords": [
+    "vue",
+    "vue-3",
+    "slick",
+    "carousel",
+    "slider",
+    "nuxt",
+    "typescript"
+  ],
+  "author": "Davis Chan <davis.chan@aol.com> (https://github.com/ctfdavis)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ctfdavis/vue-3-slick-carousel/issues"
+  },
+  "homepage": "https://github.com/ctfdavis/vue-3-slick-carousel#readme",
+  "peerDependencies": {
+    "vue": "^3"
+  },
+  "devDependencies": {
+    "@types/enquire.js": "^2.1.5",
+    "@types/json2mq": "^0.2.2",
+    "@types/lodash.clonedeep": "^4.5.9",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.pick": "^4.4.9",
+    "@types/node": "^20.14.2",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "eslint": "^9.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-vue": "^9.26.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.5",
+    "prettier": "^3.3.1",
+    "rimraf": "^5.0.7",
+    "sass": "^1.77.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-eslint": "^1.8.1",
+    "vue-tsc": "^2.0.6"
+  },
+  "dependencies": {
+    "enquire.js": "^2.1.6",
+    "json2mq": "^0.2.0",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
+    "lodash.pick": "^4.4.0"
+  }
+}
