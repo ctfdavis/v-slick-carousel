@@ -59,6 +59,7 @@ export type Props = {
   slidesPerGroup: number
   groupsToScroll: number
   groupsToShow: number
+  showDefaultArrows: boolean
   speed: number
   swipe: boolean
   swipeToSlide: boolean

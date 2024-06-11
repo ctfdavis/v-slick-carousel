@@ -46,6 +46,7 @@ export const defaultProps = {
   slidesPerGroup: { type: Number, default: 1 },
   groupsToScroll: { type: Number, default: 1 },
   groupsToShow: { type: Number, default: 1 },
+  showDefaultArrows: { type: Boolean, default: true },
   speed: { type: Number, default: 500 },
   swipe: { type: Boolean, default: true },
   swipeToSlide: { type: Boolean, default: false },
@@ -66,16 +67,7 @@ export const defaultPropValues = Object.keys(defaultProps).reduce<{
   return acc
 }, {}) as {
   [K in keyof Props]: unknown
-}
-
-export const propTypes = Object.keys(defaultProps).reduce<{
-  [key: string]: unknown
-}>((acc, key) => {
-  acc[key] = (defaultProps as any)[key].type
-  return acc
-}, {}) as {
-  [K in keyof Props]: PropType<any>
-}
+} as Props
 
 export const defaultSliderState: SliderState = {
   animating: false,
