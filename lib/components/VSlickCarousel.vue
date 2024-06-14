@@ -273,7 +273,7 @@ const changeSlideGroup = (
 const slideGroupHandler = (index: number, dontAnimate = false) => {
   const { asNavFor, speed } = props
   // capture currentslide before state is updated
-  const currentSlide = state.value.currentSlide
+  const currentSlideGroupIndex = state.value.currentSlideGroupIndex
   const { slidingState, afterSlidingState } = getStatesOnSlideGroup({
     index,
     ...props,
@@ -282,7 +282,7 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
     useCSS: props.useCSS && !dontAnimate
   } as OnSlideSpec)
   if (!slidingState) return
-  emit('beforeChange', currentSlide, slidingState.currentSlide)
+  emit('beforeChange', currentSlideGroupIndex, slidingState.currentSlide)
   const slidesToLoad =
     slidingState.lazyLoadedList?.filter(
       (value: number) => state.value.lazyLoadedList.indexOf(value) < 0
