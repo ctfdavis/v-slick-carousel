@@ -1,7 +1,8 @@
 import { VNode } from 'vue'
 
-import { LazyLoadType, PlayingType, SlideNavigation } from '.'
+import { LazyLoadType, PlayingType, SlideNavigation, SwipeDirection } from '.'
 import { Combine, MarkRequiredWithPartialBase } from './helpers'
+import VSlickCarousel from '@lib/components/VSlickCarousel.vue'
 
 export type Props = {
   accessibility: boolean
@@ -38,8 +39,8 @@ export type Props = {
   swipeToSlide: boolean
   touchMove: boolean
   touchThreshold: number
-  useCSS: boolean
-  useTransform: boolean
+  useCSSTransitions: boolean
+  useCSSTransform: boolean
   variableWidth: boolean
   vertical: boolean
   verticalSwiping: boolean
@@ -88,7 +89,7 @@ export type SliderState = {
 export type SliderSpec = Props &
   SliderState & {
     slideGroupCount: number
-    slideIndex: number
+    slideGroupIndex: number
     trackEl: HTMLElement
     listEl: HTMLElement
   }
@@ -169,6 +170,41 @@ export type CloneSlideOptions = {
 
 export type SwipeEvent = TouchEvent | MouseEvent
 
+export type SwipeEndSpec = Combine<
+  MarkRequiredWithPartialBase<
+    SliderSpec,
+    | 'currentSlideGroupIndex'
+    | 'dragging'
+    | 'swipe'
+    | 'touchObject'
+    | 'listEl'
+    | 'listHeight'
+    | 'listWidth'
+    | 'rtl'
+    | 'touchThreshold'
+    | 'scrolling'
+    | 'swipeLeft'
+    | 'verticalSwiping'
+  >,
+  TrackInfoSpec
+> & {
+  swipeToSlide: boolean
+  onSwipe?: (swipeDirection: string) => void
+}
+
+export type SwipeEndState = {
+  dragging: boolean
+  edgeDragged: boolean
+  scrolling: boolean
+  swiping: boolean
+  swiped: boolean
+  swipeLeft: number | null
+  touchObject: TouchObject | object
+  triggerSlideGroupHandler?: number
+  currentDirection?: number
+  trackStyle?: object
+}
+
 export type Settings = Partial<Props>
 
 export type SlideGroupChangeOptions = {
@@ -195,6 +231,7 @@ export type TrackInfoSpec = MarkRequiredWithPartialBase<
   | 'trackEl'
   | 'infinite'
   | 'centerMode'
+  | 'slideGroupIndex'
   | 'slideGroupCount'
   | 'groupsToShow'
   | 'groupsToScroll'
@@ -214,8 +251,97 @@ export type OnSlideSpec = Combine<
     | 'animating'
     | 'lazyLoadedList'
     | 'currentSlideGroupIndex'
-    | 'useCSS'
+    | 'useCSSTransitions'
   >
 > & {
   index: number
+}
+
+export type VSlickCarouselInstance = InstanceType<typeof VSlickCarousel>
+
+export type SlideCountSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  | 'swipeToSlide'
+  | 'listEl'
+  | 'vertical'
+  | 'rtl'
+  | 'currentSlideGroupIndex'
+  | 'slideWidth'
+  | 'groupsToShow'
+  | 'swipeLeft'
+  | 'slideGroupCount'
+  | 'groupsToScroll'
+>
+
+export type NavigableSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  'groupsToScroll' | 'groupsToShow' | 'slideGroupCount' | 'infinite'
+>
+
+export type SwipeMoveSpec = Combine<
+  MarkRequiredWithPartialBase<
+    SliderSpec,
+    | 'scrolling'
+    | 'animating'
+    | 'vertical'
+    | 'swipeToSlide'
+    | 'verticalSwiping'
+    | 'rtl'
+    | 'currentSlideGroupIndex'
+    | 'edgeFriction'
+    | 'edgeDragged'
+    | 'swiped'
+    | 'swiping'
+    | 'slideGroupCount'
+    | 'groupsToScroll'
+    | 'infinite'
+    | 'touchObject'
+    | 'listHeight'
+    | 'listWidth'
+  >,
+  TrackInfoSpec
+> & {
+  swipeEvent?: (
+    swipeDirection: SwipeDirection | keyof typeof SwipeDirection
+  ) => void
+  onEdge?: (
+    swipeDirection: SwipeDirection | keyof typeof SwipeDirection
+  ) => void
+}
+
+export type GoNextSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  | 'infinite'
+  | 'centerMode'
+  | 'currentSlideGroupIndex'
+  | 'slideGroupCount'
+  | 'groupsToShow'
+>
+
+export type LazyInfoSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  | 'currentSlideGroupIndex'
+  | 'centerMode'
+  | 'groupsToShow'
+  | 'centerPadding'
+  | 'lazyLoadedList'
+>
+
+export type CloneInfoSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  | 'infinite'
+  | 'variableWidth'
+  | 'groupsToShow'
+  | 'centerMode'
+  | 'slideGroupCount'
+>
+
+export type SwipeMoveState = {
+  scrolling?: boolean
+  touchObject?: TouchObject
+  swipeLeft?: number
+  trackStyle?: object
+  edgeDragged?: boolean
+  swiped?: boolean
+  swiping?: boolean
 }

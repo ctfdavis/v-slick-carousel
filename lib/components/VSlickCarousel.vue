@@ -42,7 +42,13 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, VNode, useSlots, getCurrentInstance } from 'vue'
-import { Props } from '@lib/types'
+import {
+  Props,
+  SwipeDirection,
+  SwipeEndSpec,
+  SwipeMoveSpec,
+  VSlickCarouselInstance
+} from '@lib/types'
 import {
   canUseDOM,
   filterUndefined,
@@ -55,10 +61,12 @@ import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
 import cloneDeep from 'lodash.clonedeep'
 import debounce from 'lodash.debounce'
-import ResizeObserver from 'resize-observer-polyfill'
 import {
   extractSlides,
   getNavigationOnKeyType,
+  getStatesOnSlideGroup,
+  getSwipeEndState,
+  getSwipeMoveState,
   getSwipeStartState
 } from '@lib/utils/carousel-utils'
 import {
@@ -90,8 +98,12 @@ const emit = defineEmits([
 ])
 
 const vSlickListRef = ref<HTMLElement>()
-
 const vSlickTrackRef = ref<InstanceType<typeof VSlickTrack>>()
+
+let triggerSlideGroupHandler: number | undefined
+let animationEndCallback: NodeJS.Timeout | null = null
+let lazyLoadTimer: NodeJS.Timeout | null = null
+let callbackTimers: NodeJS.Timeout[] = []
 
 const slideGroupCount = computed(() =>
   Math.ceil(slides.value.length / settings.value.slidesPerGroup)
@@ -150,7 +162,7 @@ const settings = computed<Props>(() => {
 
 const state = ref({
   ...cloneDeep(defaultSliderState),
-  currentSlideGroupIndex: props.initialGroupIndex
+  currentSlideGroupIndex: settings.value.initialGroupIndex
 })
 
 let responsiveMediaHandlers: {
@@ -205,14 +217,16 @@ watch(
 makeBreakpoints()
 
 const slides = ref<VNode[]>(
-  slots.default ? extractSlides(slots.default(), props.isSlidePredicate) : []
+  slots.default
+    ? extractSlides(slots.default(), settings.value.isSlidePredicate)
+    : []
 )
 
 watch(
-  () => slots.default,
-  () => {
-    slides.value = slots.default
-      ? extractSlides(slots.default(), props.isSlidePredicate)
+  () => [slots.default, settings.value.isSlidePredicate],
+  ([newSlots, newIsSlidePredicate]) => {
+    slides.value = newSlots
+      ? extractSlides((newSlots as any)(), newIsSlidePredicate as any)
       : []
   }
 )
@@ -234,28 +248,97 @@ const handleClickVSlickList = (e: Event) => {
 }
 
 const keyHandler = (e: KeyboardEvent) => {
-  const navigation = getNavigationOnKeyType(e, props.accessibility, props.rtl)
+  const navigation = getNavigationOnKeyType(
+    e,
+    settings.value.accessibility,
+    settings.value.rtl
+  )
   navigation !== '' &&
     changeSlideGroup({ message: navigation as SlideNavigation })
 }
 
 const handleKeyDownVSlickList = computed(() =>
-  props.accessibility ? keyHandler : undefined
+  settings.value.accessibility ? keyHandler : undefined
 )
 
 const swipeStart = (e: SwipeEvent) => {
-  const swipeStartState = getSwipeStartState(e, props.swipe, props.draggable)
-  if (swipeStartState !== '') {
-    Object.assign(state.value, swipeStartState)
+  const swipeStartState = getSwipeStartState(
+    e,
+    settings.value.swipe,
+    settings.value.draggable
+  )
+  Object.assign(state.value, swipeStartState)
+}
+
+const swipeEnd = (e: SwipeEvent) => {
+  const swipeEndState = getSwipeEndState(e, {
+    ...settings.value,
+    ...state.value,
+    trackEl: vSlickTrackRef.value?.$el,
+    listEl: vSlickListRef.value,
+    slideGroupIndex: state.value.currentSlideGroupIndex,
+    slideGroupCount: slideGroupCount.value
+  } as SwipeEndSpec)
+  if (!swipeEndState) return
+  const { triggerSlideGroupHandler: newTriggerSlideGroupHandler, ...rest } =
+    swipeEndState
+  triggerSlideGroupHandler = newTriggerSlideGroupHandler
+  Object.assign(state.value, rest)
+  if (triggerSlideGroupHandler) {
+    slideGroupHandler(triggerSlideGroupHandler)
   }
 }
+
+const swipeMove = (e: SwipeEvent) => {
+  const swipeMoveState = getSwipeMoveState(e, {
+    ...props,
+    ...state.value,
+    trackEl: vSlickTrackRef.value?.$el,
+    listEl: vSlickListRef.value,
+    slideGroupIndex: state.value.currentSlideGroupIndex,
+    slideGroupCount: slideGroupCount.value,
+    onEdge: (e: SwipeDirection | keyof typeof SwipeDirection) =>
+      emit('edge', e),
+    swipeEvent: (e: SwipeDirection | keyof typeof SwipeDirection) =>
+      emit('swipe', e)
+  } as SwipeMoveSpec)
+  if (!swipeMoveState) return
+  if (swipeMoveState.swiping) {
+    isVSlickListClickable = false
+  }
+  Object.assign(state.value, swipeMoveState)
+}
+
+const handleMouseDownVSlickList = computed(() =>
+  settings.value.touchMove ? swipeStart : undefined
+)
+
+const handleTouchStartVSlickList = computed(() =>
+  settings.value.touchMove ? swipeStart : undefined
+)
+
+const handleMouseUpVSlickList = computed(() =>
+  settings.value.touchMove ? swipeEnd : undefined
+)
+
+const handleMouseLeaveVSlickList = computed(() =>
+  state.value.dragging && settings.value.touchMove ? swipeEnd : undefined
+)
+
+const handleTouchEndVSlickList = computed(() =>
+  settings.value.touchMove ? swipeEnd : undefined
+)
+
+const handleMouseMoveVSlickList = computed(() =>
+  state.value.dragging && settings.value.touchMove ? swipeMove : undefined
+)
 
 const changeSlideGroup = (
   options: SlideGroupChangeOptions,
   dontAnimate = false
 ) => {
   const spec = {
-    ...props,
+    ...settings.value,
     ...state.value,
     slideGroupCount: slideGroupCount.value
   }
@@ -271,18 +354,21 @@ const changeSlideGroup = (
 }
 
 const slideGroupHandler = (index: number, dontAnimate = false) => {
-  const { asNavFor, speed } = props
-  // capture currentslide before state is updated
+  const { asNavFor, speed } = settings.value
   const currentSlideGroupIndex = state.value.currentSlideGroupIndex
   const { slidingState, afterSlidingState } = getStatesOnSlideGroup({
     index,
-    ...props,
+    ...settings.value,
     ...state.value,
     trackEl: vSlickTrackRef.value?.$el,
-    useCSS: props.useCSS && !dontAnimate
+    useCSSTransitions: settings.value.useCSSTransitions && !dontAnimate
   } as OnSlideSpec)
   if (!slidingState) return
-  emit('beforeChange', currentSlideGroupIndex, slidingState.currentSlide)
+  emit(
+    'beforeChange',
+    currentSlideGroupIndex,
+    slidingState.currentSlideGroupIndex
+  )
   const slidesToLoad =
     slidingState.lazyLoadedList?.filter(
       (value: number) => state.value.lazyLoadedList.indexOf(value) < 0
@@ -292,7 +378,7 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
   }
   Object.assign(state.value, slidingState)
   if (asNavFor) {
-    ;(asNavFor as InstanceType<any>).goTo(index)
+    ;(asNavFor as VSlickCarouselInstance).goTo(index)
   }
   if (!afterSlidingState) return
   animationEndCallback = setTimeout(() => {
@@ -303,8 +389,26 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
         state.value.animating = animating || false
       }, 10)
     )
-    emit('afterChange', slidingState!.currentSlide)
+    emit('afterChange', slidingState.currentSlideGroupIndex)
     animationEndCallback = null
   }, speed)
 }
+
+defineExpose({
+  goTo: slideGroupHandler,
+  next: () => {
+    slideGroupHandler(
+      state.value.currentSlideGroupIndex + settings.value.groupsToScroll
+    )
+  },
+  prev: () => {
+    slideGroupHandler(
+      state.value.currentSlideGroupIndex - settings.value.groupsToScroll
+    )
+  },
+  // play,
+  // pause,
+  // autoplay,
+  state
+})
 </script>
