@@ -43,7 +43,11 @@
 <script setup lang="ts">
 import { ref, computed, watch, VNode, useSlots, getCurrentInstance } from 'vue'
 import { Props } from '@lib/types'
-import { canUseDOM, filterUndefined } from '@lib/utils'
+import {
+  canUseDOM,
+  filterUndefined,
+  getChangedSlideGroupIndex
+} from '@lib/utils'
 import { defaultPropValues, defaultProps, defaultSliderState } from './props'
 import enquireJs from 'enquire.js'
 import json2mq from 'json2mq'
@@ -54,13 +58,15 @@ import debounce from 'lodash.debounce'
 import ResizeObserver from 'resize-observer-polyfill'
 import {
   extractSlides,
-  getNavigationOnKeyType
+  getNavigationOnKeyType,
+  getSwipeStartState
 } from '@lib/utils/carousel-utils'
 import {
   SwipeEvent,
   SlideNavigation,
   SlideGroupChangeOptions,
-  SlideGroupChangeSpec
+  SlideGroupChangeSpec,
+  OnSlideSpec
 } from '@lib/types'
 
 const slots = useSlots()
@@ -71,6 +77,21 @@ const props = defineProps(defaultProps) as Props
 defineOptions({ inheritAttrs: false })
 
 const breakpoint = ref<number>()
+
+const emit = defineEmits([
+  'init',
+  'beforeChange',
+  'afterChange',
+  'lazyLoad',
+  'lazyLoadError',
+  'reInit',
+  'edge',
+  'swipe'
+])
+
+const vSlickListRef = ref<HTMLElement>()
+
+const vSlickTrackRef = ref<InstanceType<typeof VSlickTrack>>()
 
 const slideGroupCount = computed(() =>
   Math.ceil(slides.value.length / settings.value.slidesPerGroup)
@@ -129,7 +150,7 @@ const settings = computed<Props>(() => {
 
 const state = ref({
   ...cloneDeep(defaultSliderState),
-  currentSlide: props.initialGroup
+  currentSlideGroupIndex: props.initialGroupIndex
 })
 
 let responsiveMediaHandlers: {
@@ -200,20 +221,6 @@ const vSlickListStyle = {
   ...(getCurrentInstance()?.vnode?.props?.style || {})
 }
 
-const changeSlideGroup = (
-  options: SlideGroupChangeOptions,
-  dontAnimate = false
-) => {
-  const spec = { ...props, ...state.value, slideCount: slideCount.value }
-  const targetSlide = getChangedSlide(spec as SlideChangeSpec, options)
-  if (targetSlide !== 0 && !targetSlide) return
-  if (dontAnimate === true) {
-    slideHandler(targetSlide, dontAnimate)
-  } else {
-    slideHandler(targetSlide)
-  }
-}
-
 let isVSlickListClickable = true
 let debouncedResize: ReturnType<typeof debounce> | null = null
 let ro: ResizeObserver | null = null
@@ -257,10 +264,47 @@ const changeSlideGroup = (
     options
   )
   if (!targetSlideGroupIndex) return
-  if (dontAnimate === true) {
-    slideGroupHandler(targetSlideGroupIndex, dontAnimate)
-  } else {
-    slideGroupHandler(targetSlideGroupIndex)
+  slideGroupHandler(
+    targetSlideGroupIndex,
+    dontAnimate === true ? true : undefined
+  )
+}
+
+const slideGroupHandler = (index: number, dontAnimate = false) => {
+  const { asNavFor, speed } = props
+  // capture currentslide before state is updated
+  const currentSlide = state.value.currentSlide
+  const { slidingState, afterSlidingState } = getStatesOnSlideGroup({
+    index,
+    ...props,
+    ...state.value,
+    trackEl: vSlickTrackRef.value?.$el,
+    useCSS: props.useCSS && !dontAnimate
+  } as OnSlideSpec)
+  if (!slidingState) return
+  emit('beforeChange', currentSlide, slidingState.currentSlide)
+  const slidesToLoad =
+    slidingState.lazyLoadedList?.filter(
+      (value: number) => state.value.lazyLoadedList.indexOf(value) < 0
+    ) || []
+  if (slidesToLoad.length) {
+    emit('lazyLoad', slidesToLoad)
   }
+  Object.assign(state.value, slidingState)
+  if (asNavFor) {
+    ;(asNavFor as InstanceType<any>).goTo(index)
+  }
+  if (!afterSlidingState) return
+  animationEndCallback = setTimeout(() => {
+    const { animating, ...firstBatch } = afterSlidingState!
+    Object.assign(state.value, firstBatch)
+    callbackTimers.push(
+      setTimeout(() => {
+        state.value.animating = animating || false
+      }, 10)
+    )
+    emit('afterChange', slidingState!.currentSlide)
+    animationEndCallback = null
+  }, speed)
 }
 </script>

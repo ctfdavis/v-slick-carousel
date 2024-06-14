@@ -35,7 +35,7 @@ export const defaultProps = {
   fade: { type: Boolean, default: false },
   focusOnSelect: { type: Boolean, default: false },
   infinite: { type: Boolean, default: true },
-  initialGroup: { type: Number, default: 0 },
+  initialGroupIndex: { type: Number, default: 0 },
   lazyLoad: { type: String, default: null },
   pauseOnDotsHover: { type: Boolean, default: false },
   pauseOnFocus: { type: Boolean, default: false },
@@ -80,7 +80,7 @@ export const defaultSliderState: SliderState = {
   autoplayTimer: null,
   currentDirection: 0,
   currentLeft: null,
-  currentSlide: 0,
+  currentSlideGroupIndex: 0,
   direction: 1,
   dragging: false,
   edgeDragged: false,
@@ -116,7 +116,7 @@ export const defaultTrackProps = {
     'vertical'
   ]),
   ...{
-    currentSlide: { type: Number, default: 0 },
+    currentSlideGroupIndex: { type: Number, default: 0 },
     lazyLoadedList: {
       type: Array as PropType<Number[]>,
       default: []
@@ -133,7 +133,7 @@ export const defaultTrackProps = {
 export const defaultArrowProps = {
   ...pick(cloneDeep(defaultProps), ['centerMode', 'infinite', 'groupsToShow']),
   ...{
-    currentSlide: { type: Number, default: 0 },
+    currentSlideGroupIndex: { type: Number, default: 0 },
     slideCount: { type: Number, default: 0 },
     type: { type: String as PropType<'prev' | 'next'>, default: 'prev' }
   }
@@ -147,7 +147,7 @@ export const defaultDotsProps = {
     'groupsToShow'
   ]),
   ...{
-    currentSlide: { type: Number, default: 0 },
+    currentSlideGroupIndex: { type: Number, default: 0 },
     slideCount: { type: Number, default: 0 }
   }
 } satisfies VuePropDef<keyof DotsProps>

@@ -1,5 +1,7 @@
 import { VNode } from 'vue'
 
+export * from './carousel-utils'
+
 export const canUseDOM = () =>
   !!(
     typeof window !== 'undefined' &&

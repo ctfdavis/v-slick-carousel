@@ -1,7 +1,7 @@
 import { VNode } from 'vue'
 
 import { LazyLoadType, PlayingType, SlideNavigation } from '.'
-import { MarkRequiredWithPartialBase } from './helpers'
+import { Combine, MarkRequiredWithPartialBase } from './helpers'
 
 export type Props = {
   accessibility: boolean
@@ -20,7 +20,7 @@ export type Props = {
   fade: boolean
   focusOnSelect: boolean
   infinite: boolean
-  initialGroup: number
+  initialGroupIndex: number
   lazyLoad?: LazyLoadType | keyof typeof LazyLoadType
   pauseOnDotsHover: boolean
   pauseOnFocus: boolean
@@ -66,7 +66,7 @@ export type SliderState = {
   autoplayTimer: null | NodeJS.Timeout
   currentDirection: number
   currentLeft: null | number
-  currentSlide: number
+  currentSlideGroupIndex: number
   direction: number
   dragging: boolean
   edgeDragged: boolean
@@ -111,7 +111,7 @@ export type TrackProps = Pick<
 > &
   Pick<
     SliderState,
-    | 'currentSlide'
+    | 'currentSlideGroupIndex'
     | 'lazyLoadedList'
     | 'listHeight'
     | 'trackStyle'
@@ -126,7 +126,7 @@ export type ArrowProps = Pick<
   Props,
   'centerMode' | 'infinite' | 'groupsToShow'
 > &
-  Pick<SliderState, 'currentSlide'> & {
+  Pick<SliderState, 'currentSlideGroupIndex'> & {
     slideCount: number
     type: 'next' | 'prev'
   }
@@ -135,7 +135,7 @@ export type DotsProps = Pick<
   Props,
   'dotsClass' | 'infinite' | 'groupsToScroll' | 'groupsToShow'
 > &
-  Pick<SliderState, 'currentSlide'> & {
+  Pick<SliderState, 'currentSlideGroupIndex'> & {
     slideCount: number
   }
 
@@ -181,9 +181,41 @@ export type SlideGroupChangeSpec = MarkRequiredWithPartialBase<
   | 'groupsToScroll'
   | 'groupsToShow'
   | 'slideGroupCount'
-  | 'currentSlide'
+  | 'currentSlideGroupIndex'
   | 'lazyLoad'
   | 'infinite'
   | 'centerMode'
   | 'centerPadding'
 >
+
+export type TrackInfoSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  | 'currentSlideGroupIndex'
+  | 'centerPadding'
+  | 'trackEl'
+  | 'infinite'
+  | 'centerMode'
+  | 'slideGroupCount'
+  | 'groupsToShow'
+  | 'groupsToScroll'
+  | 'slideWidth'
+  | 'listWidth'
+  | 'variableWidth'
+  | 'slideHeight'
+  | 'fade'
+  | 'vertical'
+>
+
+export type OnSlideSpec = Combine<
+  TrackInfoSpec,
+  MarkRequiredWithPartialBase<
+    SliderSpec,
+    | 'waitForAnimate'
+    | 'animating'
+    | 'lazyLoadedList'
+    | 'currentSlideGroupIndex'
+    | 'useCSS'
+  >
+> & {
+  index: number
+}
