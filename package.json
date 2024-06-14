@@ -32,7 +32,8 @@
     "prepublish": "npm run build",
     "lint": "eslint 'src/**/*.{js,ts,vue}' --fix",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write \"**/*.{json,js,ts,vue,html,css,scss}\""
+    "format": "prettier --write \"**/*.{json,js,ts,vue,html,css,scss}\"",
+    "test": "jest"
   },
   "lint-staged": {
     "*.{js,ts,vue}": [
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "@types/enquire.js": "^2.1.5",
+    "@types/jest": "^29.5.12",
     "@types/json2mq": "^0.2.2",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/lodash.debounce": "^4.0.9",
@@ -77,21 +79,26 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-vue": "^9.26.0",
     "husky": "^9.0.11",
+    "jest": "^29.7.0",
     "lint-staged": "^15.2.5",
     "prettier": "^3.3.1",
     "rimraf": "^5.0.7",
     "sass": "^1.77.4",
-    "typescript": "^5.2.2",
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.4.5",
     "vite": "^5.2.0",
     "vite-plugin-dts": "^3.9.1",
     "vite-plugin-eslint": "^1.8.1",
-    "vue-tsc": "^2.0.6"
+    "vue-tsc": "^2.0.6",
+    "vue-v3.0": "npm:vue@3.0",
+    "vue-v3.1": "npm:vue@3.1"
   },
   "dependencies": {
     "enquire.js": "^2.1.6",
     "json2mq": "^0.2.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
-    "lodash.pick": "^4.4.0"
+    "lodash.pick": "^4.4.0",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }

@@ -47,6 +47,7 @@ export const defaultProps = {
   groupsToScroll: { type: Number, default: 1 },
   groupsToShow: { type: Number, default: 1 },
   showDefaultArrows: { type: Boolean, default: true },
+  showDefaultDots: { type: Boolean, default: true },
   speed: { type: Number, default: 500 },
   swipe: { type: Boolean, default: true },
   swipeToSlide: { type: Boolean, default: false },
@@ -57,7 +58,11 @@ export const defaultProps = {
   variableWidth: { type: Boolean, default: false },
   vertical: { type: Boolean, default: false },
   verticalSwiping: { type: Boolean, default: false },
-  waitForAnimate: { type: Boolean, default: true }
+  waitForAnimate: { type: Boolean, default: true },
+  isSlidePredicate: {
+    type: Function as PropType<(vnode: VNode) => boolean>,
+    default: undefined
+  }
 } satisfies VuePropDef<keyof Props>
 
 export const defaultPropValues = Object.keys(defaultProps).reduce<{

@@ -9,7 +9,7 @@
         <slot name="prevArrow" v-bind="arrowSlotProps"></slot>
       </template>
     </VSlickArrow>
-    <!-- <div
+    <div
       :class="{ 'v-slick-dragging': state.dragging }"
       class="v-slick-list"
       ref="vSlickListRef"
@@ -26,27 +26,44 @@
       @keydown="handleKeyDownVSlickList"
     >
       <VSlickTrack ref="vSlickTrackRef"></VSlickTrack>
-    </div> -->
+    </div>
     <VSlickArrow v-if="settings.showDefaultArrows">
       <template v-slot:nextArrow="arrowSlotProps">
         <slot name="nextArrow" v-bind="arrowSlotProps"></slot>
       </template>
     </VSlickArrow>
-    <!-- <VSlickDots v-if="settings.showDefaultDots">
-      <template v-slot:customPaging="paging"></template>
-    </VSlickDots> -->
+    <VSlickDots v-if="settings.showDefaultDots">
+      <template v-slot:customPaging="paging">
+        <slot name="customPaging" v-bind="paging"></slot>
+      </template>
+    </VSlickDots>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, VNode, useSlots, getCurrentInstance } from 'vue'
 import { Props } from '@lib/types'
 import { canUseDOM, filterUndefined } from '@lib/utils'
-import { defaultPropValues, defaultProps } from './props'
+import { defaultPropValues, defaultProps, defaultSliderState } from './props'
 import enquireJs from 'enquire.js'
 import json2mq from 'json2mq'
 import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
+import cloneDeep from 'lodash.clonedeep'
+import debounce from 'lodash.debounce'
+import ResizeObserver from 'resize-observer-polyfill'
+import {
+  extractSlides,
+  getNavigationOnKeyType
+} from '@lib/utils/carousel-utils'
+import {
+  SwipeEvent,
+  SlideNavigation,
+  SlideGroupChangeOptions,
+  SlideGroupChangeSpec
+} from '@lib/types'
+
+const slots = useSlots()
 
 const enquire = canUseDOM() ? enquireJs : undefined
 
@@ -54,6 +71,10 @@ const props = defineProps(defaultProps) as Props
 defineOptions({ inheritAttrs: false })
 
 const breakpoint = ref<number>()
+
+const slideGroupCount = computed(() =>
+  Math.ceil(slides.value.length / settings.value.slidesPerGroup)
+)
 
 const settings = computed<Props>(() => {
   const definedProps = filterUndefined(props)
@@ -106,6 +127,11 @@ const settings = computed<Props>(() => {
   return settings
 })
 
+const state = ref({
+  ...cloneDeep(defaultSliderState),
+  currentSlide: props.initialGroup
+})
+
 let responsiveMediaHandlers: {
   query: string
   handler: () => void
@@ -156,4 +182,85 @@ watch(
 )
 
 makeBreakpoints()
+
+const slides = ref<VNode[]>(
+  slots.default ? extractSlides(slots.default(), props.isSlidePredicate) : []
+)
+
+watch(
+  () => slots.default,
+  () => {
+    slides.value = slots.default
+      ? extractSlides(slots.default(), props.isSlidePredicate)
+      : []
+  }
+)
+
+const vSlickListStyle = {
+  ...(getCurrentInstance()?.vnode?.props?.style || {})
+}
+
+const changeSlideGroup = (
+  options: SlideGroupChangeOptions,
+  dontAnimate = false
+) => {
+  const spec = { ...props, ...state.value, slideCount: slideCount.value }
+  const targetSlide = getChangedSlide(spec as SlideChangeSpec, options)
+  if (targetSlide !== 0 && !targetSlide) return
+  if (dontAnimate === true) {
+    slideHandler(targetSlide, dontAnimate)
+  } else {
+    slideHandler(targetSlide)
+  }
+}
+
+let isVSlickListClickable = true
+let debouncedResize: ReturnType<typeof debounce> | null = null
+let ro: ResizeObserver | null = null
+
+const handleClickVSlickList = (e: Event) => {
+  if (isVSlickListClickable === false) {
+    e.stopPropagation()
+    e.preventDefault()
+  }
+  isVSlickListClickable = true
+}
+
+const keyHandler = (e: KeyboardEvent) => {
+  const navigation = getNavigationOnKeyType(e, props.accessibility, props.rtl)
+  navigation !== '' &&
+    changeSlideGroup({ message: navigation as SlideNavigation })
+}
+
+const handleKeyDownVSlickList = computed(() =>
+  props.accessibility ? keyHandler : undefined
+)
+
+const swipeStart = (e: SwipeEvent) => {
+  const swipeStartState = getSwipeStartState(e, props.swipe, props.draggable)
+  if (swipeStartState !== '') {
+    Object.assign(state.value, swipeStartState)
+  }
+}
+
+const changeSlideGroup = (
+  options: SlideGroupChangeOptions,
+  dontAnimate = false
+) => {
+  const spec = {
+    ...props,
+    ...state.value,
+    slideGroupCount: slideGroupCount.value
+  }
+  const targetSlideGroupIndex = getChangedSlideGroupIndex(
+    spec as SlideGroupChangeSpec,
+    options
+  )
+  if (!targetSlideGroupIndex) return
+  if (dontAnimate === true) {
+    slideGroupHandler(targetSlideGroupIndex, dontAnimate)
+  } else {
+    slideGroupHandler(targetSlideGroupIndex)
+  }
+}
 </script>
