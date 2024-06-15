@@ -5,11 +5,13 @@ import {
   LazyInfoSpec,
   NavigableSpec,
   OnSlideSpec,
+  PlayingType,
   SlideCountSpec,
   SlideGroupChangeOptions,
   SlideGroupChangeSpec,
   SlideNavigation,
   SliderState,
+  SliderStateInfoSpec,
   SwipeDirection,
   SwipeEndSpec,
   SwipeEndState,
@@ -19,6 +21,7 @@ import {
   TouchObject,
   TrackInfoSpec
 } from '../types'
+import { MarkRequiredWithPartialBase } from '@lib/types/helpers'
 
 export const extractSlides = (
   vnodes: VNode[],
@@ -235,7 +238,7 @@ export const getSwipeStartState = (
 
 export const getSlideCount = (spec: SlideCountSpec) => {
   const centerOffset = spec.centerMode
-    ? +spec.slideWidth * Math.floor(spec.groupsToShow / 2)
+    ? +spec.slideGroupWidth * Math.floor(spec.groupsToShow / 2)
     : 0
   if (spec.swipeToSlide) {
     let swipedSlideGroup
@@ -425,9 +428,10 @@ export function getTrackCSS(spec: TrackInfoSpec, left: number) {
   let trackWidth, trackHeight
   const trackChildren = spec.slideGroupCount + 2 * spec.groupsToShow
   if (!spec.vertical) {
-    trackWidth = getTotalSlideGroups(spec) * parseInt(`${spec.slideWidth || 0}`)
+    trackWidth =
+      getTotalSlideGroups(spec) * parseInt(`${spec.slideGroupWidth || 0}`)
   } else {
-    trackHeight = trackChildren * parseInt(`${spec.slideHeight || 0}`)
+    trackHeight = trackChildren * parseInt(`${spec.slideGroupHeight || 0}`)
   }
   let style: Record<string, string | number> = {
     opacity: 1,
@@ -490,25 +494,25 @@ export function getTrackAnimateCSS(spec: TrackInfoSpec, left: number) {
 export function getTrackLeft(spec: TrackInfoSpec) {
   let {
     centerPadding,
-    slideGroupIndex,
+    currentSlideGroupIndex,
     trackEl,
     infinite,
     centerMode,
     slideGroupCount,
     groupsToShow,
     groupsToScroll,
-    slideWidth,
+    slideGroupWidth,
     listWidth,
     variableWidth,
-    slideHeight,
+    slideGroupHeight,
     fade,
     vertical
   } = spec
   listWidth = listWidth || 0
-  slideWidth = slideWidth || 0
-  slideHeight = slideHeight || 0
+  slideGroupWidth = slideGroupWidth || 0
+  slideGroupHeight = slideGroupHeight || 0
 
-  let slideOffset = 0
+  let slideGroupOffset = 0
   let targetLeft
   let targetSlide: HTMLElement
   let verticalOffset = 0
@@ -523,10 +527,10 @@ export function getTrackLeft(spec: TrackInfoSpec) {
     // if next scroll doesn't have enough children, just reach till the end of original slides instead of shifting groupsToScroll children
     if (
       slideGroupCount % groupsToScroll !== 0 &&
-      slideGroupIndex + groupsToScroll > slideGroupCount
+      currentSlideGroupIndex + groupsToScroll > slideGroupCount
     ) {
-      slidesToOffset = -(slideGroupIndex > slideGroupCount
-        ? groupsToShow - (slideGroupIndex - slideGroupCount)
+      slidesToOffset = -(currentSlideGroupIndex > slideGroupCount
+        ? groupsToShow - (currentSlideGroupIndex - slideGroupCount)
         : slideGroupCount % groupsToScroll)
     }
     // in center mode, shift current slide group to the center of the frame
@@ -536,7 +540,7 @@ export function getTrackLeft(spec: TrackInfoSpec) {
   } else {
     if (
       slideGroupCount % groupsToScroll !== 0 &&
-      slideGroupIndex + groupsToScroll > slideGroupCount
+      currentSlideGroupIndex + groupsToScroll > slideGroupCount
     ) {
       slidesToOffset = groupsToShow - (slideGroupCount % groupsToScroll)
     }
@@ -544,26 +548,29 @@ export function getTrackLeft(spec: TrackInfoSpec) {
       slidesToOffset = groupsToShow / 2
     }
   }
-  slideOffset = slidesToOffset * parseInt(`${slideWidth}`)
-  verticalOffset = slidesToOffset * parseInt(`${slideHeight}`)
+  slideGroupOffset = slidesToOffset * parseInt(`${slideGroupWidth}`)
+  verticalOffset = slidesToOffset * parseInt(`${slideGroupHeight}`)
 
   if (!vertical) {
-    targetLeft = slideGroupIndex * parseInt(`${slideWidth}`) * -1 + slideOffset
+    targetLeft =
+      currentSlideGroupIndex * parseInt(`${slideGroupWidth}`) * -1 +
+      slideGroupOffset
   } else {
     targetLeft =
-      slideGroupIndex * parseInt(`${slideHeight}`) * -1 + verticalOffset
+      currentSlideGroupIndex * parseInt(`${slideGroupHeight}`) * -1 +
+      verticalOffset
   }
 
   if (variableWidth === true) {
     let targetSlideIndex
-    targetSlideIndex = slideGroupIndex + getPreClones(spec)
+    targetSlideIndex = currentSlideGroupIndex + getPreClones(spec)
     targetSlide =
       trackEl && (trackEl.childNodes[targetSlideIndex] as HTMLElement)
     targetLeft = targetSlide ? targetSlide.offsetLeft * -1 : 0
     if (centerMode === true) {
       targetSlideIndex = infinite
-        ? slideGroupIndex + getPreClones(spec)
-        : slideGroupIndex
+        ? currentSlideGroupIndex + getPreClones(spec)
+        : currentSlideGroupIndex
       targetSlide =
         trackEl && (trackEl.children[targetSlideIndex] as HTMLElement)
       targetLeft = 0
@@ -599,7 +606,7 @@ export const canGoNext = (spec: GoNextSpec) => {
   return canGo
 }
 
-export const getStatesOnSlideGroup = (spec: OnSlideSpec) => {
+export const getStatesOnSlide = (spec: OnSlideSpec) => {
   const {
     waitForAnimate,
     animating,
@@ -663,9 +670,12 @@ export const getStatesOnSlideGroup = (spec: OnSlideSpec) => {
     }
     animationLeft = getTrackLeft({
       ...spec,
-      slideGroupIndex: animationSlideGroupIndex
+      currentSlideGroupIndex: animationSlideGroupIndex
     })
-    finalLeft = getTrackLeft({ ...spec, slideGroupIndex: finalSlideGroupIndex })
+    finalLeft = getTrackLeft({
+      ...spec,
+      currentSlideGroupIndex: finalSlideGroupIndex
+    })
     if (!infinite) {
       if (animationLeft === finalLeft)
         animationSlideGroupIndex = finalSlideGroupIndex
@@ -820,4 +830,73 @@ export const getSwipeMoveState = (
     e.preventDefault()
   }
   return state
+}
+
+export function getSlideGroupCount(slideCount: number, groupsToShow: number) {
+  return Math.ceil(slideCount / groupsToShow)
+}
+
+export function getSliderState(spec: SliderStateInfoSpec) {
+  let slideGroupCount = getSlideGroupCount(
+    spec.slides.length,
+    spec.groupsToShow
+  )
+  let listWidth = Math.ceil(spec.listEl?.offsetWidth || 0)
+  let trackWidth = Math.ceil(spec.trackEl?.offsetWidth || 0)
+  let slideGroupWidth
+  if (!spec.vertical) {
+    let centerPaddingAdj = spec.centerMode
+      ? parseInt(spec.centerPadding) * 2
+      : 0
+    if (
+      typeof spec.centerPadding === 'string' &&
+      spec.centerPadding.slice(-1) === '%'
+    ) {
+      centerPaddingAdj *= listWidth / 100
+    }
+    slideGroupWidth = Math.ceil(
+      (listWidth - centerPaddingAdj) / spec.groupsToShow
+    )
+  } else {
+    slideGroupWidth = listWidth
+  }
+  let slideGroupHeight =
+    spec.listEl && spec.listEl.querySelector('[data-index="0"]')
+      ? spec.listEl.querySelector<HTMLElement>('[data-index="0"]')
+          ?.offsetHeight || 0
+      : 0
+  let listHeight = slideGroupHeight * spec.groupsToShow
+  let currentSlideGroupIndex =
+    spec.currentSlideGroupIndex === undefined
+      ? spec.initialGroupIndex
+      : spec.currentSlideGroupIndex
+  if (spec.rtl && spec.currentSlideGroupIndex === undefined) {
+    currentSlideGroupIndex = slideGroupCount - 1 - spec.initialGroupIndex
+  }
+  let lazyLoadedList = spec.lazyLoadedList || []
+  let slidesToLoad = getOnDemandLazySlides(spec as LazyInfoSpec)
+  lazyLoadedList.concat(slidesToLoad)
+
+  let sliderState: MarkRequiredWithPartialBase<
+    SliderState,
+    | 'currentSlideGroupIndex'
+    | 'listWidth'
+    | 'slideGroupHeight'
+    | 'slideGroupWidth'
+  > & { slideGroupCount: number } = {
+    slideGroupCount,
+    slideGroupWidth,
+    listWidth,
+    trackWidth,
+    currentSlideGroupIndex,
+    slideGroupHeight,
+    listHeight,
+    lazyLoadedList
+  }
+
+  if (spec.autoplaying === null && spec.autoplay) {
+    sliderState.autoplaying = PlayingType.playing
+  }
+
+  return sliderState
 }

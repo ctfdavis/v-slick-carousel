@@ -1,7 +1,11 @@
 import { VNode } from 'vue'
 
 import { LazyLoadType, PlayingType, SlideNavigation, SwipeDirection } from '.'
-import { Combine, MarkRequiredWithPartialBase } from './helpers'
+import {
+  Combine,
+  MarkRequiredAndPartialKeysWithPartialBase,
+  MarkRequiredWithPartialBase
+} from './helpers'
 import VSlickCarousel from '@lib/components/VSlickCarousel.vue'
 
 export type Props = {
@@ -27,7 +31,6 @@ export type Props = {
   pauseOnFocus: boolean
   pauseOnHover: boolean
   responsive: Responsive[]
-  rows: number
   rtl: boolean
   slidesPerGroup: number
   groupsToScroll: number
@@ -76,8 +79,8 @@ export type SliderState = {
   listHeight?: number
   listWidth?: number
   scrolling: boolean
-  slideHeight?: number | string
-  slideWidth?: number | string
+  slideGroupHeight?: number | string
+  slideGroupWidth?: number | string
   swipeLeft?: number
   swiped: boolean
   swiping: boolean
@@ -89,7 +92,6 @@ export type SliderState = {
 export type SliderSpec = Props &
   SliderState & {
     slideGroupCount: number
-    slideGroupIndex: number
     trackEl: HTMLElement
     listEl: HTMLElement
   }
@@ -103,7 +105,6 @@ export type TrackProps = Pick<
   | 'infinite'
   | 'lazyLoad'
   | 'rtl'
-  | 'rows'
   | 'groupsToScroll'
   | 'groupsToShow'
   | 'speed'
@@ -116,8 +117,8 @@ export type TrackProps = Pick<
     | 'lazyLoadedList'
     | 'listHeight'
     | 'trackStyle'
-    | 'slideHeight'
-    | 'slideWidth'
+    | 'slideGroupHeight'
+    | 'slideGroupWidth'
   > & {
     slideCount: number
     children: VNode[]
@@ -231,14 +232,13 @@ export type TrackInfoSpec = MarkRequiredWithPartialBase<
   | 'trackEl'
   | 'infinite'
   | 'centerMode'
-  | 'slideGroupIndex'
   | 'slideGroupCount'
   | 'groupsToShow'
   | 'groupsToScroll'
-  | 'slideWidth'
+  | 'slideGroupWidth'
   | 'listWidth'
   | 'variableWidth'
-  | 'slideHeight'
+  | 'slideGroupHeight'
   | 'fade'
   | 'vertical'
 >
@@ -266,7 +266,7 @@ export type SlideCountSpec = MarkRequiredWithPartialBase<
   | 'vertical'
   | 'rtl'
   | 'currentSlideGroupIndex'
-  | 'slideWidth'
+  | 'slideGroupWidth'
   | 'groupsToShow'
   | 'swipeLeft'
   | 'slideGroupCount'
@@ -344,4 +344,20 @@ export type SwipeMoveState = {
   edgeDragged?: boolean
   swiped?: boolean
   swiping?: boolean
+}
+
+export type SliderStateInfoSpec = MarkRequiredAndPartialKeysWithPartialBase<
+  SliderSpec,
+  | 'vertical'
+  | 'centerMode'
+  | 'centerPadding'
+  | 'initialGroupIndex'
+  | 'currentSlideGroupIndex'
+  | 'rtl'
+  | 'autoplay'
+  | 'autoplaying'
+  | 'groupsToShow',
+  'listEl' | 'trackEl'
+> & {
+  slides: VNode[]
 }

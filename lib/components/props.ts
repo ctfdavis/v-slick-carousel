@@ -41,7 +41,6 @@ export const defaultProps = {
   pauseOnFocus: { type: Boolean, default: false },
   pauseOnHover: { type: Boolean, default: true },
   responsive: { type: Array as PropType<Responsive[]>, default: [] },
-  rows: { type: Number, default: 1 },
   rtl: { type: Boolean, default: false },
   slidesPerGroup: { type: Number, default: 1 },
   groupsToScroll: { type: Number, default: 1 },
@@ -53,8 +52,8 @@ export const defaultProps = {
   swipeToSlide: { type: Boolean, default: false },
   touchMove: { type: Boolean, default: true },
   touchThreshold: { type: Number, default: 5 },
-  useCSS: { type: Boolean, default: true },
-  useTransform: { type: Boolean, default: true },
+  useCSSTransitions: { type: Boolean, default: true },
+  useCSSTransform: { type: Boolean, default: true },
   variableWidth: { type: Boolean, default: false },
   vertical: { type: Boolean, default: false },
   verticalSwiping: { type: Boolean, default: false },
@@ -89,8 +88,8 @@ export const defaultSliderState: SliderState = {
   listHeight: undefined,
   listWidth: undefined,
   scrolling: false,
-  slideHeight: undefined,
-  slideWidth: undefined,
+  slideGroupHeight: undefined,
+  slideGroupWidth: undefined,
   swipeLeft: undefined,
   swiped: false, // used by swipeEvent. differentites between touch and swipe.
   swiping: false,
@@ -108,7 +107,6 @@ export const defaultTrackProps = {
     'infinite',
     'lazyLoad',
     'rtl',
-    'rows',
     'groupsToScroll',
     'groupsToShow',
     'speed',
@@ -125,8 +123,8 @@ export const defaultTrackProps = {
     trackStyle: { type: Object, default: {} },
     slideCount: { type: Number, default: 0 },
     children: { type: Array as PropType<VNode[]>, default: [] },
-    slideHeight: { type: [String, Number], default: undefined },
-    slideWidth: { type: [String, Number], default: undefined }
+    slideGroupHeight: { type: [String, Number], default: undefined },
+    slideGroupWidth: { type: [String, Number], default: undefined }
   }
 } satisfies VuePropDef<keyof TrackProps>
 
