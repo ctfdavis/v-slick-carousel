@@ -412,16 +412,20 @@ export function getLazyEndIndex(spec: LazyInfoSpec) {
   return spec.currentSlideGroupIndex + getLazySlidesOnRight(spec)
 }
 
-export function getOnDemandLazySlides(spec: LazyInfoSpec) {
-  let onDemandSlides = []
+export function getOnDemandLazySlideGroups(spec: LazyInfoSpec) {
+  let onDemandSlideGroups = []
   const startIndex = getLazyStartIndex(spec)
   const endIndex = getLazyEndIndex(spec)
-  for (let slideIndex = startIndex; slideIndex < endIndex; slideIndex++) {
-    if (spec.lazyLoadedList?.indexOf(slideIndex) < 0) {
-      onDemandSlides.push(slideIndex)
+  for (
+    let slideGroupIndex = startIndex;
+    slideGroupIndex < endIndex;
+    slideGroupIndex++
+  ) {
+    if (spec.lazyLoadedList?.indexOf(slideGroupIndex) < 0) {
+      onDemandSlideGroups.push(slideGroupIndex)
     }
   }
-  return onDemandSlides
+  return onDemandSlideGroups
 }
 
 export function getTrackCSS(spec: TrackInfoSpec, left: number) {
@@ -683,7 +687,7 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
     }
     lazyLoad &&
       lazyLoadedList.concat(
-        getOnDemandLazySlides({
+        getOnDemandLazySlideGroups({
           ...spec,
           currentSlideGroupIndex: animationSlideGroupIndex
         })
@@ -874,8 +878,8 @@ export function getSliderState(spec: SliderStateInfoSpec) {
     currentSlideGroupIndex = slideGroupCount - 1 - spec.initialGroupIndex
   }
   let lazyLoadedList = spec.lazyLoadedList || []
-  let slidesToLoad = getOnDemandLazySlides(spec as LazyInfoSpec)
-  lazyLoadedList.concat(slidesToLoad)
+  let slideGroupsToLoad = getOnDemandLazySlideGroups(spec as LazyInfoSpec)
+  lazyLoadedList.concat(slideGroupsToLoad)
 
   let sliderState: MarkRequiredWithPartialBase<
     SliderState,

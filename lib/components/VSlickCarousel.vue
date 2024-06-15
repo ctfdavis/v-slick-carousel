@@ -4,7 +4,16 @@
     class="v-slick-slider"
     dir="ltr"
   >
-    <VSlickArrow v-if="settings.showDefaultArrows">
+    <VSlickArrow
+      v-if="settings.showDefaultArrows"
+      type="prev"
+      @prev="handlePrevVSlickArrow"
+      :center-mode="settings.centerMode"
+      :infinite="settings.infinite"
+      :groups-to-show="settings.groupsToShow"
+      :slide-group-count="slideGroupCount"
+      :current-slide-group-index="state.currentSlideGroupIndex"
+    >
       <template v-slot:prevArrow="arrowSlotProps">
         <slot name="prevArrow" v-bind="arrowSlotProps"></slot>
       </template>
@@ -52,12 +61,31 @@
         @child-click="handleChildClickVSlickTrack"
       ></VSlickTrack>
     </div>
-    <VSlickArrow v-if="settings.showDefaultArrows">
+    <VSlickArrow
+      v-if="settings.showDefaultArrows"
+      type="next"
+      @prev="handleNextVSlickArrow"
+      :center-mode="settings.centerMode"
+      :infinite="settings.infinite"
+      :groups-to-show="settings.groupsToShow"
+      :slide-group-count="slideGroupCount"
+      :current-slide-group-index="state.currentSlideGroupIndex"
+    >
       <template v-slot:nextArrow="arrowSlotProps">
         <slot name="nextArrow" v-bind="arrowSlotProps"></slot>
       </template>
     </VSlickArrow>
-    <VSlickDots v-if="settings.showDefaultDots">
+    <VSlickDots
+      v-if="settings.showDefaultDots"
+      @dot-click="handleClickDot"
+      @dots-over="handleOverDots"
+      @dots-leave="handleLeaveDots"
+      :current-slide-group-index="state.currentSlideGroupIndex"
+      :infinite="settings.infinite"
+      :slide-group-count="slideGroupCount"
+      :groups-to-scroll="settings.groupsToScroll"
+      :groups-to-show="settings.groupsToShow"
+    >
       <template v-slot:customPaging="paging">
         <slot name="customPaging" v-bind="paging"></slot>
       </template>
@@ -73,12 +101,13 @@ import {
   VNode,
   useSlots,
   getCurrentInstance,
-  h,
   onMounted,
-  onBeforeUnmount
+  onBeforeUnmount,
+  onUpdated
 } from 'vue'
 import {
   ChildClickPayload,
+  DotClickPayload,
   GoNextSpec,
   LazyLoadType,
   PlayingType,
@@ -105,6 +134,9 @@ import {
   canGoNext,
   extractSlides,
   getNavigationOnKeyType,
+  getOnDemandLazySlideGroups,
+  getPostClones,
+  getPreClones,
   getSlideGroupCount,
   getSliderState,
   getStatesOnSlide,
@@ -121,7 +153,6 @@ import {
   SlideGroupChangeSpec,
   OnSlideSpec
 } from '@lib/types'
-import { on } from 'events'
 
 const props = defineProps(defaultProps) as Props
 defineOptions({ inheritAttrs: false })
@@ -393,6 +424,38 @@ const handleMouseLeaveVSlickTrack = () => {
   onTrackLeave()
 }
 
+const handleOverDots = () => {
+  if (settings.value.pauseOnDotsHover && settings.value.autoplay)
+    pause(PlayingType.hovered)
+}
+const handleLeaveDots = () => {
+  if (
+    settings.value.pauseOnDotsHover &&
+    settings.value.autoplay &&
+    state.value.autoplaying === PlayingType.hovered
+  )
+    autoPlay(PlayingType.leave)
+}
+
+const handleClickDot = ({ index }: DotClickPayload) => {
+  changeSlideGroup({
+    message: 'dots',
+    index
+  })
+}
+
+const handleNextVSlickArrow = () => {
+  changeSlideGroup({
+    message: SlideNavigation.next
+  })
+}
+
+const handlePrevVSlickArrow = () => {
+  changeSlideGroup({
+    message: SlideNavigation.previous
+  })
+}
+
 const changeSlideGroup = (
   options: SlideGroupChangeOptions,
   dontAnimate = false
@@ -502,6 +565,54 @@ const onWindowResize = (shouldSetTrackStyle?: boolean) => {
 
 const onWindowResizeEventListener = () => onWindowResize()
 
+const onSlideGroupFocus = () => {
+  if (settings.value.autoplay) pause(PlayingType.focused)
+}
+const onSlideGroupBlur = () => {
+  if (
+    settings.value.autoplay &&
+    state.value.autoplaying === PlayingType.focused
+  )
+    autoPlay(PlayingType.blur)
+}
+
+const progressiveLazyLoad = () => {
+  const slideGroupsToLoad = []
+  const spec = { ...props, ...state.value }
+  for (
+    let index = state.value.currentSlideGroupIndex;
+    index <
+    slideGroupCount.value +
+      getPostClones({ ...spec, slideGroupCount: slideGroupCount.value });
+    index++
+  ) {
+    if (state.value.lazyLoadedList.indexOf(index) < 0) {
+      slideGroupsToLoad.push(index)
+      break
+    }
+  }
+  for (
+    let index = state.value.currentSlideGroupIndex - 1;
+    index >= -getPreClones({ ...spec, slideGroupCount: slideGroupCount.value });
+    index--
+  ) {
+    if (state.value.lazyLoadedList.indexOf(index) < 0) {
+      slideGroupsToLoad.push(index)
+      break
+    }
+  }
+  if (slideGroupsToLoad.length > 0) {
+    state.value.lazyLoadedList =
+      state.value.lazyLoadedList.concat(slideGroupsToLoad)
+    emit('lazyLoad', slideGroupsToLoad)
+  } else {
+    if (lazyLoadTimer) {
+      clearInterval(lazyLoadTimer)
+      lazyLoadTimer = null
+    }
+  }
+}
+
 const checkImagesLoad = () => {
   const images = vSlickListRef.value?.querySelectorAll<HTMLImageElement>(
     '.v-slick-slide-group img'
@@ -539,6 +650,71 @@ const checkImagesLoad = () => {
       }
     }
   })
+}
+
+const ssrInit = () => {
+  emit('init')
+  const spec = {
+    ...settings.value,
+    ...state.value,
+    slideGroupCount: slideGroupCount.value
+  }
+  const preClones = getPreClones(spec)
+  const postClones = getPostClones(spec)
+  if (settings.value.variableWidth) {
+    let trackWidth = [],
+      trackLeft = []
+    const childrenWidths: number[] = []
+    slideGroups.value.forEach((slideGroup) => {
+      let maxWidth = 0
+      slideGroup.forEach((child) => {
+        const { width } = child.props || {}
+        if (width) maxWidth = Math.max(maxWidth, width)
+      })
+      childrenWidths.push(maxWidth)
+      trackWidth.push(maxWidth)
+    })
+    for (let i = 0; i < preClones; i++) {
+      trackLeft.push(childrenWidths[childrenWidths.length - 1 - i])
+      trackWidth.push(childrenWidths[childrenWidths.length - 1 - i])
+    }
+    for (let i = 0; i < postClones; i++) {
+      trackWidth.push(childrenWidths[i])
+    }
+    for (let i = 0; i < state.value.currentSlideGroupIndex; i++) {
+      trackLeft.push(childrenWidths[i])
+    }
+    trackWidth = trackWidth.filter((o) => o)
+    trackLeft = trackLeft.filter((o) => o)
+    const trackStyle = {
+      width: `calc(${trackWidth.join(' + ')})`,
+      left: `calc(${trackLeft.map((o) => `-${o}`).join(' + ')})`
+    }
+    if (settings.value.centerMode) {
+      const currentWidth = childrenWidths[state.value.currentSlideGroupIndex]
+      trackStyle.left = `calc(${trackLeft
+        .map((o) => `-${o}`)
+        .join(' + ')} + (100% - ${currentWidth}) / 2 )`
+    }
+    state.value.trackStyle = trackStyle
+  } else {
+    const _slideGroupCount = preClones + postClones + slideGroupCount.value
+    const trackWidth = (100 / props.groupsToShow) * _slideGroupCount
+    const slideGroupWidth = 100 / _slideGroupCount
+    let trackLeft =
+      (-slideGroupWidth *
+        (preClones + state.value.currentSlideGroupIndex) *
+        trackWidth) /
+      100
+    if (settings.value.centerMode) {
+      trackLeft += (100 - (slideGroupWidth * trackWidth) / 100) / 2
+    }
+    state.value.slideGroupWidth = slideGroupWidth + '%'
+    state.value.trackStyle = {
+      width: trackWidth + '%',
+      left: trackLeft + '%'
+    }
+  }
 }
 
 const breakpoint = ref<number>()
@@ -727,16 +903,46 @@ onMounted(() => {
     .forEach((slideGroup) => {
       slideGroup.onfocus = settings.value.pauseOnFocus
         ? onSlideGroupFocus
-        : undefined
-      slideGroup.onblur = settings.value.pauseOnFocus
-        ? onSlideGroupBlur
-        : undefined
+        : null
+      slideGroup.onblur = settings.value.pauseOnFocus ? onSlideGroupBlur : null
     })
+})
+
+onUpdated(() => {
+  checkImagesLoad()
+  emit('reInit')
+  if (settings.value.lazyLoad) {
+    const slideGroupsToLoad = getOnDemandLazySlideGroups({
+      ...settings.value,
+      ...state.value
+    })
+    if (slideGroupsToLoad.length) {
+      state.value.lazyLoadedList =
+        state.value.lazyLoadedList.concat(slideGroupsToLoad)
+      emit('lazyLoad', slideGroupsToLoad)
+    }
+  }
+  adaptHeight()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onWindowResizeEventListener)
+  ro?.unobserve(vSlickListRef.value as Element)
+  if (animationEndCallback) {
+    clearTimeout(animationEndCallback)
+  }
+  if (lazyLoadTimer) {
+    clearInterval(lazyLoadTimer)
+  }
+  if (callbackTimers.length) {
+    callbackTimers.forEach((timer) => clearTimeout(timer))
+    callbackTimers = []
+  }
+  if (state.value.autoplayTimer) {
+    clearInterval(state.value.autoplayTimer)
+  }
 })
 
 makeBreakpoints()
+ssrInit()
 </script>
