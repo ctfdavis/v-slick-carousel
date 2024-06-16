@@ -120,8 +120,8 @@ export type TrackProps = Pick<
     | 'slideGroupHeight'
     | 'slideGroupWidth'
   > & {
-    slideCount: number
-    children: VNode[]
+    slideGroupCount: number
+    rawSlideGroups: VNode[][]
   }
 
 export type ArrowProps = Pick<
@@ -166,7 +166,7 @@ export type CloneSlideOptions = {
   class: string[]
   attrs: Record<string, string | number>
   style: Record<string, string | number>
-  index: number
+  groupIndex: number
 }
 
 export type SwipeEvent = TouchEvent | MouseEvent
@@ -360,4 +360,13 @@ export type SliderStateInfoSpec = MarkRequiredAndPartialKeysWithPartialBase<
   'listEl' | 'trackEl'
 > & {
   slides: VNode[]
+}
+
+export type SlideGroup = {
+  slides: VNode[]
+  key: string
+  class?: string[]
+  style?: Record<string, string | number>
+  attrs?: Record<string, string | number>
+  onClick?: () => void
 }

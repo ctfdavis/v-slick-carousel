@@ -716,7 +716,7 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
   return { slidingState, afterSlidingState }
 }
 
-export function getPreClones(spec: CloneInfoSpec) {
+export function getTotalPreClones(spec: CloneInfoSpec) {
   if (!spec.infinite) {
     return 0
   }
@@ -726,7 +726,7 @@ export function getPreClones(spec: CloneInfoSpec) {
   return spec.groupsToShow + (spec.centerMode ? 1 : 0)
 }
 
-export function getPostClones(spec: CloneInfoSpec) {
+export function getTotalPostClones(spec: CloneInfoSpec) {
   if (!spec.infinite) {
     return 0
   }

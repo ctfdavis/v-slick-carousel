@@ -38,7 +38,7 @@
         ref="vSlickTrackRef"
         :center-mode="settings.centerMode"
         :center-padding="settings.centerPadding"
-        :slide-groups="slideGroups"
+        :raw-slide-groups="rawSlideGroups"
         :css-ease="cssEase"
         :current-slide-group-index="state.currentSlideGroupIndex"
         :fade="settings.fade"
@@ -135,14 +135,14 @@ import {
   extractSlides,
   getNavigationOnKeyType,
   getOnDemandLazySlideGroups,
-  getPostClones,
-  getPreClones,
   getSlideGroupCount,
   getSliderState,
   getStatesOnSlide,
   getSwipeEndState,
   getSwipeMoveState,
   getSwipeStartState,
+  getTotalPostClones,
+  getTotalPreClones,
   getTrackCSS,
   getTrackLeft
 } from '@lib/utils/carousel-utils'
@@ -583,7 +583,7 @@ const progressiveLazyLoad = () => {
     let index = state.value.currentSlideGroupIndex;
     index <
     slideGroupCount.value +
-      getPostClones({ ...spec, slideGroupCount: slideGroupCount.value });
+      getTotalPostClones({ ...spec, slideGroupCount: slideGroupCount.value });
     index++
   ) {
     if (state.value.lazyLoadedList.indexOf(index) < 0) {
@@ -593,7 +593,8 @@ const progressiveLazyLoad = () => {
   }
   for (
     let index = state.value.currentSlideGroupIndex - 1;
-    index >= -getPreClones({ ...spec, slideGroupCount: slideGroupCount.value });
+    index >=
+    -getTotalPreClones({ ...spec, slideGroupCount: slideGroupCount.value });
     index--
   ) {
     if (state.value.lazyLoadedList.indexOf(index) < 0) {
@@ -659,13 +660,13 @@ const ssrInit = () => {
     ...state.value,
     slideGroupCount: slideGroupCount.value
   }
-  const preClones = getPreClones(spec)
-  const postClones = getPostClones(spec)
+  const preClones = getTotalPreClones(spec)
+  const postClones = getTotalPostClones(spec)
   if (settings.value.variableWidth) {
     let trackWidth = [],
       trackLeft = []
     const childrenWidths: number[] = []
-    slideGroups.value.forEach((slideGroup) => {
+    rawSlideGroups.value.forEach((slideGroup) => {
       let maxWidth = 0
       slideGroup.forEach((child) => {
         const { width } = child.props || {}
@@ -788,16 +789,16 @@ const slideGroupCount = computed(() =>
   getSlideGroupCount(slides.value.length, settings.value.slidesPerGroup)
 )
 
-const slideGroups = computed<VNode[][]>(() => {
-  const groupsOfSlides: VNode[][] = []
+const rawSlideGroups = computed<VNode[][]>(() => {
+  const slideGroups: VNode[][] = []
   const slidesPerGroup = settings.value.slidesPerGroup
   const slideGroupsCount = slideGroupCount.value
   for (let i = 0; i < slideGroupsCount; i++) {
     const startIndex = i * slidesPerGroup
     const endIndex = startIndex + slidesPerGroup
-    groupsOfSlides.push(slides.value.slice(startIndex, endIndex))
+    slideGroups.push(slides.value.slice(startIndex, endIndex))
   }
-  return groupsOfSlides
+  return slideGroups
 })
 
 watch(

@@ -121,8 +121,8 @@ export const defaultTrackProps = {
     },
     listHeight: { type: Number, default: undefined },
     trackStyle: { type: Object, default: {} },
-    slideCount: { type: Number, default: 0 },
-    children: { type: Array as PropType<VNode[]>, default: [] },
+    slideGroupCount: { type: Number, default: 0 },
+    rawSlideGroups: { type: Array as PropType<VNode[][]>, default: [] },
     slideGroupHeight: { type: [String, Number], default: undefined },
     slideGroupWidth: { type: [String, Number], default: undefined }
   }
