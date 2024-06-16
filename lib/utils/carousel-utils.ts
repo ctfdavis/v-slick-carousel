@@ -475,7 +475,7 @@ export function getTrackCSS(spec: TrackInfoSpec, left: number) {
 export function getTotalSlideGroups(spec: TrackInfoSpec) {
   return spec.slideGroupCount === 1
     ? 1
-    : getPreClones(spec) + spec.slideGroupCount + getPostClones(spec)
+    : getTotalPreClones(spec) + spec.slideGroupCount + getTotalPostClones(spec)
 }
 
 export function getTrackAnimateCSS(spec: TrackInfoSpec, left: number) {
@@ -527,7 +527,7 @@ export function getTrackLeft(spec: TrackInfoSpec) {
 
   let slidesToOffset = 0
   if (infinite) {
-    slidesToOffset = -getPreClones(spec) // bring active slide to the beginning of visible area
+    slidesToOffset = -getTotalPreClones(spec) // bring active slide to the beginning of visible area
     // if next scroll doesn't have enough children, just reach till the end of original slides instead of shifting groupsToScroll children
     if (
       slideGroupCount % groupsToScroll !== 0 &&
@@ -567,13 +567,13 @@ export function getTrackLeft(spec: TrackInfoSpec) {
 
   if (variableWidth === true) {
     let targetSlideIndex
-    targetSlideIndex = currentSlideGroupIndex + getPreClones(spec)
+    targetSlideIndex = currentSlideGroupIndex + getTotalPreClones(spec)
     targetSlide =
       trackEl && (trackEl.childNodes[targetSlideIndex] as HTMLElement)
     targetLeft = targetSlide ? targetSlide.offsetLeft * -1 : 0
     if (centerMode === true) {
       targetSlideIndex = infinite
-        ? currentSlideGroupIndex + getPreClones(spec)
+        ? currentSlideGroupIndex + getTotalPreClones(spec)
         : currentSlideGroupIndex
       targetSlide =
         trackEl && (trackEl.children[targetSlideIndex] as HTMLElement)

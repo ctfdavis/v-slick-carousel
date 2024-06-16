@@ -6,7 +6,7 @@
   >
     <VSlickArrow
       v-if="settings.showDefaultArrows"
-      type="prev"
+      :type="SlideNavigation.previous"
       @prev="handlePrevVSlickArrow"
       :center-mode="settings.centerMode"
       :infinite="settings.infinite"
@@ -63,7 +63,7 @@
     </div>
     <VSlickArrow
       v-if="settings.showDefaultArrows"
-      type="next"
+      :type="SlideNavigation.next"
       @prev="handleNextVSlickArrow"
       :center-mode="settings.centerMode"
       :infinite="settings.infinite"
@@ -116,7 +116,12 @@ import {
   SwipeEndSpec,
   SwipeMoveSpec,
   TrackInfoSpec,
-  VSlickCarouselInstance
+  VSlickCarouselInstance,
+  SwipeEvent,
+  SlideNavigation,
+  SlideGroupChangeOptions,
+  SlideGroupChangeSpec,
+  OnSlideSpec
 } from '@lib/types'
 import {
   canUseDOM,
@@ -146,13 +151,6 @@ import {
   getTrackCSS,
   getTrackLeft
 } from '@lib/utils/carousel-utils'
-import {
-  SwipeEvent,
-  SlideNavigation,
-  SlideGroupChangeOptions,
-  SlideGroupChangeSpec,
-  OnSlideSpec
-} from '@lib/types'
 
 const props = defineProps(defaultProps) as Props
 defineOptions({ inheritAttrs: false })

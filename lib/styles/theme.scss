@@ -7,8 +7,7 @@
 }
 
 /* Arrows */
-.slick-prev,
-.slick-next {
+.v-slick-arrow {
   font-size: 0;
   line-height: 0;
   position: absolute;
@@ -51,48 +50,43 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-}
 
-.slick-prev {
-  left: -25px;
-
-  [dir='rtl'] & {
-    right: -25px;
-    left: auto;
-  }
-
-  &:before {
-    content: '←';
-  }
-
-  [dir='rtl'] &:before {
-    content: '→';
-  }
-}
-
-.slick-next {
-  right: -25px;
-
-  [dir='rtl'] & {
-    right: auto;
+  &.prev {
     left: -25px;
+
+    [dir='rtl'] & {
+      right: -25px;
+      left: auto;
+    }
+
+    &:before {
+      content: '←';
+    }
+
+    [dir='rtl'] &:before {
+      content: '→';
+    }
   }
 
-  &:before {
-    content: '→';
-  }
+  &.next {
+    right: -25px;
 
-  [dir='rtl'] &:before {
-    content: '←';
+    [dir='rtl'] & {
+      right: auto;
+      left: -25px;
+    }
+
+    &:before {
+      content: '→';
+    }
+
+    [dir='rtl'] &:before {
+      content: '←';
+    }
   }
 }
 
-/* Dots */
-.slick-dotted.slick-slider {
-  margin-bottom: 30px;
-}
-
-.slick-dots {
+.v-slick-dots {
   position: absolute;
   bottom: -25px;
   display: block;
@@ -152,7 +146,7 @@
       }
     }
 
-    &.slick-active button:before {
+    &.active button:before {
       opacity: 0.75;
       color: black;
     }

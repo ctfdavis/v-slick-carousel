@@ -4,6 +4,7 @@ import {
   DotsProps,
   Props,
   Responsive,
+  SlideNavigation,
   SliderState,
   TrackProps
 } from '../types'
@@ -29,7 +30,7 @@ export const defaultProps = {
   centerPadding: { type: String, default: '50px' },
   cssEase: { type: String, default: 'ease' },
   dots: { type: Boolean, default: false },
-  dotsClass: { type: String, default: 'slick-dots' },
+  dotsClass: { type: String, default: 'v-slick-dots' },
   draggable: { type: Boolean, default: true },
   edgeFriction: { type: Number, default: 0.35 },
   fade: { type: Boolean, default: false },
@@ -37,9 +38,11 @@ export const defaultProps = {
   infinite: { type: Boolean, default: true },
   initialGroupIndex: { type: Number, default: 0 },
   lazyLoad: { type: String, default: null },
+  nextArrowLabel: { type: String, default: 'Next' },
   pauseOnDotsHover: { type: Boolean, default: false },
   pauseOnFocus: { type: Boolean, default: false },
   pauseOnHover: { type: Boolean, default: true },
+  prevArrowLabel: { type: String, default: 'Previous' },
   responsive: { type: Array as PropType<Responsive[]>, default: [] },
   rtl: { type: Boolean, default: false },
   slidesPerGroup: { type: Number, default: 1 },
@@ -129,11 +132,17 @@ export const defaultTrackProps = {
 } satisfies VuePropDef<keyof TrackProps>
 
 export const defaultArrowProps = {
-  ...pick(cloneDeep(defaultProps), ['centerMode', 'infinite', 'groupsToShow']),
+  ...pick(cloneDeep(defaultProps), [
+    'centerMode',
+    'infinite',
+    'groupsToShow',
+    'prevArrowLabel',
+    'nextArrowLabel'
+  ]),
   ...{
     currentSlideGroupIndex: { type: Number, default: 0 },
-    slideCount: { type: Number, default: 0 },
-    type: { type: String as PropType<'prev' | 'next'>, default: 'prev' }
+    slideGroupCount: { type: Number, default: 0 },
+    type: { type: String as PropType<SlideNavigation>, default: 'prev' }
   }
 } satisfies VuePropDef<keyof ArrowProps>
 

@@ -50,12 +50,11 @@
 </template>
 
 <script setup lang="ts">
-import { VNode, ref, computed, cloneVNode } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { defaultTrackProps } from './props'
 import {
   ChildClickPayload,
   CloneInfoSpec,
-  CloneSlideOptions,
   LazyInfoSpec,
   SlideGroup,
   TrackProps
@@ -252,5 +251,13 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
     }
     return slideGroup
   })
+})
+
+onMounted(() => {
+  offsetWidth.value = trackRef.value?.offsetWidth || 0
+})
+
+defineExpose({
+  offsetWidth
 })
 </script>

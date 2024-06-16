@@ -27,9 +27,11 @@ export type Props = {
   infinite: boolean
   initialGroupIndex: number
   lazyLoad?: LazyLoadType | keyof typeof LazyLoadType
+  nextArrowLabel?: string
   pauseOnDotsHover: boolean
   pauseOnFocus: boolean
   pauseOnHover: boolean
+  prevArrowLabel?: string
   responsive: Responsive[]
   rtl: boolean
   slidesPerGroup: number
@@ -126,11 +128,15 @@ export type TrackProps = Pick<
 
 export type ArrowProps = Pick<
   Props,
-  'centerMode' | 'infinite' | 'groupsToShow'
+  | 'centerMode'
+  | 'infinite'
+  | 'groupsToShow'
+  | 'prevArrowLabel'
+  | 'nextArrowLabel'
 > &
   Pick<SliderState, 'currentSlideGroupIndex'> & {
-    slideCount: number
-    type: 'next' | 'prev'
+    slideGroupCount: number
+    type: SlideNavigation
   }
 
 export type DotsProps = Pick<
@@ -142,8 +148,8 @@ export type DotsProps = Pick<
   }
 
 export type ArrowSlotProps = {
-  currentSlide: number
-  slideCount: number
+  currentSlideGroupIndex: number
+  slideGroupCount: number
   disabled: boolean
   onClick: () => void
 }
