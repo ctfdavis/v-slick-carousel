@@ -1,1 +1,3 @@
-export * from './VSlickCarousel.vue'
+import VSlickCarousel from './VSlickCarousel.vue'
+
+export { VSlickCarousel }

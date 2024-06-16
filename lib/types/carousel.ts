@@ -37,8 +37,6 @@ export type Props = {
   slidesPerGroup: number
   groupsToScroll: number
   groupsToShow: number
-  showDefaultArrows: boolean
-  showDefaultDots: boolean
   speed: number
   swipe: boolean
   swipeToSlide: boolean
@@ -144,7 +142,7 @@ export type DotsProps = Pick<
   'dotsClass' | 'infinite' | 'groupsToScroll' | 'groupsToShow'
 > &
   Pick<SliderState, 'currentSlideGroupIndex'> & {
-    slideCount: number
+    slideGroupCount: number
   }
 
 export type ArrowSlotProps = {
@@ -265,7 +263,7 @@ export type OnSlideSpec = Combine<
 
 export type VSlickCarouselInstance = InstanceType<typeof VSlickCarousel>
 
-export type SlideCountSpec = MarkRequiredWithPartialBase<
+export type SlideGroupCountSpec = MarkRequiredWithPartialBase<
   SliderSpec,
   | 'swipeToSlide'
   | 'listEl'

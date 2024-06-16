@@ -35,11 +35,12 @@ defineEmits<{
 const props = defineProps(defaultDotsProps)
 const dotCount = computed(() => {
   if (props.infinite) {
-    return Math.ceil(props.slideCount / props.groupsToScroll)
+    return Math.ceil(props.slideGroupCount / props.groupsToScroll)
   }
   return (
-    Math.ceil((props.slideCount - props.groupsToShow) / props.groupsToScroll) +
-    1
+    Math.ceil(
+      (props.slideGroupCount - props.groupsToShow) / props.groupsToScroll
+    ) + 1
   )
 })
 const isActive = (i: number) => {

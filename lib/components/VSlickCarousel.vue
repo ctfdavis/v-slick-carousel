@@ -1,27 +1,23 @@
 <template>
-  <div
-    :class="{ 'v-slick-vertical': settings.vertical }"
-    class="v-slick-slider"
-    dir="ltr"
-  >
+  <div class="v-slick-slider" dir="ltr">
     <VSlickArrow
-      v-if="settings.showDefaultArrows"
+      v-if="settings.arrows"
       :type="SlideNavigation.previous"
-      @prev="handlePrevVSlickArrow"
       :center-mode="settings.centerMode"
       :infinite="settings.infinite"
       :groups-to-show="settings.groupsToShow"
       :slide-group-count="slideGroupCount"
       :current-slide-group-index="state.currentSlideGroupIndex"
+      @previous="handlePrevVSlickArrow"
     >
-      <template v-slot:prevArrow="arrowSlotProps">
-        <slot name="prevArrow" v-bind="arrowSlotProps"></slot>
+      <template #prevArrow="arrowSlotProps">
+        <slot name="prevArrow" v-bind="arrowSlotProps" />
       </template>
     </VSlickArrow>
     <div
-      :class="{ dragging: state.dragging }"
-      class="v-slick-list"
       ref="vSlickListRef"
+      class="v-slick-list"
+      :class="{ dragging: state.dragging }"
       :style="vSlickListStyle"
       @click="handleClickVSlickList"
       @mousedown="handleMouseDownOrTouchStartVSlickList"
@@ -44,6 +40,7 @@
         :fade="settings.fade"
         :infinite="settings.infinite"
         :lazy-load="settings.lazyLoad"
+        :lazy-loaded-list="state.lazyLoadedList"
         :list-height="state.listHeight"
         :rtl="settings.rtl"
         :slide-group-count="slideGroupCount"
@@ -59,35 +56,35 @@
         @mouseleave="handleMouseLeaveVSlickTrack"
         @mouseover="handleMouseEnterOrOverVSlickTrack"
         @child-click="handleChildClickVSlickTrack"
-      ></VSlickTrack>
+      />
     </div>
     <VSlickArrow
-      v-if="settings.showDefaultArrows"
+      v-if="settings.arrows"
       :type="SlideNavigation.next"
-      @prev="handleNextVSlickArrow"
       :center-mode="settings.centerMode"
       :infinite="settings.infinite"
       :groups-to-show="settings.groupsToShow"
       :slide-group-count="slideGroupCount"
       :current-slide-group-index="state.currentSlideGroupIndex"
+      @next="handleNextVSlickArrow"
     >
-      <template v-slot:nextArrow="arrowSlotProps">
-        <slot name="nextArrow" v-bind="arrowSlotProps"></slot>
+      <template #nextArrow="arrowSlotProps">
+        <slot name="nextArrow" v-bind="arrowSlotProps" />
       </template>
     </VSlickArrow>
     <VSlickDots
-      v-if="settings.showDefaultDots"
-      @dot-click="handleClickDot"
-      @dots-over="handleOverDots"
-      @dots-leave="handleLeaveDots"
+      v-if="settings.dots"
       :current-slide-group-index="state.currentSlideGroupIndex"
       :infinite="settings.infinite"
       :slide-group-count="slideGroupCount"
       :groups-to-scroll="settings.groupsToScroll"
       :groups-to-show="settings.groupsToShow"
+      @dot-click="handleClickDot"
+      @dots-over="handleOverDots"
+      @dots-leave="handleLeaveDots"
     >
-      <template v-slot:customPaging="paging">
-        <slot name="customPaging" v-bind="paging"></slot>
+      <template #customPaging="paging">
+        <slot name="customPaging" v-bind="paging" />
       </template>
     </VSlickDots>
   </div>
@@ -133,6 +130,7 @@ import enquireJs from 'enquire.js'
 import json2mq from 'json2mq'
 import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
+import VSlickDots from './VSlickDots.vue'
 import cloneDeep from 'lodash.clonedeep'
 import debounce from 'lodash.debounce'
 import {
@@ -176,9 +174,9 @@ let animationEndCallback: NodeJS.Timeout | null = null
 let lazyLoadTimer: NodeJS.Timeout | null = null
 let callbackTimers: NodeJS.Timeout[] = []
 
-const vSlickListStyle = {
+const vSlickListStyle = ref({
   ...(getCurrentInstance()?.vnode?.props?.style || {})
-}
+})
 
 let isVSlickListClickable = true
 let debouncedResize: ReturnType<typeof debounce> | null = null
@@ -247,7 +245,7 @@ const swipeEnd = (e: SwipeEvent) => {
     swipeEndState
   triggerSlideGroupHandler = newTriggerSlideGroupHandler
   Object.assign(state.value, rest)
-  if (triggerSlideGroupHandler) {
+  if (triggerSlideGroupHandler !== undefined) {
     slideGroupHandler(triggerSlideGroupHandler)
   }
 }
@@ -399,6 +397,8 @@ const handleMouseDownOrTouchStartVSlickList = (e: SwipeEvent) => {
 
 const handleMouseMoveOrTouchMoveVSlickList = (e: SwipeEvent) => {
   if (!state.value.dragging || !settings.value.touchMove) return
+  const target = e.target as HTMLElement | null
+  if (target?.classList.contains('no-swipe')) return
   swipeMove(e)
 }
 
@@ -467,7 +467,8 @@ const changeSlideGroup = (
     spec as SlideGroupChangeSpec,
     options
   )
-  if (!targetSlideGroupIndex) return
+  if (targetSlideGroupIndex === undefined || targetSlideGroupIndex === null)
+    return
   slideGroupHandler(
     targetSlideGroupIndex,
     dontAnimate === true ? true : undefined
@@ -481,6 +482,7 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
     index,
     ...settings.value,
     ...state.value,
+    slideGroupCount: slideGroupCount.value,
     trackEl: vSlickTrackRef.value?.$el,
     useCSSTransitions: settings.value.useCSSTransitions && !dontAnimate
   } as OnSlideSpec)
@@ -508,7 +510,7 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
     callbackTimers.push(
       setTimeout(() => {
         state.value.animating = animating || false
-      }, 10)
+      })
     )
     emit('afterChange', slidingState.currentSlideGroupIndex)
     animationEndCallback = null
@@ -575,13 +577,20 @@ const onSlideGroupBlur = () => {
 }
 
 const progressiveLazyLoad = () => {
+  console.debug('progressiveLazyLoad')
   const slideGroupsToLoad = []
-  const spec = { ...props, ...state.value }
+  const spec = { ...settings.value, ...state.value }
+  const totalPostClones = getTotalPostClones({
+    ...spec,
+    slideGroupCount: slideGroupCount.value
+  })
+  const totalPreClones = getTotalPreClones({
+    ...spec,
+    slideGroupCount: slideGroupCount.value
+  })
   for (
     let index = state.value.currentSlideGroupIndex;
-    index <
-    slideGroupCount.value +
-      getTotalPostClones({ ...spec, slideGroupCount: slideGroupCount.value });
+    index < slideGroupCount.value + totalPostClones;
     index++
   ) {
     if (state.value.lazyLoadedList.indexOf(index) < 0) {
@@ -591,8 +600,7 @@ const progressiveLazyLoad = () => {
   }
   for (
     let index = state.value.currentSlideGroupIndex - 1;
-    index >=
-    -getTotalPreClones({ ...spec, slideGroupCount: slideGroupCount.value });
+    index >= -totalPreClones;
     index--
   ) {
     if (state.value.lazyLoadedList.indexOf(index) < 0) {
@@ -600,10 +608,12 @@ const progressiveLazyLoad = () => {
       break
     }
   }
+  console.debug('slideGroupsToLoad', slideGroupsToLoad)
   if (slideGroupsToLoad.length > 0) {
     state.value.lazyLoadedList =
       state.value.lazyLoadedList.concat(slideGroupsToLoad)
     emit('lazyLoad', slideGroupsToLoad)
+    console.debug('lazyLoadedList', state.value.lazyLoadedList)
   } else {
     if (lazyLoadTimer) {
       clearInterval(lazyLoadTimer)
@@ -652,7 +662,6 @@ const checkImagesLoad = () => {
 }
 
 const ssrInit = () => {
-  emit('init')
   const spec = {
     ...settings.value,
     ...state.value,
@@ -667,7 +676,7 @@ const ssrInit = () => {
     rawSlideGroups.value.forEach((slideGroup) => {
       let maxWidth = 0
       slideGroup.forEach((child) => {
-        const { width } = child.props || {}
+        const { width } = child.props?.style || {}
         if (width) maxWidth = Math.max(maxWidth, width)
       })
       childrenWidths.push(maxWidth)
@@ -858,6 +867,41 @@ watch(
   }
 )
 
+watch(
+  () => [
+    state.value.listHeight,
+    settings.value.centerMode,
+    settings.value.centerPadding,
+    settings.value.vertical
+  ],
+  ([listHeight, centerMode, centerPadding, vertical]) => {
+    let verticalHeightStyle = {}
+    if (vertical) {
+      verticalHeightStyle = {
+        height: `${listHeight}px`
+      }
+    }
+
+    var centerPaddingStyle = {}
+    if (!vertical) {
+      if (centerMode) {
+        centerPaddingStyle = {
+          padding: '0px ' + centerPadding
+        }
+      }
+    } else if (centerMode) {
+      centerPaddingStyle = {
+        padding: centerPadding + ' 0px'
+      }
+    }
+    vSlickListStyle.value = {
+      ...vSlickListStyle.value,
+      ...filterUndefined(verticalHeightStyle),
+      ...centerPaddingStyle
+    }
+  }
+)
+
 defineExpose({
   goTo: slideGroupHandler,
   next: () => {
@@ -944,4 +988,28 @@ onBeforeUnmount(() => {
 
 makeBreakpoints()
 ssrInit()
+emit('init')
 </script>
+
+<style scoped lang="scss">
+.v-slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+}
+.v-slick-list {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  transform: translate3d(0, 0, 0);
+  &:focus {
+    outline: none;
+  }
+  &.dragging {
+    cursor: pointer;
+    cursor: hand;
+  }
+}
+</style>

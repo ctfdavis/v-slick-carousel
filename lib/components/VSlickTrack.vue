@@ -1,15 +1,17 @@
 <template>
   <div
     class="v-slick-track"
-    :class="{ 'v-slick-center': centerMode, 'v-slick-vertical': vertical }"
+    :class="{ center: centerMode, vertical: vertical }"
     :style="trackStyle"
-    ref="trackRef"
   >
     <div
       v-for="(slideGroup, i) in props.rtl
-        ? postCloneSlideGroups
+        ? postCloneSlideGroups.reverse()
         : preCloneSlideGroups"
       :key="slideGroup.key"
+      v-bind="slideGroup.attrs"
+      :class="slideGroup.class"
+      :style="slideGroup.style"
       class="v-slick-slide-group clone"
     >
       <component
@@ -19,12 +21,14 @@
       />
     </div>
     <div
-      v-for="(slideGroup, i) in originalSlideGroups"
+      v-for="(slideGroup, i) in props.rtl
+        ? originalSlideGroups.reverse()
+        : originalSlideGroups"
       :key="slideGroup.key"
       class="v-slick-slide-group"
-      v-bind="slideGroup.attrs"
       :class="slideGroup.class"
       :style="slideGroup.style"
+      v-bind="slideGroup.attrs"
       @click="slideGroup.onClick"
     >
       <component
@@ -35,10 +39,13 @@
     </div>
     <div
       v-for="(slideGroup, i) in props.rtl
-        ? preCloneSlideGroups
+        ? preCloneSlideGroups.reverse()
         : postCloneSlideGroups"
       :key="slideGroup.key"
+      :class="slideGroup.class"
+      :style="slideGroup.style"
       class="v-slick-slide-group clone"
+      v-bind="slideGroup.attrs"
     >
       <component
         v-for="(slide, j) of slideGroup.slides"
@@ -50,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { defaultTrackProps } from './props'
 import {
   ChildClickPayload,
@@ -73,11 +80,9 @@ const emit = defineEmits<{
 const getSlideGroupClasses = (index: number) => {
   let isActive = false,
     isCenter = false,
-    isCloned = false,
     isCurrent = false,
     centerOffset: number
   if (props.rtl) index = props.slideGroupCount - 1 - index
-  isCloned = index < 0 || index >= props.slideGroupCount
   if (props.centerMode) {
     centerOffset = Math.floor(props.groupsToShow / 2)
     isCenter =
@@ -97,7 +102,6 @@ const getSlideGroupClasses = (index: number) => {
   return Object.entries({
     active: isActive,
     center: isCenter,
-    cloned: isCloned,
     current: isCurrent
   })
     .filter(([, value]) => value)
@@ -153,9 +157,6 @@ const getSlideGroupStyle = (index: number) => {
 
   return style
 }
-
-const trackRef = ref<HTMLElement>()
-const offsetWidth = ref(0)
 
 const originalSlideGroups = computed<SlideGroup[]>(() => {
   return props.rawSlideGroups.map((rawSlideGroup, index) => {
@@ -252,12 +253,45 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
     return slideGroup
   })
 })
-
-onMounted(() => {
-  offsetWidth.value = trackRef.value?.offsetWidth || 0
-})
-
-defineExpose({
-  offsetWidth
-})
 </script>
+
+<style scoped lang="scss">
+.v-slick-track {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  &.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  &.vertical {
+    flex-direction: column;
+    .v-slick-slide-group {
+      flex-direction: row;
+      height: auto;
+      & > * {
+        flex-grow: 1;
+      }
+    }
+  }
+  &.dragging img {
+    pointer-events: none;
+  }
+  [dir='rtl'] & {
+    flex-direction: row-reverse;
+  }
+}
+.v-slick-slide-group {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 1px;
+  flex-shrink: 0;
+}
+</style>

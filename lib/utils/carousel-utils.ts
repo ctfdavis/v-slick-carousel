@@ -6,9 +6,9 @@ import {
   NavigableSpec,
   OnSlideSpec,
   PlayingType,
-  SlideCountSpec,
   SlideGroupChangeOptions,
   SlideGroupChangeSpec,
+  SlideGroupCountSpec,
   SlideNavigation,
   SliderState,
   SliderStateInfoSpec,
@@ -236,15 +236,16 @@ export const getSwipeStartState = (
   }
 }
 
-export const getSlideCount = (spec: SlideCountSpec) => {
+export const getTraversedSlideGroupCount = (spec: SlideGroupCountSpec) => {
   const centerOffset = spec.centerMode
     ? +spec.slideGroupWidth * Math.floor(spec.groupsToShow / 2)
     : 0
   if (spec.swipeToSlide) {
     let swipedSlideGroup
     const slickList = spec.listEl
-    const slideGroups =
-      slickList.querySelectorAll<HTMLElement>('.slick-slide-group')
+    const slideGroups = slickList.querySelectorAll<HTMLElement>(
+      '.v-slick-slide-group'
+    )
     Array.from(slideGroups).every((grp) => {
       if (!spec.vertical) {
         if (
@@ -363,24 +364,30 @@ export const getSwipeEndState = (
     if (onSwipe) {
       onSwipe(swipeDirection)
     }
-    let slideCount, newSlide
+    let slideGroupCount, newSlideGroupIndex
     switch (swipeDirection) {
       case 'left':
       case 'up':
-        newSlide = currentSlideGroupIndex + getSlideCount(spec)
-        slideCount = swipeToSlide ? checkNavigable(spec, newSlide) : newSlide
+        newSlideGroupIndex =
+          currentSlideGroupIndex + getTraversedSlideGroupCount(spec)
+        slideGroupCount = swipeToSlide
+          ? checkNavigable(spec, newSlideGroupIndex)
+          : newSlideGroupIndex
         state.currentDirection = 0
         break
       case 'right':
       case 'down':
-        newSlide = currentSlideGroupIndex - getSlideCount(spec)
-        slideCount = swipeToSlide ? checkNavigable(spec, newSlide) : newSlide
+        newSlideGroupIndex =
+          currentSlideGroupIndex - getTraversedSlideGroupCount(spec)
+        slideGroupCount = swipeToSlide
+          ? checkNavigable(spec, newSlideGroupIndex)
+          : newSlideGroupIndex
         state.currentDirection = 1
         break
       default:
-        slideCount = currentSlideGroupIndex
+        slideGroupCount = currentSlideGroupIndex
     }
-    state.triggerSlideGroupHandler = slideCount
+    state.triggerSlideGroupHandler = slideGroupCount
   } else {
     // Adjust the track back to its original position.
     let currentLeft = getTrackLeft(spec)
@@ -473,8 +480,8 @@ export function getTrackCSS(spec: TrackInfoSpec, left: number) {
 }
 
 export function getTotalSlideGroups(spec: TrackInfoSpec) {
-  return spec.slideGroupCount === 1
-    ? 1
+  return spec.slideGroupCount <= spec.groupsToShow
+    ? spec.slideGroupCount
     : getTotalPreClones(spec) + spec.slideGroupCount + getTotalPostClones(spec)
 }
 
