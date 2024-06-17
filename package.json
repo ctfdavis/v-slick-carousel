@@ -1,6 +1,6 @@
 {
   "name": "vue-3-slick-carousel",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Vue Slick Carousel for Vue 3",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.mjs",
@@ -10,7 +10,6 @@
   "jsnext:main": "dist/index.es.mjs",
   "source": "lib/index.ts",
   "types": "dist/index.d.ts",
-  "sideEffects": false,
   "files": [
     "dist"
   ],
