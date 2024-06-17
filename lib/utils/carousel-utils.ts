@@ -75,14 +75,30 @@ export const getChangedSlideGroupIndex = (
     infinite
   } = spec
   unevenOffset = slideGroupCount % groupsToScroll !== 0
+  console.debug('getChangedSlideGroupIndex: unevenOffset', unevenOffset)
+  console.debug('getChangedSlideGroupIndex: groupsToScroll', groupsToScroll)
   indexOffset = unevenOffset
     ? 0
     : (slideGroupCount - currentSlideGroupIndex) % groupsToScroll
+  console.debug(
+    'getChangedSlideGroupIndex: (slideGroupCount - currentSlideGroupIndex) % groupsToScroll',
+    (slideGroupCount - currentSlideGroupIndex) % groupsToScroll
+  )
+  console.debug('getChangedSlideGroupIndex: indexOffset', indexOffset)
+  console.debug('getChangedSlideGroupIndex: slideGroupCount', slideGroupCount)
+  console.debug(
+    'getChangedSlideGroupIndex: currentSlideGroupIndex',
+    currentSlideGroupIndex
+  )
 
   if (options.message === SlideNavigation.previous) {
     slideGroupOffset =
       indexOffset === 0 ? groupsToScroll : groupsToShow - indexOffset
     targetSlideGroupIndex = currentSlideGroupIndex - slideGroupOffset
+    console.debug(
+      'SlideNavigation.previous: targetSlideGroupIndex',
+      targetSlideGroupIndex
+    )
     if (lazyLoad && !infinite) {
       previousInt = currentSlideGroupIndex - slideGroupOffset
       targetSlideGroupIndex =
@@ -91,6 +107,11 @@ export const getChangedSlideGroupIndex = (
   } else if (options.message === SlideNavigation.next) {
     slideGroupOffset = indexOffset === 0 ? groupsToScroll : indexOffset
     targetSlideGroupIndex = currentSlideGroupIndex + slideGroupOffset
+    console.debug('SlideNavigation.next: slideGroupOffset', slideGroupOffset)
+    console.debug(
+      'SlideNavigation.next: targetSlideGroupIndex',
+      targetSlideGroupIndex
+    )
     if (lazyLoad && !infinite) {
       targetSlideGroupIndex =
         ((currentSlideGroupIndex + groupsToScroll) % slideGroupCount) +
@@ -165,6 +186,7 @@ const totalVisibleGroupsOnRightOfCurrGroup = ({
     if (rtl && groupsToShow % 2 === 0) right += 1
     return right
   }
+  console.debug('totalVisibleGroupsOnRightOfCurrGroup rtl', rtl)
   if (rtl) {
     return 0
   }
@@ -183,6 +205,7 @@ const totalVisibleGroupsOnLeftOfCurrGroup = ({
     if (!rtl && groupsToShow % 2 === 0) left += 1
     return left
   }
+  console.debug('totalVisibleGroupsOnLeftOfCurrGroup rtl', rtl)
   if (rtl) {
     return groupsToShow - 1
   }
@@ -333,7 +356,8 @@ export const getSwipeEndState = (
     currentSlideGroupIndex,
     swipeToSlide,
     scrolling,
-    onSwipe
+    onSwipe,
+    rtl
   } = spec
   if (!dragging) {
     if (swipe) e.preventDefault()
@@ -343,6 +367,13 @@ export const getSwipeEndState = (
     ? listHeight / touchThreshold
     : listWidth / touchThreshold
   let swipeDirection = getSwipeDirection(touchObject, verticalSwiping)
+  if (rtl) {
+    if (swipeDirection === SwipeDirection.left) {
+      swipeDirection = SwipeDirection.right
+    } else if (swipeDirection === SwipeDirection.right) {
+      swipeDirection = SwipeDirection.left
+    }
+  }
   // reset the state of touch related state variables.
   let state: SwipeEndState = {
     dragging: false,
@@ -446,24 +477,15 @@ export function getTrackCSS(spec: TrackInfoSpec, left: number) {
   }
   let style: Record<string, string | number> = {
     opacity: 1,
-    transition: '',
-    WebkitTransition: ''
+    transition: ''
   }
   if (spec.useCSSTransform) {
-    let WebkitTransform = !spec.vertical
-      ? 'translate3d(' + left + 'px, 0px, 0px)'
-      : 'translate3d(0px, ' + left + 'px, 0px)'
     let transform = !spec.vertical
       ? 'translate3d(' + left + 'px, 0px, 0px)'
       : 'translate3d(0px, ' + left + 'px, 0px)'
-    let msTransform = !spec.vertical
-      ? 'translateX(' + left + 'px)'
-      : 'translateY(' + left + 'px)'
     style = {
       ...style,
-      WebkitTransform,
-      transform,
-      msTransform
+      transform
     }
   } else {
     if (spec.vertical) {
@@ -489,8 +511,6 @@ export function getTrackAnimateCSS(spec: TrackInfoSpec, left: number) {
   let style = getTrackCSS(spec, left)
   // useCSS is true by default so it can be undefined
   if (spec.useCSSTransform) {
-    style.WebkitTransition =
-      '-webkit-transform ' + spec.speed + 'ms ' + spec.cssEase
     style.transition = 'transform ' + spec.speed + 'ms ' + spec.cssEase
   } else {
     if (spec.vertical) {
@@ -517,7 +537,8 @@ export function getTrackLeft(spec: TrackInfoSpec) {
     variableWidth,
     slideGroupHeight,
     fade,
-    vertical
+    vertical,
+    rtl
   } = spec
   listWidth = listWidth || 0
   slideGroupWidth = slideGroupWidth || 0
@@ -595,6 +616,9 @@ export function getTrackLeft(spec: TrackInfoSpec) {
       targetLeft += targetSlide && (listWidth - targetSlide.offsetWidth) / 2
     }
   }
+
+  console.debug('getTrackLeft: targetLeft', targetLeft)
+  if (rtl) targetLeft = -targetLeft
 
   return targetLeft
 }
@@ -679,14 +703,16 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
       if (!infinite) finalSlideGroupIndex = slideGroupCount - groupsToShow
       else if (slideGroupCount % groupsToScroll !== 0) finalSlideGroupIndex = 0
     }
-    animationLeft = getTrackLeft({
-      ...spec,
-      currentSlideGroupIndex: animationSlideGroupIndex
-    })
     finalLeft = getTrackLeft({
       ...spec,
       currentSlideGroupIndex: finalSlideGroupIndex
     })
+    animationLeft = getTrackLeft({
+      ...spec,
+      currentSlideGroupIndex: animationSlideGroupIndex
+    })
+    console.debug('SUS animationLeft', animationLeft)
+    console.debug('SUS finalLeft', finalLeft)
     if (!infinite) {
       if (animationLeft === finalLeft)
         animationSlideGroupIndex = finalSlideGroupIndex
@@ -720,6 +746,8 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
       }
     }
   }
+  console.debug('slidingState', slidingState)
+  console.debug('afterSlidingState', afterSlidingState)
   return { slidingState, afterSlidingState }
 }
 

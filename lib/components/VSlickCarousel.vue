@@ -1,5 +1,5 @@
 <template>
-  <div class="v-slick-slider" dir="ltr">
+  <div class="v-slick-slider" :dir="settings.rtl ? 'rtl' : 'ltr'">
     <VSlickArrow
       v-if="settings.arrows"
       :type="SlideNavigation.previous"
@@ -373,6 +373,7 @@ const handleClickVSlickList = (e: Event) => {
 
 const handleChildClickVSlickTrack = ({ index }: ChildClickPayload) => {
   if (!settings.value.focusOnSelect) return
+  console.debug('handleChildClickVSlickTrack index', index)
   changeSlideGroup({
     message: 'children',
     index
@@ -776,6 +777,14 @@ const settings = computed<Props>(() => {
       console.warn(`slidesPerGroup is bigger than 1: variableWidth is disabled`)
     }
     settings.variableWidth = false
+  }
+
+  if (settings.vertical && settings.rtl) {
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn(`vertical mode is enabled: rtl is disabled`)
+    }
+    settings.rtl = false
   }
 
   return settings

@@ -245,6 +245,7 @@ export type TrackInfoSpec = MarkRequiredWithPartialBase<
   | 'slideGroupHeight'
   | 'fade'
   | 'vertical'
+  | 'rtl'
 >
 
 export type OnSlideSpec = Combine<

@@ -3,19 +3,37 @@ import { VSlickCarousel } from '@lib/index'
 import { Settings } from '@lib/types'
 const settings: Settings = {
   dots: true,
-  infinite: false,
+  infinite: true,
   speed: 500,
-  groupsToShow: 2,
+  groupsToShow: 3,
   groupsToScroll: 1,
   slidesPerGroup: 2,
-  vertical: true,
-  verticalSwiping: true
+  focusOnSelect: true,
+  rtl: true
+  // responsive: [
+  //   {
+  //     breakpoint: 1024,
+  //     settings: {
+  //       groupsToShow: 3,
+  //       groupsToScroll: 3,
+  //       slidesPerGroup: 3
+  //     }
+  //   },
+  //   {
+  //     breakpoint: 600,
+  //     settings: {
+  //       groupsToShow: 2,
+  //       groupsToScroll: 2,
+  //       slidesPerGroup: 2
+  //     }
+  //   }
+  // ],
 }
 </script>
 
 <template>
   <div class="wrapper">
-    <VSlickCarousel v-bind="settings" :style="{ height: '400px' }">
+    <VSlickCarousel v-bind="settings">
       <div class="slide" v-for="i in 13" :key="i">
         <img
           :src="`https://placehold.co/${10 * i}x${10 * i}?text=${i}`"
@@ -33,7 +51,7 @@ const settings: Settings = {
   .slide {
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 300px;
+    height: 200px;
     h3 {
       padding: 20px;
       margin: 0 10px;

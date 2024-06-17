@@ -5,14 +5,13 @@
     :style="trackStyle"
   >
     <div
-      v-for="(slideGroup, i) in props.rtl
-        ? postCloneSlideGroups.reverse()
-        : preCloneSlideGroups"
+      v-for="(slideGroup, i) in preCloneSlideGroups"
       :key="slideGroup.key"
-      v-bind="slideGroup.attrs"
       :class="slideGroup.class"
       :style="slideGroup.style"
       class="v-slick-slide-group clone"
+      v-bind="slideGroup.attrs"
+      @click="slideGroup.onClick"
     >
       <component
         v-for="(slide, j) of slideGroup.slides"
@@ -21,9 +20,7 @@
       />
     </div>
     <div
-      v-for="(slideGroup, i) in props.rtl
-        ? originalSlideGroups.reverse()
-        : originalSlideGroups"
+      v-for="(slideGroup, i) in originalSlideGroups"
       :key="slideGroup.key"
       class="v-slick-slide-group"
       :class="slideGroup.class"
@@ -38,14 +35,13 @@
       />
     </div>
     <div
-      v-for="(slideGroup, i) in props.rtl
-        ? preCloneSlideGroups.reverse()
-        : postCloneSlideGroups"
+      v-for="(slideGroup, i) in postCloneSlideGroups"
       :key="slideGroup.key"
       :class="slideGroup.class"
       :style="slideGroup.style"
       class="v-slick-slide-group clone"
       v-bind="slideGroup.attrs"
+      @click="slideGroup.onClick"
     >
       <component
         v-for="(slide, j) of slideGroup.slides"
@@ -159,7 +155,7 @@ const getSlideGroupStyle = (index: number) => {
 }
 
 const originalSlideGroups = computed<SlideGroup[]>(() => {
-  return props.rawSlideGroups.map((rawSlideGroup, index) => {
+  const slideGroups = props.rawSlideGroups.map((rawSlideGroup, index) => {
     const style = getSlideGroupStyle(index)
     const classes = getSlideGroupClasses(index)
     const slideGroup: SlideGroup = {
@@ -172,7 +168,6 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
         'aria-hidden': `${!classes.includes('active')}`
       },
       onClick: () => {
-        if (!classes.includes('active')) return
         emit('childClick', {
           index
         })
@@ -186,6 +181,8 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
     }
     return slideGroup
   })
+  // return props.rtl ? slideGroups.reverse() : slideGroups
+  return slideGroups
 })
 
 const preCloneSlideGroups = computed<SlideGroup[]>(() => {
@@ -196,7 +193,7 @@ const preCloneSlideGroups = computed<SlideGroup[]>(() => {
   ) {
     return []
   }
-  return props.rawSlideGroups
+  const slideGroups = props.rawSlideGroups
     .map((rawSlideGroup, index) => {
       const preCloneNo = props.slideGroupCount - index
       if (preCloneNo > getTotalPreClones(props as CloneInfoSpec)) return
@@ -209,6 +206,11 @@ const preCloneSlideGroups = computed<SlideGroup[]>(() => {
         attrs: {
           'data-index': key,
           'aria-hidden': 'true'
+        },
+        onClick: () => {
+          emit('childClick', {
+            index: key
+          })
         }
       }
       if (
@@ -221,6 +223,8 @@ const preCloneSlideGroups = computed<SlideGroup[]>(() => {
       return slideGroup
     })
     .filter((slideGroup) => slideGroup) as SlideGroup[]
+  // return props.rtl ? slideGroups.reverse() : slideGroups
+  return slideGroups
 })
 
 const postCloneSlideGroups = computed<SlideGroup[]>(() => {
@@ -231,7 +235,7 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   ) {
     return []
   }
-  return props.rawSlideGroups.map((rawSlideGroup, index) => {
+  const slideGroups = props.rawSlideGroups.map((rawSlideGroup, index) => {
     const key = props.slideGroupCount + index
     const slideGroup: SlideGroup = {
       slides: [],
@@ -241,6 +245,11 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
       attrs: {
         'data-index': key,
         'aria-hidden': 'true'
+      },
+      onClick: () => {
+        emit('childClick', {
+          index: key
+        })
       }
     }
     if (
@@ -252,6 +261,8 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
     }
     return slideGroup
   })
+  // return props.rtl ? slideGroups.reverse() : slideGroups
+  return slideGroups
 })
 </script>
 
@@ -261,10 +272,6 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   top: 0;
   left: 0;
   display: flex;
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   &.center {
     margin-left: auto;
@@ -283,9 +290,9 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   &.dragging img {
     pointer-events: none;
   }
-  [dir='rtl'] & {
-    flex-direction: row-reverse;
-  }
+  // [dir='rtl'] & {
+  //   flex-direction: row-reverse;
+  // }
 }
 .v-slick-slide-group {
   display: flex;
