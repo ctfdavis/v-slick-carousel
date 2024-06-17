@@ -23,10 +23,7 @@ import {
 } from '../types'
 import { MarkRequiredWithPartialBase } from '@lib/types/helpers'
 
-export const extractSlides = (
-  vnodes: VNode[],
-  isSlide = isSlidePredicate
-): VNode[] => {
+export const extractSlides = (vnodes: VNode[]): VNode[] => {
   return vnodes.flatMap((vnode) =>
     isSlide(vnode)
       ? [vnode]
@@ -36,7 +33,7 @@ export const extractSlides = (
   )
 }
 
-function isSlidePredicate(vnode: VNode): boolean {
+function isSlide(vnode: VNode): boolean {
   return !vnode.type.toString().startsWith('Symbol')
 }
 

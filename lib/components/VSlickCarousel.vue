@@ -791,11 +791,7 @@ const settings = computed<Props>(() => {
   return settings
 })
 
-const slides = ref<VNode[]>(
-  slots.default
-    ? extractSlides(slots.default(), settings.value.isSlidePredicate)
-    : []
-)
+const slides = ref<VNode[]>(slots.default ? extractSlides(slots.default()) : [])
 
 const state = ref({
   ...cloneDeep(defaultSliderState),
@@ -869,11 +865,9 @@ watch(
 )
 
 watch(
-  () => [slots.default, settings.value.isSlidePredicate],
-  ([newSlots, newIsSlidePredicate]) => {
-    slides.value = newSlots
-      ? extractSlides((newSlots as any)(), newIsSlidePredicate as any)
-      : []
+  () => slots.default,
+  (newSlots) => {
+    slides.value = newSlots ? extractSlides(newSlots()) : []
   }
 )
 

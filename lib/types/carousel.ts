@@ -48,7 +48,6 @@ export type Props = {
   vertical: boolean
   verticalSwiping: boolean
   waitForAnimate: boolean
-  isSlidePredicate?: (vnode: VNode) => boolean
 }
 
 export type Responsive = {

@@ -58,11 +58,7 @@ export const defaultProps = {
   variableWidth: { type: Boolean, default: false },
   vertical: { type: Boolean, default: false },
   verticalSwiping: { type: Boolean, default: false },
-  waitForAnimate: { type: Boolean, default: true },
-  isSlidePredicate: {
-    type: Function as PropType<(vnode: VNode) => boolean>,
-    default: undefined
-  }
+  waitForAnimate: { type: Boolean, default: true }
 } satisfies VuePropDef<keyof Props>
 
 export const defaultPropValues = Object.keys(defaultProps).reduce<{
