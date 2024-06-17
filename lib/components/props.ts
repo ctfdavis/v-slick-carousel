@@ -4,6 +4,7 @@ import {
   DotsProps,
   Props,
   Responsive,
+  SlideNavigation,
   SliderState,
   TrackProps
 } from '../types'
@@ -29,19 +30,20 @@ export const defaultProps = {
   centerPadding: { type: String, default: '50px' },
   cssEase: { type: String, default: 'ease' },
   dots: { type: Boolean, default: false },
-  dotsClass: { type: String, default: 'slick-dots' },
+  dotsClass: { type: String, default: 'v-slick-dots' },
   draggable: { type: Boolean, default: true },
   edgeFriction: { type: Number, default: 0.35 },
   fade: { type: Boolean, default: false },
   focusOnSelect: { type: Boolean, default: false },
   infinite: { type: Boolean, default: true },
-  initialGroup: { type: Number, default: 0 },
+  initialGroupIndex: { type: Number, default: 0 },
   lazyLoad: { type: String, default: null },
+  nextArrowLabel: { type: String, default: 'Next' },
   pauseOnDotsHover: { type: Boolean, default: false },
   pauseOnFocus: { type: Boolean, default: false },
   pauseOnHover: { type: Boolean, default: true },
+  prevArrowLabel: { type: String, default: 'Previous' },
   responsive: { type: Array as PropType<Responsive[]>, default: [] },
-  rows: { type: Number, default: 1 },
   rtl: { type: Boolean, default: false },
   slidesPerGroup: { type: Number, default: 1 },
   groupsToScroll: { type: Number, default: 1 },
@@ -51,8 +53,8 @@ export const defaultProps = {
   swipeToSlide: { type: Boolean, default: false },
   touchMove: { type: Boolean, default: true },
   touchThreshold: { type: Number, default: 5 },
-  useCSS: { type: Boolean, default: true },
-  useTransform: { type: Boolean, default: true },
+  useCSSTransitions: { type: Boolean, default: true },
+  useCSSTransform: { type: Boolean, default: true },
   variableWidth: { type: Boolean, default: false },
   vertical: { type: Boolean, default: false },
   verticalSwiping: { type: Boolean, default: false },
@@ -66,16 +68,7 @@ export const defaultPropValues = Object.keys(defaultProps).reduce<{
   return acc
 }, {}) as {
   [K in keyof Props]: unknown
-}
-
-export const propTypes = Object.keys(defaultProps).reduce<{
-  [key: string]: unknown
-}>((acc, key) => {
-  acc[key] = (defaultProps as any)[key].type
-  return acc
-}, {}) as {
-  [K in keyof Props]: PropType<any>
-}
+} as Props
 
 export const defaultSliderState: SliderState = {
   animating: false,
@@ -83,7 +76,7 @@ export const defaultSliderState: SliderState = {
   autoplayTimer: null,
   currentDirection: 0,
   currentLeft: null,
-  currentSlide: 0,
+  currentSlideGroupIndex: 0,
   direction: 1,
   dragging: false,
   edgeDragged: false,
@@ -92,8 +85,8 @@ export const defaultSliderState: SliderState = {
   listHeight: undefined,
   listWidth: undefined,
   scrolling: false,
-  slideHeight: undefined,
-  slideWidth: undefined,
+  slideGroupHeight: undefined,
+  slideGroupWidth: undefined,
   swipeLeft: undefined,
   swiped: false, // used by swipeEvent. differentites between touch and swipe.
   swiping: false,
@@ -111,7 +104,6 @@ export const defaultTrackProps = {
     'infinite',
     'lazyLoad',
     'rtl',
-    'rows',
     'groupsToScroll',
     'groupsToShow',
     'speed',
@@ -119,26 +111,32 @@ export const defaultTrackProps = {
     'vertical'
   ]),
   ...{
-    currentSlide: { type: Number, default: 0 },
+    currentSlideGroupIndex: { type: Number, default: 0 },
     lazyLoadedList: {
       type: Array as PropType<Number[]>,
       default: []
     },
     listHeight: { type: Number, default: undefined },
     trackStyle: { type: Object, default: {} },
-    slideCount: { type: Number, default: 0 },
-    children: { type: Array as PropType<VNode[]>, default: [] },
-    slideHeight: { type: [String, Number], default: undefined },
-    slideWidth: { type: [String, Number], default: undefined }
+    slideGroupCount: { type: Number, default: 0 },
+    rawSlideGroups: { type: Array as PropType<VNode[][]>, default: [] },
+    slideGroupHeight: { type: [String, Number], default: undefined },
+    slideGroupWidth: { type: [String, Number], default: undefined }
   }
 } satisfies VuePropDef<keyof TrackProps>
 
 export const defaultArrowProps = {
-  ...pick(cloneDeep(defaultProps), ['centerMode', 'infinite', 'groupsToShow']),
+  ...pick(cloneDeep(defaultProps), [
+    'centerMode',
+    'infinite',
+    'groupsToShow',
+    'prevArrowLabel',
+    'nextArrowLabel'
+  ]),
   ...{
-    currentSlide: { type: Number, default: 0 },
-    slideCount: { type: Number, default: 0 },
-    type: { type: String as PropType<'prev' | 'next'>, default: 'prev' }
+    currentSlideGroupIndex: { type: Number, default: 0 },
+    slideGroupCount: { type: Number, default: 0 },
+    type: { type: String as PropType<SlideNavigation>, default: 'prev' }
   }
 } satisfies VuePropDef<keyof ArrowProps>
 
@@ -150,7 +148,7 @@ export const defaultDotsProps = {
     'groupsToShow'
   ]),
   ...{
-    currentSlide: { type: Number, default: 0 },
-    slideCount: { type: Number, default: 0 }
+    currentSlideGroupIndex: { type: Number, default: 0 },
+    slideGroupCount: { type: Number, default: 0 }
   }
 } satisfies VuePropDef<keyof DotsProps>

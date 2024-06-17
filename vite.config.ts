@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [vue(), eslint(), dts({ include: ['lib'] })],
   resolve: {
     alias: {
-      '@lib': resolve(__dirname, 'lib/index.ts')
+      '@lib': resolve(__dirname, 'lib')
     }
   },
   build: {

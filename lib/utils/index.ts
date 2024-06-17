@@ -1,4 +1,4 @@
-import { VNode } from 'vue'
+export * from './carousel-utils'
 
 export const canUseDOM = () =>
   !!(
@@ -14,13 +14,3 @@ export const filterUndefined = <T extends object>(props: T) =>
       acc[key as keyof T] = props[key as keyof T]
       return acc
     }, {} as T)
-
-export const mergeClass = (original: string | undefined, classes: string[]) => {
-  return [original, ...classes].filter(Boolean).join(' ')
-}
-
-export const getVNodeStyle = (vnode: VNode) => {
-  return {
-    ...vnode.props?.style
-  }
-}
