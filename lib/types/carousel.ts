@@ -257,6 +257,7 @@ export type OnSlideSpec = Combine<
     | 'lazyLoadedList'
     | 'currentSlideGroupIndex'
     | 'useCSSTransitions'
+    | 'slideGroupCount'
   >
 > & {
   index: number

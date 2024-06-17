@@ -50,9 +50,9 @@ export const getNavigationOnKeyType = (
     !accessibility
   )
     return ''
-  if (e.key === 'Left')
+  if (e.key === 'ArrowLeft')
     return rtl ? SlideNavigation.next : SlideNavigation.previous
-  if (e.key === 'Right')
+  if (e.key === 'ArrowRight')
     return rtl ? SlideNavigation.previous : SlideNavigation.next
   return ''
 }
@@ -75,30 +75,14 @@ export const getChangedSlideGroupIndex = (
     infinite
   } = spec
   unevenOffset = slideGroupCount % groupsToScroll !== 0
-  console.debug('getChangedSlideGroupIndex: unevenOffset', unevenOffset)
-  console.debug('getChangedSlideGroupIndex: groupsToScroll', groupsToScroll)
   indexOffset = unevenOffset
     ? 0
     : (slideGroupCount - currentSlideGroupIndex) % groupsToScroll
-  console.debug(
-    'getChangedSlideGroupIndex: (slideGroupCount - currentSlideGroupIndex) % groupsToScroll',
-    (slideGroupCount - currentSlideGroupIndex) % groupsToScroll
-  )
-  console.debug('getChangedSlideGroupIndex: indexOffset', indexOffset)
-  console.debug('getChangedSlideGroupIndex: slideGroupCount', slideGroupCount)
-  console.debug(
-    'getChangedSlideGroupIndex: currentSlideGroupIndex',
-    currentSlideGroupIndex
-  )
 
   if (options.message === SlideNavigation.previous) {
     slideGroupOffset =
       indexOffset === 0 ? groupsToScroll : groupsToShow - indexOffset
     targetSlideGroupIndex = currentSlideGroupIndex - slideGroupOffset
-    console.debug(
-      'SlideNavigation.previous: targetSlideGroupIndex',
-      targetSlideGroupIndex
-    )
     if (lazyLoad && !infinite) {
       previousInt = currentSlideGroupIndex - slideGroupOffset
       targetSlideGroupIndex =
@@ -107,11 +91,6 @@ export const getChangedSlideGroupIndex = (
   } else if (options.message === SlideNavigation.next) {
     slideGroupOffset = indexOffset === 0 ? groupsToScroll : indexOffset
     targetSlideGroupIndex = currentSlideGroupIndex + slideGroupOffset
-    console.debug('SlideNavigation.next: slideGroupOffset', slideGroupOffset)
-    console.debug(
-      'SlideNavigation.next: targetSlideGroupIndex',
-      targetSlideGroupIndex
-    )
     if (lazyLoad && !infinite) {
       targetSlideGroupIndex =
         ((currentSlideGroupIndex + groupsToScroll) % slideGroupCount) +
@@ -186,7 +165,6 @@ const totalVisibleGroupsOnRightOfCurrGroup = ({
     if (rtl && groupsToShow % 2 === 0) right += 1
     return right
   }
-  console.debug('totalVisibleGroupsOnRightOfCurrGroup rtl', rtl)
   if (rtl) {
     return 0
   }
@@ -205,7 +183,6 @@ const totalVisibleGroupsOnLeftOfCurrGroup = ({
     if (!rtl && groupsToShow % 2 === 0) left += 1
     return left
   }
-  console.debug('totalVisibleGroupsOnLeftOfCurrGroup rtl', rtl)
   if (rtl) {
     return groupsToShow - 1
   }
@@ -617,7 +594,6 @@ export function getTrackLeft(spec: TrackInfoSpec) {
     }
   }
 
-  console.debug('getTrackLeft: targetLeft', targetLeft)
   if (rtl) targetLeft = -targetLeft
 
   return targetLeft
@@ -711,8 +687,6 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
       ...spec,
       currentSlideGroupIndex: animationSlideGroupIndex
     })
-    console.debug('SUS animationLeft', animationLeft)
-    console.debug('SUS finalLeft', finalLeft)
     if (!infinite) {
       if (animationLeft === finalLeft)
         animationSlideGroupIndex = finalSlideGroupIndex
@@ -746,8 +720,6 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
       }
     }
   }
-  console.debug('slidingState', slidingState)
-  console.debug('afterSlidingState', afterSlidingState)
   return { slidingState, afterSlidingState }
 }
 

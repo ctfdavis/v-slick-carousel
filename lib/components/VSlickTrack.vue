@@ -6,6 +6,7 @@
   >
     <div
       v-for="(slideGroup, i) in preCloneSlideGroups"
+      tabindex="-1"
       :key="slideGroup.key"
       :class="slideGroup.class"
       :style="slideGroup.style"
@@ -21,6 +22,7 @@
     </div>
     <div
       v-for="(slideGroup, i) in originalSlideGroups"
+      tabindex="-1"
       :key="slideGroup.key"
       class="v-slick-slide-group"
       :class="slideGroup.class"
@@ -36,6 +38,7 @@
     </div>
     <div
       v-for="(slideGroup, i) in postCloneSlideGroups"
+      tabindex="-1"
       :key="slideGroup.key"
       :class="slideGroup.class"
       :style="slideGroup.style"
@@ -78,7 +81,6 @@ const getSlideGroupClasses = (index: number) => {
     isCenter = false,
     isCurrent = false,
     centerOffset: number
-  if (props.rtl) index = props.slideGroupCount - 1 - index
   if (props.centerMode) {
     centerOffset = Math.floor(props.groupsToShow / 2)
     isCenter =
@@ -136,7 +138,11 @@ const getSlideGroupStyle = (index: number) => {
         : typeof props.slideGroupWidth === 'string'
           ? parseFloat(props.slideGroupWidth)
           : props.slideGroupWidth
-      style.left = `${-index * slideGroupWidth}px`
+
+      const left = props.rtl
+        ? index * slideGroupWidth
+        : -index * slideGroupWidth
+      style.left = `${left}px`
     }
     style.opacity = props.currentSlideGroupIndex === index ? 1 : 0
     style.transition =
@@ -169,7 +175,8 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
       },
       onClick: () => {
         emit('childClick', {
-          index
+          index:
+            props.rtl && props.infinite ? props.slideGroupCount + index : index
         })
       }
     }
@@ -248,7 +255,7 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
       },
       onClick: () => {
         emit('childClick', {
-          index: key
+          index: props.rtl ? props.slideGroupCount + key : key
         })
       }
     }
@@ -290,9 +297,6 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   &.dragging img {
     pointer-events: none;
   }
-  // [dir='rtl'] & {
-  //   flex-direction: row-reverse;
-  // }
 }
 .v-slick-slide-group {
   display: flex;
@@ -300,5 +304,6 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   height: 100%;
   min-height: 1px;
   flex-shrink: 0;
+  outline: none;
 }
 </style>

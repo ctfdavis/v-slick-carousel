@@ -3,13 +3,15 @@ import { VSlickCarousel } from '@lib/index'
 import { Settings } from '@lib/types'
 const settings: Settings = {
   dots: true,
-  infinite: true,
+  infinite: false,
   speed: 500,
   groupsToShow: 3,
-  groupsToScroll: 1,
+  groupsToScroll: 3,
   slidesPerGroup: 2,
   focusOnSelect: true,
-  rtl: true
+  fade: false,
+  rtl: false,
+  lazyLoad: 'ondemand'
   // responsive: [
   //   {
   //     breakpoint: 1024,

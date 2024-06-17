@@ -273,10 +273,12 @@ const swipeMove = (e: SwipeEvent) => {
 const play = () => {
   let nextIndex
   if (settings.value.rtl) {
-    nextIndex = state.value.currentSlideGroupIndex - props.groupsToScroll
+    nextIndex =
+      state.value.currentSlideGroupIndex - settings.value.groupsToScroll
   } else {
     if (canGoNext({ ...props, ...state.value } as GoNextSpec)) {
-      nextIndex = state.value.currentSlideGroupIndex + props.groupsToScroll
+      nextIndex =
+        state.value.currentSlideGroupIndex + settings.value.groupsToScroll
     } else {
       return false
     }
@@ -373,7 +375,6 @@ const handleClickVSlickList = (e: Event) => {
 
 const handleChildClickVSlickTrack = ({ index }: ChildClickPayload) => {
   if (!settings.value.focusOnSelect) return
-  console.debug('handleChildClickVSlickTrack index', index)
   changeSlideGroup({
     message: 'children',
     index
@@ -381,12 +382,14 @@ const handleChildClickVSlickTrack = ({ index }: ChildClickPayload) => {
 }
 
 const handleKeyDownVSlickList = (e: KeyboardEvent) => {
+  console.debug('handleKeyDownVSlickList', e)
   if (!settings.value.accessibility) return
   const navigation = getNavigationOnKeyType(
     e,
     settings.value.accessibility,
     settings.value.rtl
   )
+  console.debug('navigation', navigation)
   if (!navigation) return
   changeSlideGroup({ message: navigation as SlideNavigation })
 }
@@ -520,7 +523,7 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
 
 const updateState = (shouldSetTrackStyle?: boolean) => {
   const updatedState = getSliderState({
-    ...props,
+    ...settings.value,
     ...state.value,
     listEl: vSlickListRef.value,
     trackEl: vSlickTrackRef.value?.$el,
@@ -530,7 +533,8 @@ const updateState = (shouldSetTrackStyle?: boolean) => {
     ...props,
     ...state,
     ...updatedState,
-    trackEl: vSlickTrackRef.value?.$el
+    trackEl: vSlickTrackRef.value?.$el,
+    slideGroupCount: slideGroupCount.value
   }
   const targetLeft = getTrackLeft(spec as TrackInfoSpec)
   const trackStyle = getTrackCSS(spec as TrackInfoSpec, targetLeft)
@@ -578,7 +582,6 @@ const onSlideGroupBlur = () => {
 }
 
 const progressiveLazyLoad = () => {
-  console.debug('progressiveLazyLoad')
   const slideGroupsToLoad = []
   const spec = { ...settings.value, ...state.value }
   const totalPostClones = getTotalPostClones({
@@ -609,12 +612,10 @@ const progressiveLazyLoad = () => {
       break
     }
   }
-  console.debug('slideGroupsToLoad', slideGroupsToLoad)
   if (slideGroupsToLoad.length > 0) {
     state.value.lazyLoadedList =
       state.value.lazyLoadedList.concat(slideGroupsToLoad)
     emit('lazyLoad', slideGroupsToLoad)
-    console.debug('lazyLoadedList', state.value.lazyLoadedList)
   } else {
     if (lazyLoadTimer) {
       clearInterval(lazyLoadTimer)
@@ -708,7 +709,7 @@ const ssrInit = () => {
     state.value.trackStyle = trackStyle
   } else {
     const _slideGroupCount = preClones + postClones + slideGroupCount.value
-    const trackWidth = (100 / props.groupsToShow) * _slideGroupCount
+    const trackWidth = (100 / settings.value.groupsToShow) * _slideGroupCount
     const slideGroupWidth = 100 / _slideGroupCount
     let trackLeft =
       (-slideGroupWidth *
