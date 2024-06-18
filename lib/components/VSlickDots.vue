@@ -7,7 +7,7 @@
     @mouseover="$emit('dotsOver')"
   >
     <li
-      v-for="i in dotCount || 0"
+      v-for="i in dotCount"
       :key="i"
       :class="{ active: isActive(i - 1) }"
       @click="
