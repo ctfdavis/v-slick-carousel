@@ -923,6 +923,7 @@ defineExpose({
   play,
   pause,
   autoPlay,
+  slideGroupCount,
   currentSliderGroupIndex
 })
 
