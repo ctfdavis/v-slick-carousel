@@ -798,6 +798,8 @@ const state = ref({
   currentSlideGroupIndex: settings.value.initialGroupIndex
 })
 
+const currentSliderGroupIndex = computed(() => state.value.currentSliderGroupIndex)
+
 const slideGroupCount = computed(() =>
   getSlideGroupCount(slides.value.length, settings.value.slidesPerGroup)
 )
@@ -921,7 +923,7 @@ defineExpose({
   play,
   pause,
   autoPlay,
-  state
+  currentSliderGroupIndex
 })
 
 onMounted(() => {
