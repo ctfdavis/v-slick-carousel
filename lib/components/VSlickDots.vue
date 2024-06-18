@@ -37,11 +37,11 @@ const dotCount = computed(() => {
   if (props.infinite) {
     return Math.ceil(props.slideGroupCount / props.groupsToScroll)
   }
-  return (
-    Math.ceil(
+  const dotsCount = Math.ceil(
       (props.slideGroupCount - props.groupsToShow) / props.groupsToScroll
     ) + 1
-  )
+  
+  return dotsCount < 0 ? 0 : dotsCount
 })
 const isActive = (i: number) => {
   const leftBound = i * props.groupsToScroll
