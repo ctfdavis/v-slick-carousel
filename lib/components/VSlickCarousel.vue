@@ -865,9 +865,9 @@ watch(
 )
 
 watch(
-  () => slots.default,
+  () => slots.default?.() || [],
   (newSlots) => {
-    slides.value = newSlots ? extractSlides(newSlots()) : []
+    slides.value = extractSlides(newSlots)
   }
 )
 
