@@ -797,9 +797,11 @@ const state = ref({
   ...cloneDeep(defaultSliderState),
   currentSlideGroupIndex: settings.value.initialGroupIndex
 })
-
+  
 const currentSliderGroupIndex = computed(() => state.value.currentSliderGroupIndex)
 
+const curretGroupsToShow = computed(()=> settings.value.groupsToShow)
+  
 const slideGroupCount = computed(() =>
   getSlideGroupCount(slides.value.length, settings.value.slidesPerGroup)
 )
@@ -924,7 +926,8 @@ defineExpose({
   pause,
   autoPlay,
   slideGroupCount,
-  currentSliderGroupIndex
+  currentSliderGroupIndex,
+  curretGroupsToShow
 })
 
 onMounted(() => {
