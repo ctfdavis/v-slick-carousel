@@ -79,6 +79,8 @@
       :slide-group-count="slideGroupCount"
       :groups-to-scroll="settings.groupsToScroll"
       :groups-to-show="settings.groupsToShow"
+      :dots-class="setting.dotsClass"
+      :page-count="pageCount"
       @dot-click="handleClickDot"
       @dots-over="handleOverDots"
       @dots-leave="handleLeaveDots"
@@ -791,6 +793,16 @@ const settings = computed<Props>(() => {
   return settings
 })
 
+const pageCount = computed(() => {
+  if (settings.value.infinite) {
+    return Math.ceil(slideGroupCount.value / settings.value.groupsToScroll)
+  }
+  const pageCount = Math.ceil(
+    (slideGroupCount.value - props.groupsToShow) / settings.value.groupsToScroll
+  ) + 1
+  return pageCount < 0 ? 0 : pageCount
+})
+
 const slides = ref<VNode[]>(slots.default ? extractSlides(slots.default()) : [])
 
 const state = ref({
@@ -910,6 +922,11 @@ watch(
   }
 )
 
+watch(() => [settings.value.infinite, state.value.currentSlideGroupIndex ,settings.value.groupsToShow, slideGroupCount.value], ([infinite, groupsIndex ,groupToShow, slideGroupCount]) => {
+  if (infinite || (groupsIndex as number) <= (slideGroupCount as number) - (groupToShow as number) + 1) return
+  slideGroupHandler(pageCount.value - 1)
+})
+
 defineExpose({
   goTo: slideGroupHandler,
   next: () => {
@@ -927,7 +944,8 @@ defineExpose({
   autoPlay,
   slideGroupCount,
   currentSliderGroupIndex,
-  curretGroupsToShow
+  curretGroupsToShow,
+  pageCount
 })
 
 onMounted(() => {

@@ -149,6 +149,7 @@ export const defaultDotsProps = {
   ]),
   ...{
     currentSlideGroupIndex: { type: Number, default: 0 },
-    slideGroupCount: { type: Number, default: 0 }
+    slideGroupCount: { type: Number, default: 0 },
+    pageCount: {type: Number, default: 0}
   }
 } satisfies VuePropDef<keyof DotsProps>

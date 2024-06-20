@@ -142,6 +142,7 @@ export type DotsProps = Pick<
 > &
   Pick<SliderState, 'currentSlideGroupIndex'> & {
     slideGroupCount: number
+    pageCount: number
   }
 
 export type ArrowSlotProps = {
