@@ -922,6 +922,11 @@ watch(
   }
 )
 
+watch(() => [settings.value.infinite, state.value.currentSlideGroupIndex ,settings.value.groupsToShow, slideGroupCount.value], ([infinite, groupsIndex ,groupToShow, slideGroupCount]) => {
+  if (infinite || (groupsIndex as number) <= (slideGroupCount as number) - (groupToShow as number) + 1) return
+  slideGroupHandler(pageCount.value - 1)
+})
+
 defineExpose({
   goTo: slideGroupHandler,
   next: () => {
