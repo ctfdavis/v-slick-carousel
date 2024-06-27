@@ -8,8 +8,6 @@ A Vue 3 port of [vue-slick-carousel](https://github.com/gs-shop/vue-slick-carous
 
 ### Props
 
-Here is the reordered table:
-
 | Name              | Type    | Default          | Description                                              |
 | ----------------- | ------- | ---------------- | -------------------------------------------------------- |
 | accessibility     | Boolean | `true`           | Enable accessibility.                                    |
