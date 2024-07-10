@@ -93,7 +93,7 @@
     "vue-v3.1": "npm:vue@3.1"
   },
   "dependencies": {
-    "enquire.js": "^2.1.6",
+    "@dcufo/enquire.js": "^2.1.8",
     "json2mq": "^0.2.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",

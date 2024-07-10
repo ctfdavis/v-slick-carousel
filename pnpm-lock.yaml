@@ -22,9 +22,9 @@ importers:
 
   packages/vue-3-slick-carousel:
     dependencies:
-      enquire.js:
-        specifier: ^2.1.6
-        version: 2.1.6
+      '@dcufo/enquire.js':
+        specifier: ^2.1.8
+        version: 2.1.8
       json2mq:
         specifier: ^0.2.0
         version: 0.2.0
@@ -359,6 +359,9 @@ packages:
   '@cloudflare/kv-asset-handler@0.3.4':
     resolution: {integrity: sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==}
     engines: {node: '>=16.13'}
+
+  '@dcufo/enquire.js@2.1.8':
+    resolution: {integrity: sha512-tjzHctjrzqfzVSd00yd8busoINcrtIW9o8QriRGJ7BGD5dfqDaz3ajvWgejeM31jb6j0wCrkYw9Qd1UGyADZlw==}
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -2391,9 +2394,6 @@ packages:
   enhanced-resolve@5.17.0:
     resolution: {integrity: sha512-dwDPwZL0dmye8Txp2gzFmA6sxALaSvdRDjPH0viLcKrtlOL3tw62nWWweVD1SdILDTJrbrL6tdWVN58Wo6U3eA==}
     engines: {node: '>=10.13.0'}
-
-  enquire.js@2.1.6:
-    resolution: {integrity: sha512-/KujNpO+PT63F7Hlpu4h3pE3TokKRHN26JYmQpPyjkRD/N57R7bPDNojMXdi7uveAKjYB7yQnartCxZnFWr0Xw==}
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
@@ -5067,6 +5067,8 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
+  '@dcufo/enquire.js@2.1.8': {}
+
   '@esbuild/aix-ppc64@0.20.2':
     optional: true
 
@@ -7287,8 +7289,6 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.1
-
-  enquire.js@2.1.6: {}
 
   entities@4.5.0: {}
 

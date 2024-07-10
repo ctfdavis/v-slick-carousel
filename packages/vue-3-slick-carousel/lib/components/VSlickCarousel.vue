@@ -128,7 +128,7 @@ import {
   getChangedSlideGroupIndex
 } from '@lib/utils'
 import { defaultPropValues, defaultProps, defaultSliderState } from './props'
-import enquireJs from 'enquire.js'
+import enquireJs from '@dcufo/enquire.js'
 import json2mq from 'json2mq'
 import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
