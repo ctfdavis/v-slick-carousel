@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      husky:
+        specifier: ^9.0.11
+        version: 9.0.11
 
   packages/nuxt-app:
     dependencies:
@@ -77,9 +81,6 @@ importers:
       eslint-plugin-vue:
         specifier: ^9.26.0
         version: 9.27.0(eslint@8.57.0)
-      husky:
-        specifier: ^9.0.11
-        version: 9.0.11
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.9)

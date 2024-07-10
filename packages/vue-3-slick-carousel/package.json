@@ -31,6 +31,7 @@
     "prepublish": "npm run build",
     "lint": "eslint 'src/**/*.{js,ts,vue}' --fix",
     "lint:fix": "npm run lint -- --fix",
+    "lint-staged": "lint-staged",
     "format": "prettier --write \"**/*.{json,js,ts,vue,html,css,scss}\"",
     "test": "jest"
   },
@@ -77,7 +78,6 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-vue": "^9.26.0",
-    "husky": "^9.0.11",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.5",
     "prettier": "^3.3.1",
