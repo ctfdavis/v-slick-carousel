@@ -1,1 +1,1 @@
-npx --no lint-staged
+pnpm -F vue-3-slick-carousel run lint-staged
