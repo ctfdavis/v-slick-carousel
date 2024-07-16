@@ -816,7 +816,7 @@ const currentSlideGroupIndex = computed(
   () => state.value.currentSlideGroupIndex
 )
 
-const curretGroupsToShow = computed(() => settings.value.groupsToShow)
+const currentGroupsToShow = computed(() => settings.value.groupsToShow)
 
 const slideGroupCount = computed(() =>
   getSlideGroupCount(slides.value.length, settings.value.slidesPerGroup)
@@ -961,7 +961,7 @@ defineExpose({
   autoPlay,
   slideGroupCount,
   currentSlideGroupIndex,
-  curretGroupsToShow,
+  currentGroupsToShow,
   pageCount
 })
 
