@@ -92,6 +92,7 @@
     "vite": "^5.2.0",
     "vite-plugin-dts": "^3.9.1",
     "vite-plugin-eslint": "^1.8.1",
+    "vue-router": "^4.4.0",
     "vue-tsc": "^2.0.6",
     "vue-v3.0": "npm:vue@3.0",
     "vue-v3.1": "npm:vue@3.1"

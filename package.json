@@ -7,7 +7,8 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm --filter=vue-3-slick-carousel run build",
-    "dev": "pnpm --filter=nuxt-app run dev",
+    "dev": "pnpm --filter=vue-3-slick-carousel run dev",
+    "nuxt-dev": "pnpm --filter=nuxt-app run dev",
     "prepare": "husky"
   },
   "devDependencies": {
