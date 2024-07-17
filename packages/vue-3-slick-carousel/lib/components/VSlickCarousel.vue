@@ -1,77 +1,79 @@
 <template>
-  <div class="v-slick-slider" :dir="settings.rtl ? 'rtl' : 'ltr'">
-    <VSlickArrow
-      v-if="settings.arrows"
-      :type="SlideNavigation.previous"
-      :center-mode="settings.centerMode"
-      :infinite="settings.infinite"
-      :groups-to-show="settings.groupsToShow"
-      :slide-group-count="slideGroupCount"
-      :current-slide-group-index="state.currentSlideGroupIndex"
-      @previous="handlePrevVSlickArrow"
-    >
-      <template #prevArrow="arrowSlotProps">
-        <slot name="prevArrow" v-bind="arrowSlotProps" />
-      </template>
-    </VSlickArrow>
-    <div
-      ref="vSlickListRef"
-      class="v-slick-list"
-      :class="{ dragging: state.dragging }"
-      :style="vSlickListStyle"
-      @click="handleClickVSlickList"
-      @mousedown="handleMouseDownOrTouchStartVSlickList"
-      @mouseup="handleMouseUpOrTouchEndVSlickList"
-      @mouseleave="handleMouseLeaveOrTouchCancelVSlickList"
-      @mousemove="handleMouseMoveOrTouchMoveVSlickList"
-      @touchstart.passive="handleMouseDownOrTouchStartVSlickList"
-      @touchmove.passive="handleMouseMoveOrTouchMoveVSlickList"
-      @touchend="handleMouseUpOrTouchEndVSlickList"
-      @touchcancel="handleMouseLeaveOrTouchCancelVSlickList"
-      @keydown="handleKeyDownVSlickList"
-    >
-      <VSlickTrack
-        ref="vSlickTrackRef"
+  <div class="v-slick-carousel">
+    <div class="v-slick-slider" :dir="settings.rtl ? 'rtl' : 'ltr'">
+      <VSlickArrow
+        v-if="settings.arrows"
+        :type="SlideNavigation.previous"
         :center-mode="settings.centerMode"
-        :center-padding="settings.centerPadding"
-        :raw-slide-groups="rawSlideGroups"
-        :css-ease="cssEase"
-        :current-slide-group-index="state.currentSlideGroupIndex"
-        :fade="settings.fade"
         :infinite="settings.infinite"
-        :lazy-load="settings.lazyLoad"
-        :lazy-loaded-list="state.lazyLoadedList"
-        :list-height="state.listHeight"
-        :rtl="settings.rtl"
-        :slide-group-count="slideGroupCount"
-        :slide-group-height="state.slideGroupHeight"
-        :slide-group-width="state.slideGroupWidth"
-        :groups-to-scroll="settings.groupsToScroll"
         :groups-to-show="settings.groupsToShow"
-        :speed="settings.speed"
-        :track-style="state.trackStyle"
-        :variable-width="settings.variableWidth"
-        :vertical="settings.vertical"
-        @mouseenter="handleMouseEnterOrOverVSlickTrack"
-        @mouseleave="handleMouseLeaveVSlickTrack"
-        @mouseover="handleMouseEnterOrOverVSlickTrack"
-        @child-click="handleChildClickVSlickTrack"
-      />
+        :slide-group-count="slideGroupCount"
+        :current-slide-group-index="state.currentSlideGroupIndex"
+        @previous="handlePrevVSlickArrow"
+      >
+        <template #prevArrow="arrowSlotProps">
+          <slot name="prevArrow" v-bind="arrowSlotProps" />
+        </template>
+      </VSlickArrow>
+      <div
+        ref="vSlickListRef"
+        class="v-slick-list"
+        :class="{ dragging: state.dragging }"
+        :style="vSlickListStyle"
+        @click="handleClickVSlickList"
+        @mousedown="handleMouseDownOrTouchStartVSlickList"
+        @mouseup="handleMouseUpOrTouchEndVSlickList"
+        @mouseleave="handleMouseLeaveOrTouchCancelVSlickList"
+        @mousemove="handleMouseMoveOrTouchMoveVSlickList"
+        @touchstart.passive="handleMouseDownOrTouchStartVSlickList"
+        @touchmove.passive="handleMouseMoveOrTouchMoveVSlickList"
+        @touchend="handleMouseUpOrTouchEndVSlickList"
+        @touchcancel="handleMouseLeaveOrTouchCancelVSlickList"
+        @keydown="handleKeyDownVSlickList"
+      >
+        <VSlickTrack
+          ref="vSlickTrackRef"
+          :center-mode="settings.centerMode"
+          :center-padding="settings.centerPadding"
+          :raw-slide-groups="rawSlideGroups"
+          :css-ease="cssEase"
+          :current-slide-group-index="state.currentSlideGroupIndex"
+          :fade="settings.fade"
+          :infinite="settings.infinite"
+          :lazy-load="settings.lazyLoad"
+          :lazy-loaded-list="state.lazyLoadedList"
+          :list-height="state.listHeight"
+          :rtl="settings.rtl"
+          :slide-group-count="slideGroupCount"
+          :slide-group-height="state.slideGroupHeight"
+          :slide-group-width="state.slideGroupWidth"
+          :groups-to-scroll="settings.groupsToScroll"
+          :groups-to-show="settings.groupsToShow"
+          :speed="settings.speed"
+          :track-style="state.trackStyle"
+          :variable-width="settings.variableWidth"
+          :vertical="settings.vertical"
+          @mouseenter="handleMouseEnterOrOverVSlickTrack"
+          @mouseleave="handleMouseLeaveVSlickTrack"
+          @mouseover="handleMouseEnterOrOverVSlickTrack"
+          @child-click="handleChildClickVSlickTrack"
+        />
+      </div>
+      <VSlickArrow
+        v-if="settings.arrows"
+        :type="SlideNavigation.next"
+        :center-mode="settings.centerMode"
+        :infinite="settings.infinite"
+        :groups-to-show="settings.groupsToShow"
+        :slide-group-count="slideGroupCount"
+        :current-slide-group-index="state.currentSlideGroupIndex"
+        @next="handleNextVSlickArrow"
+      >
+        <template #nextArrow="arrowSlotProps">
+          <slot name="nextArrow" v-bind="arrowSlotProps" />
+        </template>
+      </VSlickArrow>
     </div>
-    <VSlickArrow
-      v-if="settings.arrows"
-      :type="SlideNavigation.next"
-      :center-mode="settings.centerMode"
-      :infinite="settings.infinite"
-      :groups-to-show="settings.groupsToShow"
-      :slide-group-count="slideGroupCount"
-      :current-slide-group-index="state.currentSlideGroupIndex"
-      @next="handleNextVSlickArrow"
-    >
-      <template #nextArrow="arrowSlotProps">
-        <slot name="nextArrow" v-bind="arrowSlotProps" />
-      </template>
-    </VSlickArrow>
     <VSlickDots
       v-if="settings.dots"
       :current-slide-group-index="state.currentSlideGroupIndex"
