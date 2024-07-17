@@ -908,16 +908,18 @@ watch(
       }
     }
 
-    var centerPaddingStyle = {}
-    if (!vertical) {
-      if (centerMode) {
-        centerPaddingStyle = {
-          padding: '0px ' + centerPadding
-        }
+    let centerPaddingStyle
+    if (!centerMode) {
+      centerPaddingStyle = {
+        padding: '0'
       }
-    } else if (centerMode) {
+    } else if (vertical) {
       centerPaddingStyle = {
         padding: centerPadding + ' 0px'
+      }
+    } else {
+      centerPaddingStyle = {
+        padding: '0px ' + centerPadding
       }
     }
     vSlickListStyle.value = {
