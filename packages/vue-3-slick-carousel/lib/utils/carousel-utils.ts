@@ -536,7 +536,7 @@ export function getTrackLeft(spec: TrackInfoSpec) {
     }
     // in center mode, shift current slide group to the center of the frame
     if (centerMode) {
-      slidesToOffset += groupsToShow / 2
+      slidesToOffset += Math.floor(groupsToShow / 2)
     }
   } else {
     if (
@@ -546,7 +546,7 @@ export function getTrackLeft(spec: TrackInfoSpec) {
       slidesToOffset = groupsToShow - (slideGroupCount % groupsToScroll)
     }
     if (centerMode) {
-      slidesToOffset = groupsToShow / 2
+      slidesToOffset = Math.floor(groupsToShow / 2)
     }
   }
   slideGroupOffset = slidesToOffset * parseInt(`${slideGroupWidth}`)
