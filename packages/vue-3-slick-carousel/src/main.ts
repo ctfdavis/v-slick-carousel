@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
 import { createWebHistory, createRouter } from 'vue-router'
+import { Quasar } from 'quasar'
+import '@quasar/extras/material-icons/material-icons.css'
+import 'quasar/src/css/index.sass'
 import './style.css'
 import '@lib/styles/theme.scss'
 import App from './App.vue'
@@ -10,8 +13,15 @@ import NotFound from './NotFound.vue'
 
 const routes = [
   { path: '/', component: Home },
-  ...Object.keys(examples).map((o) => ({
-    path: `/example/${o}`,
+  {
+    path: '/example',
+    redirect: {
+      name: Object.values(examples).find((o) => o.order === 1)!.id
+    }
+  },
+  ...Object.keys(examples).map((k) => ({
+    path: `/example/${k}`,
+    name: k,
     component: Example
   })),
   { path: '/:pathMatch(.*)*', component: NotFound }
@@ -22,4 +32,9 @@ const router = createRouter({
   routes
 })
 
-createApp(App).use(router).mount('#app')
+createApp(App)
+  .use(Quasar, {
+    plugins: {}
+  })
+  .use(router)
+  .mount('#app')

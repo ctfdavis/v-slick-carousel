@@ -48,6 +48,12 @@ importers:
         specifier: ^3
         version: 3.4.31(typescript@5.5.3)
     devDependencies:
+      '@quasar/extras':
+        specifier: ^1.16.12
+        version: 1.16.12
+      '@quasar/vite-plugin':
+        specifier: ^1.7.0
+        version: 1.7.0(@vitejs/plugin-vue@5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)(terser@5.31.1))(vue@3.4.31(typescript@5.5.3)))(quasar@2.16.6)(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)(terser@5.31.1))(vue@3.4.31(typescript@5.5.3))
       '@types/enquire.js':
         specifier: ^2.1.5
         version: 2.1.5
@@ -93,6 +99,9 @@ importers:
       prettier:
         specifier: ^3.3.1
         version: 3.3.2
+      quasar:
+        specifier: ^2.16.6
+        version: 2.16.6
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -1325,6 +1334,18 @@ packages:
 
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
+
+  '@quasar/extras@1.16.12':
+    resolution: {integrity: sha512-hLlb3Buxo38Xg/2w0BTkz98RBh/VH8apZ2r6Fl8YpPgrVQ0diHyN/BVTvIOk5Kch2y38L2kvwOIddsB2UcCuIg==}
+
+  '@quasar/vite-plugin@1.7.0':
+    resolution: {integrity: sha512-ia4w1n4DuPYm92MQLPNpMqLJID1WGGRyVGxkVeg8V+V25Vh3p9QBo++iuXR4sW/bCmzzx66Ko6VStsr1zp90GQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@vitejs/plugin-vue': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
+      quasar: ^2.16.0
+      vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
+      vue: ^3.0.0
 
   '@rollup/plugin-alias@5.1.0':
     resolution: {integrity: sha512-lpA3RZ9PdIG7qqhEfv79tBffNaoDuukFDrmhLqg9ifv99u/ehn+lOg30x2zmhf8AQqQUZaMk/B9fZraQ6/acDQ==}
@@ -4042,6 +4063,10 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
+  quasar@2.16.6:
+    resolution: {integrity: sha512-nFFS/WniZy052wUNr0UHxc46KVB0hVg7IlBpVScxQAANQxL5uJVqaiw0z2CEM8IM+MCObXANqxHX/m7woG7zIw==}
+    engines: {node: '>= 10.18.1', npm: '>= 6.13.4', yarn: '>= 1.21.1'}
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -6455,6 +6480,15 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
+
+  '@quasar/extras@1.16.12': {}
+
+  '@quasar/vite-plugin@1.7.0(@vitejs/plugin-vue@5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)(terser@5.31.1))(vue@3.4.31(typescript@5.5.3)))(quasar@2.16.6)(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)(terser@5.31.1))(vue@3.4.31(typescript@5.5.3))':
+    dependencies:
+      '@vitejs/plugin-vue': 5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)(terser@5.31.1))(vue@3.4.31(typescript@5.5.3))
+      quasar: 2.16.6
+      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.6)(terser@5.31.1)
+      vue: 3.4.31(typescript@5.5.3)
 
   '@rollup/plugin-alias@5.1.0(rollup@4.18.0)':
     dependencies:
@@ -9671,6 +9705,8 @@ snapshots:
   punycode@2.3.1: {}
 
   pure-rand@6.1.0: {}
+
+  quasar@2.16.6: {}
 
   queue-microtask@1.2.3: {}
 

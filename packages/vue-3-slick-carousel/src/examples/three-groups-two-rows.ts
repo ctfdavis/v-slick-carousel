@@ -2,16 +2,16 @@ import type { Settings } from '@lib/types'
 import nationFlags from '../data/nation-flags'
 import { Example, ExampleSlide } from '../types'
 
-const id = 'one-slide-finite'
+const id = 'three-groups-two-rows'
 
-const name = 'One Slide Finite'
+const name = 'Three Groups Two Rows'
 
 const settings: Settings = {
   dots: true,
   infinite: false,
-  groupsToShow: 1,
+  groupsToShow: 3,
   groupsToScroll: 1,
-  slidesPerGroup: 1,
+  slidesPerGroup: 2,
   swipe: true
 }
 
@@ -25,7 +25,7 @@ const example: Example = {
   name,
   settings,
   slides,
-  order: 1
+  order: 4
 }
 
 export default example

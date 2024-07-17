@@ -2,17 +2,19 @@ import type { Settings } from '@lib/types'
 import nationFlags from '../data/nation-flags'
 import { Example, ExampleSlide } from '../types'
 
-const id = 'one-slide-finite'
+const id = 'center-mode'
 
-const name = 'One Slide Finite'
+const name = 'Center Mode'
 
 const settings: Settings = {
   dots: true,
-  infinite: false,
-  groupsToShow: 1,
+  infinite: true,
+  groupsToShow: 3,
   groupsToScroll: 1,
   slidesPerGroup: 1,
-  swipe: true
+  swipe: true,
+  centerMode: true,
+  centerPadding: '100px'
 }
 
 const slides: ExampleSlide[] = nationFlags.map((o) => ({
@@ -25,7 +27,7 @@ const example: Example = {
   name,
   settings,
   slides,
-  order: 1
+  order: 7
 }
 
 export default example

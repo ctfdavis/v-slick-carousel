@@ -3,7 +3,7 @@
 <template>
   <nav>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/example/one-slide-finite">One Slide Finite</RouterLink>
+    <RouterLink to="/example">Example</RouterLink>
   </nav>
   <main>
     <RouterView />

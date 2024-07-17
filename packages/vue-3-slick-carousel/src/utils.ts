@@ -1,8 +1,6 @@
 export function codify(obj: any) {
   let jsonString = JSON.stringify(obj, null, 2)
 
-  console.debug('jsonString', jsonString)
-
   // Add newlines after commas and curly braces
   jsonString = jsonString
     .replace(/,(\s*?)(?=\S)/g, ',\n$1')
