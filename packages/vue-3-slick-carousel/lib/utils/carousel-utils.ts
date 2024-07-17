@@ -237,50 +237,43 @@ export const getTraversedSlideGroupCount = (spec: SlideGroupCountSpec) => {
   const centerOffset = spec.centerMode
     ? +spec.slideGroupWidth * Math.floor(spec.groupsToShow / 2)
     : 0
-  if (spec.swipeToSlide) {
-    let swipedSlideGroup
-    const slickList = spec.listEl
-    const slideGroups = slickList.querySelectorAll<HTMLElement>(
-      '.v-slick-slide-group'
-    )
-    Array.from(slideGroups).every((grp) => {
-      if (!spec.vertical) {
-        if (
-          grp.offsetLeft - centerOffset + grp.offsetWidth / 2 >
-          spec.swipeLeft * -1
-        ) {
-          swipedSlideGroup = grp
-          return false
-        }
-      } else {
-        if (grp.offsetTop + grp.offsetHeight / 2 > spec.swipeLeft * -1) {
-          swipedSlideGroup = grp
-          return false
-        }
+  let swipedSlideGroup
+  const slickList = spec.listEl
+  const slideGroups = slickList.querySelectorAll<HTMLElement>(
+    '.v-slick-slide-group'
+  )
+  Array.from(slideGroups).every((grp) => {
+    if (!spec.vertical) {
+      if (
+        grp.offsetLeft - centerOffset + grp.offsetWidth / 2 >
+        spec.swipeLeft * -1
+      ) {
+        swipedSlideGroup = grp
+        return false
       }
-
-      return true
-    })
-
-    if (!swipedSlideGroup) {
-      return 0
+    } else {
+      if (grp.offsetTop + grp.offsetHeight / 2 > spec.swipeLeft * -1) {
+        swipedSlideGroup = grp
+        return false
+      }
     }
-    const currentIndex =
-      spec.rtl === true
-        ? spec.slideGroupCount - spec.currentSlideGroupIndex
-        : spec.currentSlideGroupIndex
-    const swipedSlideGroupIndex = (swipedSlideGroup as HTMLElement)?.dataset
-      ?.index
-    const groupsTraversed =
-      Math.abs(
-        swipedSlideGroupIndex
-          ? parseInt(swipedSlideGroupIndex)
-          : 0 - currentIndex
-      ) || 1
-    return groupsTraversed
-  } else {
-    return spec.groupsToScroll
+
+    return true
+  })
+
+  if (!swipedSlideGroup) {
+    return 0
   }
+  const currentIndex =
+    spec.rtl === true
+      ? spec.slideGroupCount - spec.currentSlideGroupIndex
+      : spec.currentSlideGroupIndex
+  const swipedSlideGroupIndex = (swipedSlideGroup as HTMLElement)?.dataset
+    ?.index
+  const groupsTraversed = Math.abs(
+    swipedSlideGroupIndex ? parseInt(swipedSlideGroupIndex) : 0 - currentIndex
+  )
+  return groupsTraversed
 }
 
 export const getSwipeDirection = (
@@ -373,8 +366,9 @@ export const getSwipeEndState = (
     switch (swipeDirection) {
       case 'left':
       case 'up':
-        newSlideGroupIndex =
-          currentSlideGroupIndex + getTraversedSlideGroupCount(spec)
+        newSlideGroupIndex = spec.swipeToSlide
+          ? getTraversedSlideGroupCount(spec)
+          : currentSlideGroupIndex + spec.groupsToScroll
         slideGroupCount = swipeToSlide
           ? checkNavigable(spec, newSlideGroupIndex)
           : newSlideGroupIndex
@@ -382,8 +376,9 @@ export const getSwipeEndState = (
         break
       case 'right':
       case 'down':
-        newSlideGroupIndex =
-          currentSlideGroupIndex - getTraversedSlideGroupCount(spec)
+        newSlideGroupIndex = spec.swipeToSlide
+          ? getTraversedSlideGroupCount(spec)
+          : currentSlideGroupIndex - spec.groupsToScroll
         slideGroupCount = swipeToSlide
           ? checkNavigable(spec, newSlideGroupIndex)
           : newSlideGroupIndex
