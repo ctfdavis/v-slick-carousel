@@ -291,7 +291,9 @@ const play = () => {
   slideGroupHandler(nextIndex)
 }
 
-const pause = (pauseType: PlayingType | keyof typeof PlayingType) => {
+const pause = (
+  pauseType: null | PlayingType | keyof typeof PlayingType = null
+) => {
   if (state.value.autoplayTimer) {
     clearInterval(state.value.autoplayTimer)
     state.value.autoplayTimer = null
@@ -306,6 +308,8 @@ const pause = (pauseType: PlayingType | keyof typeof PlayingType) => {
     state.value.autoplaying = PlayingType.focused
   } else if (autoplaying === PlayingType.playing) {
     state.value.autoplaying = PlayingType.hovered
+  } else if (autoplaying === null) {
+    state.value.autoplaying = null
   }
 }
 
@@ -559,7 +563,7 @@ const resizeWindow = (shouldSetTrackStyle = true) => {
   if (props.autoplay) {
     autoPlay(PlayingType.update)
   } else {
-    pause(PlayingType.paused)
+    pause()
   }
 }
 
