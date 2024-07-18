@@ -905,7 +905,9 @@ watch(
     settings.value.vertical
   ],
   ([listHeight, centerMode, centerPadding, vertical]) => {
-    let verticalHeightStyle = {}
+    let verticalHeightStyle = {
+      height: 'auto'
+    }
     if (vertical) {
       verticalHeightStyle = {
         height: `${listHeight}px`
