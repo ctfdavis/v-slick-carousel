@@ -390,14 +390,12 @@ const handleChildClickVSlickTrack = ({ index }: ChildClickPayload) => {
 }
 
 const handleKeyDownVSlickList = (e: KeyboardEvent) => {
-  console.debug('handleKeyDownVSlickList', e)
   if (!settings.value.accessibility) return
   const navigation = getNavigationOnKeyType(
     e,
     settings.value.accessibility,
     settings.value.rtl
   )
-  console.debug('navigation', navigation)
   if (!navigation) return
   changeSlideGroup({ message: navigation as SlideNavigation })
 }
