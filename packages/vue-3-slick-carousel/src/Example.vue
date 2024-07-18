@@ -27,6 +27,7 @@
         </div>
       </VSlickCarousel>
     </div>
+    <h3 class="heading">Settings</h3>
     <pre>{{ exampleCode }}</pre>
   </template>
 </template>
@@ -35,10 +36,11 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { VSlickCarousel } from '@lib/components'
-import { codify } from './utils'
+import { codify, markAsObj } from './utils'
 import type { Example, ExampleOption } from './types'
 import { id as asNavForId } from './examples/as-nav-for'
 import examples from './examples'
+import cloneDeep from 'lodash.clonedeep'
 const c1 = ref()
 const c2 = ref()
 const router = useRouter()
@@ -54,15 +56,22 @@ const options = computed<ExampleOption[]>(() =>
     .sort((o) => o.order)
     .map((o) => ({ label: o.name, value: o.id }))
 )
-const exampleCode = computed(() =>
-  example.value?.settings ? codify(example.value?.settings) : ''
-)
+
 const isAsNavFor = computed(() => example.value?.id === asNavForId)
+
+const exampleCode = computed(() => {
+  const settings = cloneDeep<any>(example.value?.settings)
+  if (settings && isAsNavFor.value) {
+    settings.asNavFor = markAsObj('c2')
+  }
+  return settings ? codify(settings) : ''
+})
 
 selected.value = options.value.find((o) => o.value === id.value)!
 
 watch(selected, (newVal) => {
   if (!newVal) return
+  c1.value?.goTo(0, true)
   router.push({
     name: newVal.value
   })
@@ -92,6 +101,10 @@ watch(selected, (newVal) => {
   .text {
     font-size: 18px;
     font-weight: 600;
+    text-align: center;
   }
+}
+.heading {
+  font-size: 18px;
 }
 </style>

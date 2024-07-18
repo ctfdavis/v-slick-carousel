@@ -2,9 +2,9 @@ import type { Settings } from '@lib/types'
 import nationFlags from '../data/nation-flags'
 import { Example, ExampleSlide } from '../types'
 
-const id = 'two-slides-finite'
+const id = 'two-slide-groups-finite'
 
-const name = 'Two Slides Finite'
+const name = 'Two Slide Groups Finite'
 
 const settings: Settings = {
   dots: true,

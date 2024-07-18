@@ -1,6 +1,6 @@
-import oneSlideFinite from './one-slide-finite'
-import twoSlidesFinite from './two-slides-finite'
-import oneSlideInfinite from './one-slide-infinite'
+import oneSlideGroupFinite from './one-slide-group-finite'
+import twoSlideGroupsFinite from './two-slide-groups-finite'
+import oneSlideGroupInfinite from './one-slide-group-infinite'
 import threeGroupsTwoRows from './three-groups-two-rows'
 import responsive from './responsive'
 import focusOnSelect from './focus-on-select'
@@ -13,9 +13,9 @@ import rtl from './rtl'
 import asNavFor from './as-nav-for'
 
 export default {
-  [oneSlideFinite.id]: oneSlideFinite,
-  [twoSlidesFinite.id]: twoSlidesFinite,
-  [oneSlideInfinite.id]: oneSlideInfinite,
+  [oneSlideGroupFinite.id]: oneSlideGroupFinite,
+  [twoSlideGroupsFinite.id]: twoSlideGroupsFinite,
+  [oneSlideGroupInfinite.id]: oneSlideGroupInfinite,
   [threeGroupsTwoRows.id]: threeGroupsTwoRows,
   [responsive.id]: responsive,
   [focusOnSelect.id]: focusOnSelect,
