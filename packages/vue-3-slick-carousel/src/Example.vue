@@ -4,7 +4,23 @@
     <h1 class="title">{{ example.name }}</h1>
 
     <div class="carousel">
-      <VSlickCarousel v-bind="example.settings">
+      <VSlickCarousel
+        ref="c1"
+        v-bind="
+          isAsNavFor ? { ...example.settings, asNavFor: c2 } : example.settings
+        "
+      >
+        <div class="slide" v-for="slide of example.slides" :key="slide.text">
+          <img class="img no-swipe" :src="slide.img" />
+          <p class="text">{{ slide.text }}</p>
+        </div>
+      </VSlickCarousel>
+    </div>
+    <div v-if="isAsNavFor" class="carousel">
+      <VSlickCarousel
+        ref="c2"
+        v-bind="{ ...example.settings, groupsToShow: 6, asNavFor: c1 }"
+      >
         <div class="slide" v-for="slide of example.slides" :key="slide.text">
           <img class="img no-swipe" :src="slide.img" />
           <p class="text">{{ slide.text }}</p>
@@ -21,7 +37,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { VSlickCarousel } from '@lib/components'
 import { codify } from './utils'
 import type { Example, ExampleOption } from './types'
+import { id as asNavForId } from './examples/as-nav-for'
 import examples from './examples'
+const c1 = ref()
+const c2 = ref()
 const router = useRouter()
 const route = useRoute()
 const id = computed<string | null>(() => route.path.split('/')?.[2] || null)
@@ -38,6 +57,7 @@ const options = computed<ExampleOption[]>(() =>
 const exampleCode = computed(() =>
   example.value?.settings ? codify(example.value?.settings) : ''
 )
+const isAsNavFor = computed(() => example.value?.id === asNavForId)
 
 selected.value = options.value.find((o) => o.value === id.value)!
 

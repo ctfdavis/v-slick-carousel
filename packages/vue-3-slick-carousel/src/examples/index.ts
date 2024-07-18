@@ -8,6 +8,9 @@ import centerMode from './center-mode'
 import fade from './fade'
 import lazyLoad from './lazy-load'
 import autoPlay from './auto-play'
+import vertical from './vertical'
+import rtl from './rtl'
+import asNavFor from './as-nav-for'
 
 export default {
   [oneSlideFinite.id]: oneSlideFinite,
@@ -19,5 +22,8 @@ export default {
   [centerMode.id]: centerMode,
   [fade.id]: fade,
   [lazyLoad.id]: lazyLoad,
-  [autoPlay.id]: autoPlay
+  [autoPlay.id]: autoPlay,
+  [vertical.id]: vertical,
+  [rtl.id]: rtl,
+  [asNavFor.id]: asNavFor
 }

@@ -2,20 +2,18 @@ import type { Settings } from '@lib/types'
 import nationFlags from '../data/nation-flags'
 import { Example, ExampleSlide } from '../types'
 
-const id = 'auto-play'
+export const id = 'as-nav-for'
 
-const name = 'Auto Play'
+const name = 'As Nav for'
 
 const settings: Settings = {
-  dots: true,
+  dots: false,
   infinite: true,
-  groupsToShow: 3,
+  groupsToShow: 1,
   groupsToScroll: 1,
   slidesPerGroup: 1,
-  swipe: false,
-  autoplay: true,
-  autoplaySpeed: 1000,
-  pauseOnHover: true
+  swipe: true,
+  focusOnSelect: true
 }
 
 const slides: ExampleSlide[] = nationFlags.map((o) => ({
@@ -28,7 +26,7 @@ const example: Example = {
   name,
   settings,
   slides,
-  order: 9
+  order: 12
 }
 
 export default example
