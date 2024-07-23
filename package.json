@@ -8,6 +8,8 @@
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm --filter=vue-3-slick-carousel run build",
     "dev": "pnpm --filter=vue-3-slick-carousel run dev",
+    "build-web": "pnpm --filter=vue-3-slick-carousel run build-web",
+    "preview": "pnpm --filter=vue-3-slick-carousel run preview",
     "nuxt-dev": "pnpm --filter=nuxt-app run dev",
     "prepare": "husky"
   },
