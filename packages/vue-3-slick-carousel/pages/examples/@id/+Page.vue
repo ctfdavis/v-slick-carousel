@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-select v-model="selected" size="large" placeholder="Example">
+    <el-select
+      v-if="isClient"
+      v-model="selected"
+      size="large"
+      placeholder="Example"
+    >
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -44,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { navigate } from 'vike/client/router'
 import { usePageContext } from 'vike-vue/usePageContext'
 import Prism from 'vue-prism-component'
@@ -54,6 +59,7 @@ import type { Example, ExampleOption } from '../../../src/types'
 import { id as asNavForId } from '../../../src/examples/as-nav-for'
 import examples from '../../../src/examples'
 import cloneDeep from 'lodash.clonedeep'
+const isClient = ref(false)
 const c1 = ref()
 const c2 = ref()
 const pageContext = usePageContext()
@@ -61,12 +67,7 @@ const id = ref<string | null>(pageContext.routeParams.id || null)
 const selected = ref<string | null>(null)
 const exampleCode = ref<string | null>(null)
 const example = computed<Example | null>(() => {
-  console.debug('updating example, id: ', id.value)
   if (!id.value) return null
-  console.debug(
-    'updating example, : ',
-    Object.values(examples).find((o) => o.id === id.value)!
-  )
   return Object.values(examples).find((o) => o.id === id.value)!
 })
 const options = computed<ExampleOption[]>(() =>
@@ -77,14 +78,9 @@ const options = computed<ExampleOption[]>(() =>
 
 const isAsNavFor = computed(() => example.value?.id === asNavForId)
 
-// const exampleCode = computed(() => {
-//   const settings = cloneDeep<any>(example.value?.settings)
-//   console.debug('settings updated, ', settings)
-//   if (settings && isAsNavFor.value) {
-//     settings.asNavFor = markAsObj('c2')
-//   }
-//   return settings ? codify(settings) : ''
-// })
+onMounted(() => {
+  isClient.value = true
+})
 
 watch(selected, (newVal) => {
   if (!newVal) return
@@ -95,13 +91,13 @@ watch(selected, (newVal) => {
 watch(
   () => pageContext.routeParams.id,
   (newVal) => {
-    console.debug('pageContext.routeParams.id newVal', newVal)
     if (!newVal) {
       id.value = Object.values(examples).sort((o) => o.order)[0].id
       selected.value = options.value.find((o) => o.value === id.value)!.value
       return
     }
     id.value = newVal
+    selected.value = options.value.find((o) => o.value === id.value)!.value
   },
   { immediate: true }
 )
@@ -110,14 +106,12 @@ watch(
   () => example.value?.settings,
   (newVal) => {
     const settings = cloneDeep<any>(newVal)
-    console.debug('settings updated, ', settings)
     if (settings && isAsNavFor.value) {
       settings.asNavFor = markAsObj('c2')
     }
     if (settings) {
       exampleCode.value = codify(settings)
     }
-    console.debug('updated exampleCode', exampleCode)
   },
   { immediate: true }
 )
