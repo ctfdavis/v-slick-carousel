@@ -485,7 +485,7 @@ const changeSlideGroup = (
   )
 }
 
-const slideGroupHandler = (index: number, dontAnimate = false) => {
+const slideGroupHandler = async (index: number, dontAnimate = false) => {
   const { asNavFor, speed } = settings.value
   const currentSlideGroupIndex = state.value.currentSlideGroupIndex
   const { slidingState, afterSlidingState } = getStatesOnSlide({
@@ -514,17 +514,20 @@ const slideGroupHandler = (index: number, dontAnimate = false) => {
     ;(asNavFor as VSlickCarouselInstance).goTo(index)
   }
   if (!afterSlidingState) return
-  animationEndCallback = setTimeout(() => {
-    const { animating, ...firstBatch } = afterSlidingState!
-    Object.assign(state.value, firstBatch)
-    callbackTimers.push(
-      setTimeout(() => {
-        state.value.animating = animating || false
-      })
-    )
-    emit('afterChange', slidingState.currentSlideGroupIndex)
-    animationEndCallback = null
-  }, speed)
+  await new Promise<void>((resolve) => {
+    animationEndCallback = setTimeout(() => {
+      const { animating, ...firstBatch } = afterSlidingState!
+      Object.assign(state.value, firstBatch)
+      callbackTimers.push(
+        setTimeout(() => {
+          state.value.animating = animating || false
+        })
+      )
+      emit('afterChange', slidingState.currentSlideGroupIndex)
+      animationEndCallback = null
+      resolve()
+    }, speed)
+  })
 }
 
 const updateState = (shouldSetTrackStyle?: boolean) => {
@@ -547,10 +550,7 @@ const updateState = (shouldSetTrackStyle?: boolean) => {
   if (shouldSetTrackStyle || slideGroupCount.value !== spec.slideGroupCount) {
     updatedState.trackStyle = trackStyle
   }
-  state.value = {
-    ...state.value,
-    ...updatedState
-  }
+  Object.assign(state.value, updatedState)
 }
 
 const resizeWindow = (shouldSetTrackStyle = true) => {
