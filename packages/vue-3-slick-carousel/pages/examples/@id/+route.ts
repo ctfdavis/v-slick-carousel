@@ -14,6 +14,5 @@ export function route(pageContext) {
   if (!match) return false
   const [result] = match
   const [, id] = result.split('/examples/')
-  console.debug('id', id)
   return { routeParams: { id } }
 }

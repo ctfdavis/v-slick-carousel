@@ -21,6 +21,30 @@ const slides: ExampleSlide[] = nationFlags.map((o) => ({
   text: o.nation
 }))
 
+export const codeC1 = String.raw`{
+  "dots": false,
+  "infinite": true,
+  "groupsToShow": 1,
+  "groupsToScroll": 1,
+  "slidesPerGroup": 1,
+  "swipe": true,
+  "focusOnSelect": true,
+  "asNavFor": c2
+}
+`
+
+export const codeC2 = String.raw`{
+  "dots": false,
+  "infinite": true,
+  "groupsToShow": 6,
+  "groupsToScroll": 1,
+  "slidesPerGroup": 1,
+  "swipe": true,
+  "focusOnSelect": true,
+  "asNavFor": c1
+}
+`
+
 const example: Example = {
   id,
   name,

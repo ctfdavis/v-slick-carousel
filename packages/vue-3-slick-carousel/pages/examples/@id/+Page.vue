@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-select
       v-if="isClient"
       v-model="selected"
@@ -43,7 +43,13 @@
         </VSlickCarousel>
       </div>
       <h3 class="heading">Settings</h3>
-      <prism language="typescript">{{ exampleCode }}</prism>
+      <template v-if="isAsNavFor">
+        <prism language="typescript">{{ codeC1 }}</prism>
+        <prism language="typescript">{{ codeC2 }}</prism>
+      </template>
+      <template v-else>
+        <prism language="typescript">{{ exampleCode }}</prism>
+      </template>
     </template>
   </div>
 </template>
@@ -54,12 +60,16 @@ import { navigate } from 'vike/client/router'
 import { usePageContext } from 'vike-vue/usePageContext'
 import Prism from 'vue-prism-component'
 import { VSlickCarousel } from '../../../lib/components'
-import { codify, markAsObj } from '../../../src/utils'
+import { codify } from '../../../src/utils'
 import type { Example, ExampleOption } from '../../../src/types'
-import { id as asNavForId } from '../../../src/examples/as-nav-for'
+import {
+  id as asNavForId,
+  codeC1,
+  codeC2
+} from '../../../src/examples/as-nav-for'
 import examples from '../../../src/examples'
-import cloneDeep from 'lodash.clonedeep'
 const isClient = ref(false)
+const loading = ref(false)
 const c1 = ref()
 const c2 = ref()
 const pageContext = usePageContext()
@@ -82,10 +92,12 @@ onMounted(() => {
   isClient.value = true
 })
 
-watch(selected, (newVal) => {
+watch(selected, async (newVal) => {
   if (!newVal) return
-  c1.value?.goTo(0, true)
+  loading.value = true
+  await c1.value?.goTo(0, true)
   navigate(`/examples/${newVal}`)
+  loading.value = false
 })
 
 watch(
@@ -105,12 +117,8 @@ watch(
 watch(
   () => example.value?.settings,
   (newVal) => {
-    const settings = cloneDeep<any>(newVal)
-    if (settings && isAsNavFor.value) {
-      settings.asNavFor = markAsObj('c2')
-    }
-    if (settings) {
-      exampleCode.value = codify(settings)
+    if (newVal) {
+      exampleCode.value = codify(newVal)
     }
   },
   { immediate: true }
