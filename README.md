@@ -45,7 +45,7 @@ See [Installation](./packages/docs/guide/installation.md) for more details.
 </template>
 
 <script setup lang="ts">
-import 'vue-3-slick-carousel/dist/style.css'
+import 'vue-3-slick-carousel/style.css'
 import { VSlickCarousel } from 'vue-3-slick-carousel'
 import type { Settings } from 'vue-3-slick-carousel'
 

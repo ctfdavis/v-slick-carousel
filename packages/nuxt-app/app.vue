@@ -14,5 +14,5 @@
 
 <script setup lang="ts">
 import { VSlickCarousel } from 'vue-3-slick-carousel'
-import 'vue-3-slick-carousel/dist/style.css'
+import 'vue-3-slick-carousel/style.css'
 </script>
