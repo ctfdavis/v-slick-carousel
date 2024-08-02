@@ -3,7 +3,7 @@
 If you use a package manager like npm to install this library, you can import the component and styles in your Vue application like below:
 
 ```js
-import 'vue-3-slick-carousel/dist/style.css'
+import 'vue-3-slick-carousel/style.css'
 import { VSlickCarousel } from 'vue-3-slick-carousel'
 ```
 
@@ -21,7 +21,7 @@ For example, in a Vue SFC, you can use the component as follows:
 </template>
 
 <script setup lang="ts">
-import 'vue-3-slick-carousel/dist/style.css'
+import 'vue-3-slick-carousel/style.css'
 import { VSlickCarousel } from 'vue-3-slick-carousel'
 import type { Settings } from 'vue-3-slick-carousel'
 

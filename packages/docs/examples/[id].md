@@ -48,7 +48,7 @@ import examples from '../src/examples'
 import { useData, withBase } from 'vitepress'
 import { createHighlighter } from 'shiki'
 import { ref, onMounted } from 'vue'
-import 'vue-3-slick-carousel/dist/style.css'
+import 'vue-3-slick-carousel/style.css'
 import { VSlickCarousel } from 'vue-3-slick-carousel'
 import { codify } from '../src/utils'
 import {
