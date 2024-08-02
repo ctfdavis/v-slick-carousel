@@ -4,7 +4,10 @@
   "workspaces": [
     "packages/*"
   ],
-  "type": "module",
+  "engines": {
+    "node": ">=18.18.0",
+    "pnpm": "9.6.0"
+  },
   "packageManager": "pnpm@9.6.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
