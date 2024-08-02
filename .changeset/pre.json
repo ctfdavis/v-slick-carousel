@@ -1,0 +1,8 @@
+{
+  "mode": "exit",
+  "tag": "beta",
+  "initialVersions": {
+    "vue-3-slick-carousel": "0.1.0"
+  },
+  "changesets": []
+}
