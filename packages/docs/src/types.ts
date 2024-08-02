@@ -1,4 +1,4 @@
-import type { Settings } from 'vue-3-slick-carousel'
+import type { Settings } from 'v-slick-carousel'
 
 export type Example = {
   id: string

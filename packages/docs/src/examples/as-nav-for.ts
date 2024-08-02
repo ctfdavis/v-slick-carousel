@@ -1,4 +1,4 @@
-import type { Settings } from 'vue-3-slick-carousel'
+import type { Settings } from 'v-slick-carousel'
 import type { Example, ExampleSlide } from '../types'
 import nationFlags from '../data/nation-flags'
 

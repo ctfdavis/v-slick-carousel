@@ -18,7 +18,7 @@ Styling the slides is easy because one provides the slides as a children of the 
 </template>
 
 <script setup lang="ts">
-import { VSlickCarousel } from 'vue-3-slick-carousel'
+import { VSlickCarousel } from 'v-slick-carousel'
 </script>
 
 <style scoped>
@@ -58,7 +58,7 @@ To style the current slide group, one can use the `current` class name. **Slide 
 </template>
 
 <script setup lang="ts">
-import { VSlickCarousel } from 'vue-3-slick-carousel'
+import { VSlickCarousel } from 'v-slick-carousel'
 </script>
 
 <style scoped>
@@ -85,7 +85,7 @@ When using only the base styles, the arrows may not be visible as they are posit
 </template>
 
 <script setup lang="ts">
-import { VSlickCarousel } from 'vue-3-slick-carousel'
+import { VSlickCarousel } from 'v-slick-carousel'
 </script>
 
 <style scoped>
@@ -107,7 +107,7 @@ To style the arrows (e.g. change the color or icons), one can use the `.v-slick-
 </template>
 
 <script setup lang="ts">
-import { VSlickCarousel } from 'vue-3-slick-carousel'
+import { VSlickCarousel } from 'v-slick-carousel'
 </script>
 
 <style scoped>
@@ -135,7 +135,7 @@ To style the dots, one can use the `.v-slick-dots` selector like below. The acti
 </template>
 
 <script setup lang="ts">
-import { VSlickCarousel } from 'vue-3-slick-carousel'
+import { VSlickCarousel } from 'v-slick-carousel'
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: 'Vue 3 Slick Carousel'
+  name: 'V Slick Carousel'
   text: 'Easy to Use, Powerful & Customizable'
   tagline: Slick like a lollipop
   image:
@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/why-vue-3-slick-carousel
+      link: /guide/why-v-slick-carousel
     - theme: alt
       text: Examples
       link: /examples/one-slide-group-finite

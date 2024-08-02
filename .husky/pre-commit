@@ -1,1 +1,1 @@
-pnpm -F vue-3-slick-carousel run lint-staged
+pnpm -F v-slick-carousel run lint-staged
