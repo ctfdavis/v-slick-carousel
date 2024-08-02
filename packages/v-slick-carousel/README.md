@@ -1,6 +1,6 @@
 <div align="center">
 <h1>V Slick Carousel</h1>
-<img src="../docs/public/logo.svg" alt="V Slick Carousel" />
+<img src="https://github.com/ctfdavis/v-slick-carousel/blob/main/packages/docs/public/logo.svg" alt="V Slick Carousel" />
 </div>
 
 A Carousel component with TypeScript support and numerous features made for Vue 3.
@@ -21,7 +21,7 @@ V Slick Carousel is a carousel component with TypeScript support and features in
 - SSR support
 - Typescript support
 
-See [Why V Slick Carousel](../docs/guide/why-v-slick-carousel.md) for more details.
+See [Why V Slick Carousel](https://github.com/ctfdavis/v-slick-carousel/blob/main/packages/docs/guide/why-v-slick-carousel.md) for more details.
 
 ## Installation
 
@@ -29,7 +29,7 @@ See [Why V Slick Carousel](../docs/guide/why-v-slick-carousel.md) for more detai
 npm install v-slick-carousel
 ```
 
-See [Installation](../docs/guide/installation.md) for more details.
+See [Installation](https://github.com/ctfdavis/v-slick-carousel/blob/main/packages/docs/guide/installation.md) for more details.
 
 ## Quick Start
 
@@ -64,8 +64,8 @@ const settings: Settings = {
 
 ## Settings
 
-See [Settings](../docs/guide/settings.md).
+See [Settings](https://github.com/ctfdavis/v-slick-carousel/blob/main/packages/docs/guide/settings.md).
 
 ## License
 
-V Slick Carousel is open source and released under the [MIT License](../../LICENSE).
+V Slick Carousel is open source and released under the [MIT License](https://github.com/ctfdavis/v-slick-carousel/blob/main/LICENSE).
