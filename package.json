@@ -4,17 +4,21 @@
   "workspaces": [
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm --filter=vue-3-slick-carousel run build",
     "dev": "pnpm --filter=vue-3-slick-carousel run dev",
-    "build-web": "pnpm --filter=vue-3-slick-carousel run build-web",
+    "docs:dev": "pnpm --filter=docs run docs:dev",
+    "docs:build": "pnpm --filter=docs run docs:build",
+    "docs:preview": "pnpm --filter=docs run docs:preview",
     "preview": "pnpm --filter=vue-3-slick-carousel run preview",
-    "nuxt-dev": "pnpm --filter=nuxt-app run dev",
+    "nuxt:dev": "pnpm --filter=nuxt-app run dev",
     "prepare": "husky"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
-    "husky": "^9.0.11"
+    "husky": "^9.0.11",
+    "prettier": "3.3.2"
   }
 }
