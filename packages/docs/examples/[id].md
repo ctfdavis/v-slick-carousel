@@ -2,6 +2,7 @@
 prev: false
 next: false
 aside: false
+editLink: false
 ---
 
 <template v-if="example">
