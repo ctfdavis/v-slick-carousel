@@ -13,17 +13,6 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.mjs",
-      "require": "./dist/index.cjs.js"
-    },
-    "./dist/": {
-      "import": "./dist/",
-      "require": "./dist/"
-    }
-  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --p ./tsconfig.build.json && vite build",
