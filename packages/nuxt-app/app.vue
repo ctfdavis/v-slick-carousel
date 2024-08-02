@@ -13,6 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { VSlickCarousel } from "vue-3-slick-carousel";
-import "vue-3-slick-carousel/style.css";
+import { VSlickCarousel } from 'vue-3-slick-carousel'
+import 'vue-3-slick-carousel/dist/style.css'
 </script>
