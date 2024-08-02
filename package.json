@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "type": "module",
+  "packageManager": "pnpm@9.6.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm --filter=vue-3-slick-carousel run build",
