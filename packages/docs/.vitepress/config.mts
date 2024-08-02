@@ -9,7 +9,7 @@ export default defineConfig({
   head: [['link', { rel: 'icon', href: '/vue-3-slick-carousel/favicon.ico' }]],
   vite: {
     resolve: {
-      dedupe: ['vue-3-slick-carousel']
+      mainFields: ['module', 'main']
     }
   },
   themeConfig: {
