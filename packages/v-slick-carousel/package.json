@@ -1,5 +1,5 @@
 {
-  "name": "vue-3-slick-carousel",
+  "name": "v-slick-carousel",
   "version": "0.1.0",
   "description": "Vue Slick Carousel for Vue 3",
   "main": "dist/index.cjs.js",
@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ctfdavis/vue-3-slick-carousel.git"
+    "url": "git+https://github.com/ctfdavis/v-slick-carousel.git"
   },
   "keywords": [
     "vue",
@@ -60,9 +60,9 @@
   "author": "Davis Chan <davis.chan@aol.com> (https://github.com/ctfdavis)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ctfdavis/vue-3-slick-carousel/issues"
+    "url": "https://github.com/ctfdavis/v-slick-carousel/issues"
   },
-  "homepage": "https://github.com/ctfdavis/vue-3-slick-carousel#readme",
+  "homepage": "https://github.com/ctfdavis/v-slick-carousel#readme",
   "peerDependencies": {
     "vue": "^3"
   },

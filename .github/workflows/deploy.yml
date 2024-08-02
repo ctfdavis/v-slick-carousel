@@ -43,7 +43,7 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Install dependencies
         run: pnpm install
-      - name: Build vue-3-slick-carousel
+      - name: Build v-slick-carousel
         run: pnpm build
       - name: Build with VitePress
         run: pnpm docs:build

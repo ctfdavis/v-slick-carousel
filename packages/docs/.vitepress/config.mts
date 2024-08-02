@@ -3,10 +3,10 @@ import examples from '../src/examples'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'Vue 3 Slick Carousel',
-  description: 'Documentation for Vue 3 Slick Carousel',
-  base: '/vue-3-slick-carousel/',
-  head: [['link', { rel: 'icon', href: '/vue-3-slick-carousel/favicon.ico' }]],
+  title: 'V Slick Carousel',
+  description: 'Documentation for V Slick Carousel',
+  base: '/v-slick-carousel/',
+  head: [['link', { rel: 'icon', href: '/v-slick-carousel/favicon.ico' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: '/logo.svg',
@@ -14,7 +14,7 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       {
         text: 'Guide',
-        link: '/guide/why-vue-3-slick-carousel',
+        link: '/guide/why-v-slick-carousel',
         activeMatch: '/guide/'
       },
       {
@@ -28,8 +28,8 @@ export default defineConfig({
         text: 'Guide',
         items: [
           {
-            text: 'Why Vue 3 Slick Carousel',
-            link: '/guide/why-vue-3-slick-carousel'
+            text: 'Why V Slick Carousel',
+            link: '/guide/why-v-slick-carousel'
           },
           { text: 'Installation', link: '/guide/installation' },
           { text: 'Basic Usage', link: '/guide/basic-usage' },
@@ -52,12 +52,12 @@ export default defineConfig({
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/ctfdavis/vue-3-slick-carousel'
+        link: 'https://github.com/ctfdavis/v-slick-carousel'
       }
     ],
     footer: {
       message:
-        'Released under the <a href="https://github.com/ctfdavis/vue-3-slick-carousel/blob/main/LICENSE">MIT License</a>.',
+        'Released under the <a href="https://github.com/ctfdavis/v-slick-carousel/blob/main/LICENSE">MIT License</a>.',
       copyright:
         'Copyright © 2024-present <a href="https://github.com/ctfdavis">Davis Chan</a>'
     },
@@ -70,7 +70,7 @@ export default defineConfig({
     },
     editLink: {
       pattern:
-        'https://github.com/ctfdavis/vue-3-slick-carousel/edit/main/packages/docs/:path',
+        'https://github.com/ctfdavis/v-slick-carousel/edit/main/packages/docs/:path',
       text: 'Edit this page on GitHub'
     }
   }

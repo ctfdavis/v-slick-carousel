@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "vue": "^3.4.35",
-    "vue-3-slick-carousel": "workspace:*"
+    "v-slick-carousel": "workspace:*"
   }
 }

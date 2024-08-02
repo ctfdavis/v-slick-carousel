@@ -4,7 +4,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "vue-3-slick-carousel": ["../vue-3-slick-carousel/lib"]
+      "v-slick-carousel": ["../v-slick-carousel/lib"]
     },
     "noEmit": true
   }
