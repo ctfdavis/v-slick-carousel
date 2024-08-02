@@ -15,7 +15,7 @@ hero:
       link: /guide/why-vue-3-slick-carousel
     - theme: alt
       text: Examples
-      link: /examples
+      link: /examples/one-slide-group-finite
 
 features:
   - title: Made for Vue 3

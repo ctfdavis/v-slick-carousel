@@ -44,7 +44,7 @@ aside: false
 
 <script setup>
 import examples from '../src/examples'
-import { useData, useRouter, withBase } from 'vitepress'
+import { useData, withBase } from 'vitepress'
 import { createHighlighter } from 'shiki'
 import { ref, onMounted } from 'vue'
 import 'vue-3-slick-carousel/style.css'
@@ -57,12 +57,6 @@ import {
 } from '../src/examples/as-nav-for'
 
 const { params } = useData()
-const router = useRouter()
-
-if (params.value.id === 'index') {
-    router.go(withBase(`/examples/${Object.entries(examples).sort(([_, v]) => v.order)[0][0]}`))
-}
-
 const c1 = ref()
 const c2 = ref()
 const isAsNavFor = params.value.id === asNavForId

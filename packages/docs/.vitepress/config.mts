@@ -6,6 +6,7 @@ export default defineConfig({
   title: 'Vue 3 Slick Carousel',
   description: 'Documentation for Vue 3 Slick Carousel',
   base: '/vue-3-slick-carousel/',
+  head: [['link', { rel: 'icon', href: '/vue-3-slick-carousel/favicon.ico' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: '/logo.svg',
@@ -16,7 +17,11 @@ export default defineConfig({
         link: '/guide/why-vue-3-slick-carousel',
         activeMatch: '/guide/'
       },
-      { text: 'Examples', link: '/examples', activeMatch: '/examples/' }
+      {
+        text: 'Examples',
+        link: '/examples/one-slide-group-finite',
+        activeMatch: '/examples/'
+      }
     ],
     sidebar: [
       {
@@ -49,6 +54,12 @@ export default defineConfig({
         icon: 'github',
         link: 'https://github.com/ctfdavis/vue-3-slick-carousel'
       }
-    ]
+    ],
+    footer: {
+      message:
+        'Released under the <a href="https://github.com/ctfdavis/vue-3-slick-carousel/blob/main/LICENSE">MIT License</a>.',
+      copyright:
+        'Copyright © 2024-present <a href="https://github.com/ctfdavis">Davis Chan</a>'
+    }
   }
 })
