@@ -13,5 +13,10 @@
   "dependencies": {
     "vue": "^3.4.35",
     "vue-3-slick-carousel": "workspace:*"
+  },
+  "dependenciesMeta": {
+    "vue-3-slick-carousel": {
+      "injected": true
+    }
   }
 }
