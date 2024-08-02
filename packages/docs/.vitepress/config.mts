@@ -7,11 +7,6 @@ export default defineConfig({
   description: 'Documentation for Vue 3 Slick Carousel',
   base: '/vue-3-slick-carousel/',
   head: [['link', { rel: 'icon', href: '/vue-3-slick-carousel/favicon.ico' }]],
-  vite: {
-    resolve: {
-      mainFields: ['module', 'main']
-    }
-  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: '/logo.svg',
