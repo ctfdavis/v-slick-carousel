@@ -66,6 +66,10 @@ const settings: Settings = {
 
 See [Settings](./packages/docs/guide/settings.md).
 
+## Documentation
+
+Check the [docs website](https://ctfdavis.github.io/v-slick-carousel/) or the [docs folder](packages/docs).
+
 ## License
 
 V Slick Carousel is open source and released under the [MIT License](./LICENSE).
