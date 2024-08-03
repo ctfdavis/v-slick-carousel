@@ -21,6 +21,10 @@ export default defineConfig({
         text: 'Examples',
         link: '/examples/one-slide-group-finite',
         activeMatch: '/examples/'
+      },
+      {
+        text: 'Playground',
+        link: 'https://stackblitz.com/fork/github/ctfdavis/v-slick-carousel/tree/main/packages/v-slick-carousel?file=src/app.vue'
       }
     ],
     sidebar: [
@@ -72,6 +76,9 @@ export default defineConfig({
       pattern:
         'https://github.com/ctfdavis/v-slick-carousel/edit/main/packages/docs/:path',
       text: 'Edit this page on GitHub'
+    },
+    search: {
+      provider: 'local'
     }
   }
 })
