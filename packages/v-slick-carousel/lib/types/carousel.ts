@@ -24,6 +24,7 @@ export type Props = {
   edgeFriction: number
   fade: boolean
   focusOnSelect: boolean
+  ignorePrefersReducedMotion: boolean
   infinite: boolean
   initialGroupIndex: number
   lazyLoad?: LazyLoadType | keyof typeof LazyLoadType
@@ -101,6 +102,7 @@ export type TrackProps = Pick<
   | 'centerPadding'
   | 'cssEase'
   | 'fade'
+  | 'ignorePrefersReducedMotion'
   | 'infinite'
   | 'lazyLoad'
   | 'rtl'

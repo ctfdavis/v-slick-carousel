@@ -14,7 +14,8 @@ const settings: Settings = {
   slidesPerGroup: 1,
   swipe: true,
   centerMode: true,
-  centerPadding: '100px'
+  centerPadding: '100px',
+  ignorePrefersReducedMotion: true
 }
 
 const slides: ExampleSlide[] = nationFlags.map((o) => ({

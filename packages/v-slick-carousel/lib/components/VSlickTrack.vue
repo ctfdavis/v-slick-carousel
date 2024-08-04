@@ -155,6 +155,9 @@ const getSlideGroupStyle = (index: number) => {
       props.speed +
       'ms ' +
       props.cssEase
+    if (props.ignorePrefersReducedMotion) {
+      style.transition += ' !important'
+    }
   }
 
   return style

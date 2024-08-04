@@ -13,7 +13,8 @@ const settings: Settings = {
   groupsToScroll: 3,
   slidesPerGroup: 1,
   swipe: true,
-  rtl: true
+  rtl: true,
+  ignorePrefersReducedMotion: true
 }
 
 const slides: ExampleSlide[] = nationFlags.map((o) => ({
