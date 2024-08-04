@@ -22,13 +22,7 @@
         :style="vSlickListStyle"
         @click="handleClickVSlickList"
         @mousedown="handleMouseDownOrTouchStartVSlickList"
-        @mouseup="handleMouseUpOrTouchEndVSlickList"
-        @mouseleave="handleMouseLeaveOrTouchCancelVSlickList"
-        @mousemove="handleMouseMoveOrTouchMoveVSlickList"
         @touchstart.passive="handleMouseDownOrTouchStartVSlickList"
-        @touchmove.passive="handleMouseMoveOrTouchMoveVSlickList"
-        @touchend="handleMouseUpOrTouchEndVSlickList"
-        @touchcancel="handleMouseLeaveOrTouchCancelVSlickList"
         @keydown="handleKeyDownVSlickList"
       >
         <VSlickTrack
@@ -126,6 +120,7 @@ import {
 } from '@lib/types'
 import {
   canUseDOM,
+  clearSelection,
   filterUndefined,
   getChangedSlideGroupIndex
 } from '@lib/utils'
@@ -255,6 +250,7 @@ const swipeEnd = (e: SwipeEvent) => {
 }
 
 const swipeMove = (e: SwipeEvent) => {
+  clearSelection()
   const swipeMoveState = getSwipeMoveState(e, {
     ...props,
     ...state.value,
@@ -402,6 +398,8 @@ const handleKeyDownVSlickList = (e: KeyboardEvent) => {
 
 const handleMouseDownOrTouchStartVSlickList = (e: SwipeEvent) => {
   if (!settings.value.touchMove) return
+  const target = e.target as HTMLElement | null
+  if (target?.classList.contains('no-swipe')) return
   swipeStart(e)
 }
 
@@ -949,6 +947,29 @@ watch(
     )
       return
     slideGroupHandler(pageCount.value - 1)
+  }
+)
+
+watch(
+  () => state.value.dragging,
+  (dragging) => {
+    if (!vSlickListRef.value) return
+    if (dragging) {
+      vSlickListRef.value.onmousemove = handleMouseMoveOrTouchMoveVSlickList
+      vSlickListRef.value.ontouchmove = handleMouseMoveOrTouchMoveVSlickList
+      vSlickListRef.value.onmouseup = handleMouseUpOrTouchEndVSlickList
+      vSlickListRef.value.ontouchend = handleMouseUpOrTouchEndVSlickList
+      vSlickListRef.value.onmouseleave = handleMouseLeaveOrTouchCancelVSlickList
+      vSlickListRef.value.ontouchcancel =
+        handleMouseLeaveOrTouchCancelVSlickList
+    } else {
+      vSlickListRef.value.onmousemove = null
+      vSlickListRef.value.ontouchmove = null
+      vSlickListRef.value.onmouseup = null
+      vSlickListRef.value.ontouchend = null
+      vSlickListRef.value.onmouseleave = null
+      vSlickListRef.value.ontouchcancel = null
+    }
   }
 )
 

@@ -14,3 +14,12 @@ export const filterUndefined = <T extends object>(props: T) =>
       acc[key as keyof T] = props[key as keyof T]
       return acc
     }, {} as T)
+
+export function clearSelection() {
+  if (!window.getSelection) return
+  if (window.getSelection()?.empty) {
+    window.getSelection()!.empty()
+  } else if (window.getSelection()?.removeAllRanges) {
+    window.getSelection()!.removeAllRanges()
+  }
+}

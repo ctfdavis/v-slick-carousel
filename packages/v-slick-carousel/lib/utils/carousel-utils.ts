@@ -792,7 +792,7 @@ export const getSwipeMoveState = (
       (currentSlideGroupIndex + 1 >= dotCount && swipeDirection === 'left') ||
       (!canGoNext(spec) && swipeDirection === 'left')
     ) {
-      touchSwipeLength = touchObject.swipeLength * edgeFriction
+      touchSwipeLength = Math.round(touchObject.swipeLength * edgeFriction)
       if (edgeDragged === false && onEdge) {
         onEdge(swipeDirection)
         state.edgeDragged = true
