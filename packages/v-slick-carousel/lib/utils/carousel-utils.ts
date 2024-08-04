@@ -225,10 +225,22 @@ export const getSwipeStartState = (
   return {
     dragging: true,
     touchObject: {
-      startX: e instanceof TouchEvent ? e.touches[0].pageX : e.clientX,
-      startY: e instanceof TouchEvent ? e.touches[0].pageY : e.clientY,
-      curX: e instanceof TouchEvent ? e.touches[0].pageX : e.clientX,
-      curY: e instanceof TouchEvent ? e.touches[0].pageY : e.clientY
+      startX:
+        window.TouchEvent && e instanceof TouchEvent
+          ? e.touches[0].pageX
+          : (e as MouseEvent).clientX,
+      startY:
+        window.TouchEvent && e instanceof TouchEvent
+          ? e.touches[0].pageY
+          : (e as MouseEvent).clientY,
+      curX:
+        window.TouchEvent && e instanceof TouchEvent
+          ? e.touches[0].pageX
+          : (e as MouseEvent).clientX,
+      curY:
+        window.TouchEvent && e instanceof TouchEvent
+          ? e.touches[0].pageY
+          : (e as MouseEvent).clientY
     }
   }
 }
@@ -766,8 +778,14 @@ export const getSwipeMoveState = (
   let swipeLeft,
     state: SwipeMoveState = {}
   let curLeft = getTrackLeft(spec)
-  touchObject.curX = e instanceof TouchEvent ? e.touches[0].pageX : e.clientX
-  touchObject.curY = e instanceof TouchEvent ? e.touches[0].pageY : e.clientY
+  touchObject.curX =
+    window.TouchEvent && e instanceof TouchEvent
+      ? e.touches[0].pageX
+      : (e as MouseEvent).clientX
+  touchObject.curY =
+    window.TouchEvent && e instanceof TouchEvent
+      ? e.touches[0].pageY
+      : (e as MouseEvent).clientY
   touchObject.swipeLength = Math.round(
     Math.sqrt(Math.pow(touchObject.curX - touchObject.startX, 2))
   )
