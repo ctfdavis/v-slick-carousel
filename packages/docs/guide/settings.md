@@ -2,46 +2,47 @@
 
 ## All settings
 
-| Name                                    | Type    | Default          | Description                                              |
-| --------------------------------------- | ------- | ---------------- | -------------------------------------------------------- |
-| [accessibility](#accessibility)         | Boolean | `true`           | Enable accessibility.                                    |
-| [adaptiveHeight](#adaptiveheight)       | Boolean | `false`          | Enable adaptive height.                                  |
-| [arrows](#arrows)                       | Boolean | `true`           | Show prev/next arrows.                                   |
-| [asNavFor](#asnavfor)                   | Object  | `undefined`      | Reference of another carousel to sync with.              |
-| [autoplay](#autoplay)                   | Boolean | `false`          | Enable autoplay.                                         |
-| [autoplaySpeed](#autoplayspeed)         | Number  | `3000`           | Autoplay interval in milliseconds.                       |
-| [centerMode](#centermode)               | Boolean | `false`          | Enable center mode.                                      |
-| [centerPadding](#centerpadding)         | String  | `'50px'`         | Center padding in pixels.                                |
-| [cssEase](#cssease)                     | String  | `'ease'`         | CSS easing function.                                     |
-| [dots](#dots)                           | Boolean | `false`          | Show dots.                                               |
-| [dotsClass](#dotsclass)                 | String  | `'v-slick-dots'` | Dots class name.                                         |
-| [draggable](#draggable)                 | Boolean | `true`           | Enable dragging.                                         |
-| [edgeFriction](#edgefriction)           | Number  | `0.35`           | Edge friction.                                           |
-| [fade](#fade)                           | Boolean | `false`          | Enable fade mode.                                        |
-| [focusOnSelect](#focusonselect)         | Boolean | `false`          | Enable focus on select.                                  |
-| [groupsToScroll](#groupstoscroll)       | Number  | `1`              | Number of groups to scroll.                              |
-| [groupsToShow](#groupstoshow)           | Number  | `1`              | Number of groups to show.                                |
-| [infinite](#infinite)                   | Boolean | `true`           | Enable infinite mode.                                    |
-| [initialGroupIndex](#initialgroupindex) | Number  | `0`              | Initial group index.                                     |
-| [lazyLoad](#lazyload)                   | String  | `'ondemand'`     | Lazy load mode. Can be `'ondemand'`, or `'progressive'`. |
-| [nextArrowLabel](#nextarrowlabel)       | String  | `'Next'`         | Next arrow label.                                        |
-| [pauseOnFocus](#pauseonfocus)           | Boolean | `true`           | Pause autoplay on focus.                                 |
-| [pauseOnHover](#pauseonhover)           | Boolean | `true`           | Pause autoplay on hover.                                 |
-| [prevArrowLabel](#prevarrowlabel)       | String  | `'Previous'`     | Previous arrow label.                                    |
-| [responsive](#responsive)               | Array   | `[]`             | Responsive settings.                                     |
-| [rtl](#rtl)                             | Boolean | `false`          | Enable right-to-left mode.                               |
-| [slidesPerGroup](#slidespergroup)       | Number  | `1`              | Number of slides per group.                              |
-| [speed](#speed)                         | Number  | `300`            | Transition speed in milliseconds.                        |
-| [swipe](#swipe)                         | Boolean | `true`           | Enable swipe.                                            |
-| [swipeToSlide](#swipetoslide)           | Boolean | `true`           | Enable swipe to slide.                                   |
-| [touchMove](#touchmove)                 | Boolean | `true`           | Enable touch move.                                       |
-| [touchThreshold](#touchthreshold)       | Number  | `5`              | Touch threshold.                                         |
-| [useCSSTransitions](#usecsstransitions) | Boolean | `true`           | Use CSS transitions.                                     |
-| [useCSSTransform](#usecsstransform)     | Boolean | `true`           | Use CSS transform.                                       |
-| [variableWidth](#variablewidth)         | Boolean | `false`          | Enable variable width.                                   |
-| [vertical](#vertical)                   | Boolean | `false`          | Enable vertical mode.                                    |
-| [verticalSwiping](#verticalswiping)     | Boolean | `false`          | Enable vertical swiping.                                 |
-| [waitForAnimate](#waitforanimate)       | Boolean | `true`           | Wait for animation.                                      |
+| Name                                                      | Type    | Default          | Description                                              |
+| --------------------------------------------------------- | ------- | ---------------- | -------------------------------------------------------- |
+| [accessibility](#accessibility)                           | Boolean | `true`           | Enable accessibility.                                    |
+| [adaptiveHeight](#adaptiveheight)                         | Boolean | `false`          | Enable adaptive height.                                  |
+| [arrows](#arrows)                                         | Boolean | `true`           | Show prev/next arrows.                                   |
+| [asNavFor](#asnavfor)                                     | Object  | `undefined`      | Reference of another carousel to sync with.              |
+| [autoplay](#autoplay)                                     | Boolean | `false`          | Enable autoplay.                                         |
+| [autoplaySpeed](#autoplayspeed)                           | Number  | `3000`           | Autoplay interval in milliseconds.                       |
+| [centerMode](#centermode)                                 | Boolean | `false`          | Enable center mode.                                      |
+| [centerPadding](#centerpadding)                           | String  | `'50px'`         | Center padding in pixels.                                |
+| [cssEase](#cssease)                                       | String  | `'ease'`         | CSS easing function.                                     |
+| [dots](#dots)                                             | Boolean | `false`          | Show dots.                                               |
+| [dotsClass](#dotsclass)                                   | String  | `'v-slick-dots'` | Dots class name.                                         |
+| [draggable](#draggable)                                   | Boolean | `true`           | Enable dragging.                                         |
+| [edgeFriction](#edgefriction)                             | Number  | `0.35`           | Edge friction.                                           |
+| [fade](#fade)                                             | Boolean | `false`          | Enable fade mode.                                        |
+| [focusOnSelect](#focusonselect)                           | Boolean | `false`          | Enable focus on select.                                  |
+| [groupsToScroll](#groupstoscroll)                         | Number  | `1`              | Number of groups to scroll.                              |
+| [groupsToShow](#groupstoshow)                             | Number  | `1`              | Number of groups to show.                                |
+| [ignorePrefersReducedMotion](#ignoreprefersreducedmotion) | Boolean | `false`          | Ignore `prefers-reduced-motion` .                        |
+| [infinite](#infinite)                                     | Boolean | `true`           | Enable infinite mode.                                    |
+| [initialGroupIndex](#initialgroupindex)                   | Number  | `0`              | Initial group index.                                     |
+| [lazyLoad](#lazyload)                                     | String  | `'ondemand'`     | Lazy load mode. Can be `'ondemand'`, or `'progressive'`. |
+| [nextArrowLabel](#nextarrowlabel)                         | String  | `'Next'`         | Next arrow label.                                        |
+| [pauseOnFocus](#pauseonfocus)                             | Boolean | `true`           | Pause autoplay on focus.                                 |
+| [pauseOnHover](#pauseonhover)                             | Boolean | `true`           | Pause autoplay on hover.                                 |
+| [prevArrowLabel](#prevarrowlabel)                         | String  | `'Previous'`     | Previous arrow label.                                    |
+| [responsive](#responsive)                                 | Array   | `[]`             | Responsive settings.                                     |
+| [rtl](#rtl)                                               | Boolean | `false`          | Enable right-to-left mode.                               |
+| [slidesPerGroup](#slidespergroup)                         | Number  | `1`              | Number of slides per group.                              |
+| [speed](#speed)                                           | Number  | `300`            | Transition speed in milliseconds.                        |
+| [swipe](#swipe)                                           | Boolean | `true`           | Enable swipe.                                            |
+| [swipeToSlide](#swipetoslide)                             | Boolean | `true`           | Enable swipe to slide.                                   |
+| [touchMove](#touchmove)                                   | Boolean | `true`           | Enable touch move.                                       |
+| [touchThreshold](#touchthreshold)                         | Number  | `5`              | Touch threshold.                                         |
+| [useCSSTransitions](#usecsstransitions)                   | Boolean | `true`           | Use CSS transitions.                                     |
+| [useCSSTransform](#usecsstransform)                       | Boolean | `true`           | Use CSS transform.                                       |
+| [variableWidth](#variablewidth)                           | Boolean | `false`          | Enable variable width.                                   |
+| [vertical](#vertical)                                     | Boolean | `false`          | Enable vertical mode.                                    |
+| [verticalSwiping](#verticalswiping)                       | Boolean | `false`          | Enable vertical swiping.                                 |
+| [waitForAnimate](#waitforanimate)                         | Boolean | `true`           | Wait for animation.                                      |
 
 ## `accessibility` <Badge type="info" text="boolean" />
 
@@ -144,6 +145,12 @@ Number of groups to scroll when navigating. See [Two Slide Groups Finite](/examp
 <small>Default: `1`</small>
 
 Number of groups to show. See [Concept](/guide/concept) for more details.
+
+## `ignorePrefersReducedMotion` <Badge type="info" text="boolean" />
+
+<small>Default: `false`</small>
+
+When `true`, the carousel will ignore [`prefers-reduced-motion` settings](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) by adding `!important` to the CSS transitions for the animation to show as expected.
 
 ## `infinite` <Badge type="info" text="boolean" />
 

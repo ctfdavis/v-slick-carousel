@@ -500,6 +500,9 @@ export function getTrackAnimateCSS(spec: TrackInfoSpec, left: number) {
       style.transition = 'left ' + spec.speed + 'ms ' + spec.cssEase
     }
   }
+  if (spec.ignorePrefersReducedMotion) {
+    style.transition += ' !important'
+  }
   return style
 }
 

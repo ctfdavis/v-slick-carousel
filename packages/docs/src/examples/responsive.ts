@@ -13,6 +13,7 @@ const settings: Settings = {
   groupsToShow: 5,
   slidesPerGroup: 1,
   swipe: true,
+  ignorePrefersReducedMotion: true,
   responsive: [
     {
       breakpoint: 480,

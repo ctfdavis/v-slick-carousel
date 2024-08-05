@@ -15,7 +15,8 @@ const settings: Settings = {
   swipe: false,
   autoplay: true,
   autoplaySpeed: 1000,
-  pauseOnHover: true
+  pauseOnHover: true,
+  ignorePrefersReducedMotion: true
 }
 
 const slides: ExampleSlide[] = nationFlags.map((o) => ({
