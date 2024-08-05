@@ -18,7 +18,7 @@ editLink: false
       >
           <div :class="$style.slide" v-for="slide of example.slides" :key="slide.text">
               <img :class="$style.img" class="img no-swipe" :src="withBase(slide.img)" />
-              <p :class="$style.text">{{ slide.text }}</p>
+              <p :class="$style.text" class="no-swipe">{{ slide.text }}</p>
           </div>
       </VSlickCarousel>
     </div>
@@ -29,7 +29,7 @@ editLink: false
       >
           <div :class="$style.slide" v-for="slide of example.slides" :key="slide.text">
           <img :class="$style.img" class="no-swipe" :src="withBase(slide.img)" />
-          <p :class="$style.text">{{ slide.text }}</p>
+          <p :class="$style.text" class="no-swipe">{{ slide.text }}</p>
           </div>
       </VSlickCarousel>
     </div>
