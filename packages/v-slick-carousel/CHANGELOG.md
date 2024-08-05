@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.2.0
+
+### Minor Changes
+
+- Add an option `ignorePrefersReducedMotion` to force CSS transition animation by overriding the settings in `prefers-reduced-motion` media query.
+
 ## 0.1.2
 
 ### Patch Changes
