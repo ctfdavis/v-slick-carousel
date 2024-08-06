@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix `ignorePrefersReducedMotion` in `fade` mode
+
 ## 0.2.0
 
 ### Minor Changes
