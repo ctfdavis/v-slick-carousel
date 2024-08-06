@@ -30,7 +30,7 @@
     "clean": "rimraf dist",
     "type": "tsc --noEmit",
     "prepublish": "npm run build",
-    "lint": "eslint 'src/**/*.{js,ts,vue}' --fix",
+    "lint": "eslint 'lib/**/*.{js,ts,vue}'",
     "lint:fix": "npm run lint -- --fix",
     "lint-staged": "lint-staged",
     "format": "prettier --write \"**/*.{json,js,ts,vue,html,css,scss}\"",
