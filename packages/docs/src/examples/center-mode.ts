@@ -14,7 +14,7 @@ const settings: Settings = {
   slidesPerGroup: 1,
   swipe: true,
   centerMode: true,
-  centerPadding: '100px',
+  centerPadding: '10%',
   ignorePrefersReducedMotion: true
 }
 
