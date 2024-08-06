@@ -21,7 +21,10 @@ describe('extractSlides', () => {
     beforeEach(() => {
       MyComponent = defineComponent({
         props: {
-          msg: String
+          msg: {
+            type: String,
+            default: ''
+          }
         },
         setup(props) {
           return () => h('div', props.msg)
@@ -44,7 +47,10 @@ describe('extractSlides', () => {
     beforeEach(() => {
       MyComponent = defineComponent_3_1({
         props: {
-          msg: String
+          msg: {
+            type: String,
+            default: ''
+          }
         },
         setup(props) {
           return () => h_3_1('div', props.msg)

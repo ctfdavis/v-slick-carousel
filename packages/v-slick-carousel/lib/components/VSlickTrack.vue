@@ -6,8 +6,8 @@
   >
     <div
       v-for="(slideGroup, i) in preCloneSlideGroups"
-      tabindex="-1"
       :key="slideGroup.key"
+      tabindex="-1"
       :class="slideGroup.class"
       :style="slideGroup.style"
       class="v-slick-slide-group clone"
@@ -15,15 +15,15 @@
       @click="slideGroup.onClick"
     >
       <component
-        v-for="(slide, j) of slideGroup.slides"
         :is="slide"
+        v-for="(slide, j) of slideGroup.slides"
         :key="`slide-${i}-${j}` + (slide.key ? `-${String(slide.key)}` : '')"
       />
     </div>
     <div
       v-for="(slideGroup, i) in originalSlideGroups"
-      tabindex="-1"
       :key="slideGroup.key"
+      tabindex="-1"
       class="v-slick-slide-group"
       :class="slideGroup.class"
       :style="slideGroup.style"
@@ -31,15 +31,15 @@
       @click="slideGroup.onClick"
     >
       <component
-        v-for="(slide, j) of slideGroup.slides"
         :is="slide"
+        v-for="(slide, j) of slideGroup.slides"
         :key="`slide-${i}-${j}` + (slide.key ? `-${String(slide.key)}` : '')"
       />
     </div>
     <div
       v-for="(slideGroup, i) in postCloneSlideGroups"
-      tabindex="-1"
       :key="slideGroup.key"
+      tabindex="-1"
       :class="slideGroup.class"
       :style="slideGroup.style"
       class="v-slick-slide-group clone"
@@ -47,8 +47,8 @@
       @click="slideGroup.onClick"
     >
       <component
-        v-for="(slide, j) of slideGroup.slides"
         :is="slide"
+        v-for="(slide, j) of slideGroup.slides"
         :key="`slide-${i}-${j}` + (slide.key ? `-${String(slide.key)}` : '')"
       />
     </div>
