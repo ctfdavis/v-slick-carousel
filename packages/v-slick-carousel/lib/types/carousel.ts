@@ -265,6 +265,7 @@ export type OnSlideSpec = Combine<
   index: number
 }
 
+// @ts-ignore
 export type VSlickCarouselInstance = InstanceType<typeof VSlickCarousel>
 
 export type SlideGroupCountSpec = MarkRequiredWithPartialBase<

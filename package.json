@@ -21,7 +21,8 @@
     "prepare": "husky",
     "lint": "pnpm --filter=v-slick-carousel run lint",
     "lint:fix": "pnpm --filter=v-slick-carousel run lint:fix",
-    "format": "pnpm --filter=v-slick-carousel run format"
+    "format": "pnpm --filter=v-slick-carousel run format",
+    "test": "pnpm --filter=v-slick-carousel run test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
