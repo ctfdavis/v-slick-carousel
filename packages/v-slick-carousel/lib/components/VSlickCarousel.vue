@@ -33,6 +33,7 @@
           :css-ease="cssEase"
           :current-slide-group-index="state.currentSlideGroupIndex"
           :fade="settings.fade"
+          :ignore-prefers-reduced-motion="settings.ignorePrefersReducedMotion"
           :infinite="settings.infinite"
           :lazy-load="settings.lazyLoad"
           :lazy-loaded-list="state.lazyLoadedList"
