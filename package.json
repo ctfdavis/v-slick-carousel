@@ -18,7 +18,10 @@
     "docs:preview": "pnpm --filter=docs run docs:preview",
     "preview": "pnpm --filter=v-slick-carousel run preview",
     "nuxt:dev": "pnpm --filter=nuxt-app run dev",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "pnpm --filter=v-slick-carousel run lint",
+    "lint:fix": "pnpm --filter=v-slick-carousel run lint:fix",
+    "format": "pnpm --filter=v-slick-carousel run format"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
