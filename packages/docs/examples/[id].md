@@ -128,6 +128,7 @@ onMounted(async () => {
 .code > pre {
   padding: 12px;
   border-radius: 4px;
+  overflow: auto;
 }
 
 @media screen and (min-width: 600px) {
