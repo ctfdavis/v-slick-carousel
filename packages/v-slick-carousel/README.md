@@ -70,6 +70,13 @@ See [Settings](https://github.com/ctfdavis/v-slick-carousel/blob/main/packages/d
 
 Check the [docs website](https://ctfdavis.github.io/v-slick-carousel/) or the [docs folder](https://github.com/ctfdavis/v-slick-carousel/tree/main/packages/docs).
 
+## Contributing
+
+We are grateful to the community for contributing bug fixes and improvements to V Slick Carousel. Read below to learn how you can take part in improving the project.
+
+- [Code of Conduct](https://github.com/ctfdavis/v-slick-carousel/blob/main/CODE_OF_CONDUCT.md)
+- [Contributing Guide](https://github.com/ctfdavis/v-slick-carousel/blob/main/CONTRIBUTING.md)
+
 ## License
 
 V Slick Carousel is open source and released under the [MIT License](https://github.com/ctfdavis/v-slick-carousel/blob/main/LICENSE).
