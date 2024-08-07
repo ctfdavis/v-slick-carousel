@@ -5,7 +5,7 @@ export default [
   },
   {
     img: '/images/Butterfly.svg',
-    name: 'Australia'
+    name: 'Butterfly'
   },
   {
     img: '/images/Dolphin.svg',
