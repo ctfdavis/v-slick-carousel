@@ -1,6 +1,6 @@
 import type { Settings } from 'v-slick-carousel'
 import type { Example, ExampleSlide } from '../types'
-import nationFlags from '../data/nation-flags'
+import items from '../data/items'
 
 export const id = 'as-nav-for'
 
@@ -17,9 +17,9 @@ const settings: Settings = {
   ignorePrefersReducedMotion: true
 }
 
-const slides: ExampleSlide[] = nationFlags.map((o) => ({
+const slides: ExampleSlide[] = items.map((o) => ({
   img: o.img,
-  text: o.nation
+  text: o.name
 }))
 
 export const codeC1 = String.raw`{

@@ -17,8 +17,8 @@ editLink: false
           "
       >
           <div :class="$style.slide" v-for="slide of example.slides" :key="slide.text">
-              <img :class="$style.img" class="img no-swipe" :src="withBase(slide.img)" />
-              <p :class="$style.text" class="no-swipe">{{ slide.text }}</p>
+              <img :class="[$style.img, !isMobile && 'no-swipe']" class="img" :src="withBase(slide.img)" />
+              <p :class="[$style.text, !isMobile && 'no-swipe']">{{ slide.text }}</p>
           </div>
       </VSlickCarousel>
     </div>
@@ -28,8 +28,8 @@ editLink: false
           v-bind="{ ...example.settings, groupsToShow: 6, asNavFor: c1 }"
       >
           <div :class="$style.slide" v-for="slide of example.slides" :key="slide.text">
-          <img :class="$style.img" class="no-swipe" :src="withBase(slide.img)" />
-          <p :class="$style.text" class="no-swipe">{{ slide.text }}</p>
+              <img :class="[$style.img, !isMobile && 'no-swipe']" class="img" :src="withBase(slide.img)" />
+              <p :class="[$style.text, !isMobile && 'no-swipe']">{{ slide.text }}</p>
           </div>
       </VSlickCarousel>
     </div>
@@ -50,7 +50,7 @@ import { createHighlighter } from 'shiki'
 import { ref, onMounted } from 'vue'
 import 'v-slick-carousel/style.css'
 import { VSlickCarousel } from 'v-slick-carousel'
-import { codify } from '../src/utils'
+import { codify, mobileCheck } from '../src/utils'
 import {
   id as asNavForId,
   codeC1,
@@ -65,8 +65,10 @@ const example = Object.values(examples).find((o) => o.id === params.value.id)
 const exampleCode = ref()
 const asNavForExampleCode1 = ref()
 const asNavForExampleCode2 = ref()
+const isMobile = ref(false)
 
 onMounted(async () => {
+  isMobile.value = mobileCheck()
   if (!example.settings) return
   const highlighter = await createHighlighter({
     themes: ['nord'],
