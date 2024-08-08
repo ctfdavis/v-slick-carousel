@@ -167,6 +167,9 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
   const slideGroups = props.rawSlideGroups.map((rawSlideGroup, index) => {
     const style = getSlideGroupStyle(index)
     const classes = getSlideGroupClasses(index)
+    if (props.fade && classes.includes('active')) {
+      Object.assign(style, { zIndex: 1 })
+    }
     const slideGroup: SlideGroup = {
       slides: [],
       key: `original-${index}`,
