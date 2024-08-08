@@ -257,7 +257,15 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
       style: getSlideGroupStyle(index),
       attrs: {
         'data-index': key,
-        'aria-hidden': 'true'
+        'aria-hidden':
+          props.infinite &&
+          props.slideGroupCount - props.currentSlideGroupIndex <
+            props.groupsToShow &&
+          index <
+            props.groupsToShow -
+              (props.slideGroupCount - props.currentSlideGroupIndex)
+            ? 'false'
+            : 'true'
       },
       onClick: () => {
         emit('childClick', {
