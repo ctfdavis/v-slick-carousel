@@ -167,6 +167,9 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
   const slideGroups = props.rawSlideGroups.map((rawSlideGroup, index) => {
     const style = getSlideGroupStyle(index)
     const classes = getSlideGroupClasses(index)
+    if (props.fade && classes.includes('active')) {
+      Object.assign(style, { zIndex: 1 })
+    }
     const slideGroup: SlideGroup = {
       slides: [],
       key: `original-${index}`,
@@ -254,7 +257,15 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
       style: getSlideGroupStyle(index),
       attrs: {
         'data-index': key,
-        'aria-hidden': 'true'
+        'aria-hidden':
+          props.infinite &&
+          props.slideGroupCount - props.currentSlideGroupIndex <
+            props.groupsToShow &&
+          index <
+            props.groupsToShow -
+              (props.slideGroupCount - props.currentSlideGroupIndex)
+            ? 'false'
+            : 'true'
       },
       onClick: () => {
         emit('childClick', {
