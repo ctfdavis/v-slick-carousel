@@ -1,5 +1,18 @@
 # v-slick-carousel
 
+## 0.2.2
+
+### Patch Changes
+
+#### Bug Fixes
+
+- Fix aria-hidden errors in fade mode
+- Fix wrong aria-hidden on edge slides in infinite mode
+
+#### Others
+
+- Add Contributing section in README
+
 ## 0.2.1
 
 ### Patch Changes
