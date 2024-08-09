@@ -1,5 +1,11 @@
 # Installation
 
+## Version
+
+V Slick Carousel is undergoing rapid development. To access the latest features, please install the most recent version.
+
+[![npm version](https://img.shields.io/npm/v/v-slick-carousel.svg?style=flat-square)](https://www.npmjs.com/package/v-slick-carousel)
+
 ## Using a package manager
 
 You can install V Slick Carousel using a package manager like npm:
