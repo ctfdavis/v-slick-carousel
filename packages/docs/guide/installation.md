@@ -19,7 +19,7 @@ npm install v-slick-carousel
 You can also import the library in your HTML file via link and script tags. For example, you can use the [unpkg CDN](https://unpkg.com/) to include this library's code and styles:
 
 ```html
-<link src="//unpkg.com/v-slick-carousel/dist/style.css"></script>
+<link src="//unpkg.com/v-slick-carousel/dist/style.css">
 <script src="//unpkg.com/v-slick-carousel"></script>
 ```
 
