@@ -1,5 +1,15 @@
 <template>
-  <div class="v-slick-carousel">
+  <div
+    class="v-slick-carousel"
+    ref="vSlickCarouselRef"
+    :style="
+      widthDetection === WidthDetection.manual
+        ? state.detectingWidth
+          ? { width: '100%' }
+          : vSlickCarouselStyle
+        : {}
+    "
+  >
     <div class="v-slick-slider" :dir="settings.rtl ? 'rtl' : 'ltr'">
       <VSlickArrow
         v-if="settings.arrows"
@@ -32,6 +42,7 @@
           :raw-slide-groups="rawSlideGroups"
           :css-ease="cssEase"
           :current-slide-group-index="state.currentSlideGroupIndex"
+          :detectingWidth="state.detectingWidth"
           :fade="settings.fade"
           :ignore-prefers-reduced-motion="settings.ignorePrefersReducedMotion"
           :infinite="settings.infinite"
@@ -117,7 +128,8 @@ import {
   SlideNavigation,
   SlideGroupChangeOptions,
   SlideGroupChangeSpec,
-  OnSlideSpec
+  OnSlideSpec,
+  WidthDetection
 } from '@lib/types'
 import {
   canUseDOM,
@@ -552,11 +564,25 @@ const updateState = (shouldSetTrackStyle?: boolean) => {
   Object.assign(state.value, updatedState)
 }
 
-const resizeWindow = (shouldSetTrackStyle = true) => {
+const resize = async (
+  options: { shouldSetTrackStyle?: boolean; isWindowResize?: boolean } = {
+    shouldSetTrackStyle: true
+  }
+) => {
   if (!vSlickTrackRef.value || !vSlickTrackRef.value.$el) {
     return
   }
-  updateState(shouldSetTrackStyle)
+  if (
+    settings.value.widthDetection === WidthDetection.manual &&
+    options.isWindowResize
+  ) {
+    await detectWidth()
+  }
+  updateState(
+    options.shouldSetTrackStyle ||
+      (settings.value.widthDetection === WidthDetection.manual &&
+        options.isWindowResize)
+  )
   if (props.autoplay) {
     autoPlay(PlayingType.update)
   } else {
@@ -564,16 +590,19 @@ const resizeWindow = (shouldSetTrackStyle = true) => {
   }
 }
 
-const onWindowResize = (shouldSetTrackStyle?: boolean) => {
+const onResize = (options?: {
+  shouldSetTrackStyle?: boolean
+  isWindowResize?: boolean
+}) => {
   debouncedResize?.cancel()
-  debouncedResize = debounce(
-    () => resizeWindow(shouldSetTrackStyle),
-    DEBOUNCE_RESIZE_DURATION
-  )
+  debouncedResize = debounce(() => resize(options), DEBOUNCE_RESIZE_DURATION)
   debouncedResize()
 }
 
-const onWindowResizeEventListener = () => onWindowResize()
+const onResizeEventListener = () =>
+  onResize({
+    isWindowResize: true
+  })
 
 const onSlideGroupFocus = () => {
   if (settings.value.autoplay) pause(PlayingType.focused)
@@ -638,7 +667,7 @@ const checkImagesLoad = () => {
   images?.forEach((image) => {
     const handler = () => {
       if (++loadedCount >= imagesCount) {
-        onWindowResize()
+        onResize()
       }
     }
     if (!image.onclick) {
@@ -656,7 +685,7 @@ const checkImagesLoad = () => {
       if (!settings.value.lazyLoad) return
       image.onload = () => {
         adaptHeight()
-        callbackTimers.push(setTimeout(onWindowResize, settings.value.speed))
+        callbackTimers.push(setTimeout(onResize, settings.value.speed))
       }
     } else {
       image.onload = handler
@@ -666,6 +695,19 @@ const checkImagesLoad = () => {
       }
     }
   })
+}
+
+const detectWidth = async () => {
+  state.value.detectingWidth = true
+  return new Promise<void>((resolve) =>
+    setTimeout(() => {
+      Object.assign(vSlickCarouselStyle.value, {
+        width: `${vSlickCarouselRef.value?.offsetWidth}px`
+      })
+      state.value.detectingWidth = false
+      resolve()
+    })
+  )
 }
 
 const ssrInit = () => {
@@ -734,6 +776,8 @@ const ssrInit = () => {
 
 const breakpoint = ref<number>()
 
+const vSlickCarouselRef = ref<HTMLElement>()
+const vSlickCarouselStyle = ref({})
 const vSlickListRef = ref<HTMLElement>()
 const vSlickTrackRef = ref<InstanceType<typeof VSlickTrack>>()
 
@@ -995,8 +1039,11 @@ defineExpose({
   pageCount
 })
 
-onMounted(() => {
-  window.addEventListener('resize', onWindowResizeEventListener)
+onMounted(async () => {
+  window.addEventListener('resize', onResizeEventListener)
+  if (settings.value.widthDetection === WidthDetection.manual) {
+    await detectWidth()
+  }
   updateState(true)
   adaptHeight()
   if (settings.value.autoplay) {
@@ -1007,12 +1054,10 @@ onMounted(() => {
   }
   ro = new ResizeObserver(() => {
     if (state.value.animating) {
-      onWindowResize(false) // do not set trackStyle so as to not break the animation
-      callbackTimers.push(
-        setTimeout(() => onWindowResize(), settings.value.speed)
-      )
+      onResize({ shouldSetTrackStyle: false }) // do not set trackStyle so as to not break the animation
+      callbackTimers.push(setTimeout(() => onResize(), settings.value.speed))
     } else {
-      onWindowResize()
+      onResize()
     }
   })
   ro.observe(vSlickListRef.value as Element)
@@ -1044,7 +1089,7 @@ onUpdated(() => {
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onWindowResizeEventListener)
+  window.removeEventListener('resize', onResizeEventListener)
   ro?.unobserve(vSlickListRef.value as Element)
   if (animationEndCallback) {
     clearTimeout(animationEndCallback)
