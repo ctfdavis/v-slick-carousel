@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.3.0
+
+### Minor Changes
+
+- Add `widthDetection` setting to fix infinite scaling
+
 ## 0.2.2
 
 ### Patch Changes
