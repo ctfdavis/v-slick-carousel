@@ -40,7 +40,8 @@ export default defineConfig({
           { text: 'Concept', link: '/guide/concept' },
           { text: 'Settings', link: '/guide/settings' },
           { text: 'Styling', link: '/guide/styling' },
-          { text: 'Advanced Usage', link: '/guide/advanced-usage' }
+          { text: 'Advanced Usage', link: '/guide/advanced-usage' },
+          { text: 'FAQ', link: '/guide/faq' }
         ]
       },
       {
