@@ -6,41 +6,64 @@ editLink: false
 ---
 
 <template v-if="example">
-    <h1 :class="$style.title">{{ example.name }}</h1>
+  <h1 :class="$style.title">{{ example.name }}</h1>
+  <div :class="isFlexLayout && $style.flex">
     <div :class="$style.carousel">
       <VSlickCarousel
-          ref="c1"
-          v-bind="
-          isAsNavFor
-              ? { ...example.settings, asNavFor: c2 }
-              : example.settings
-          "
+        ref="c1"
+        v-bind="
+          isAsNavFor ? { ...example.settings, asNavFor: c2 } : example.settings
+        "
       >
-          <div :class="$style.slide" v-for="slide of example.slides" :key="slide.text">
-              <img :class="[$style.img, !isMobile && 'no-swipe']" class="img" :src="withBase(slide.img)" />
-              <p :class="[$style.text, !isMobile && 'no-swipe']">{{ slide.text }}</p>
-          </div>
+        <div
+          :class="$style.slide"
+          v-for="slide of example.slides"
+          :key="slide.text"
+        >
+          <img
+            :class="[$style.img, !isMobile && 'no-swipe']"
+            class="img"
+            :src="withBase(slide.img)"
+          />
+          <p :class="[$style.text, !isMobile && 'no-swipe']">
+            {{ slide.text }}
+          </p>
+        </div>
       </VSlickCarousel>
     </div>
-    <div v-if="isAsNavFor" :class="$style.carousel">
+    <div v-if="isAsNavFor || isFlexLayout" :class="$style.carousel">
       <VSlickCarousel
-          ref="c2"
-          v-bind="{ ...example.settings, groupsToShow: 6, asNavFor: c1 }"
+        ref="c2"
+        v-bind="{
+          ...example.settings,
+          ...(isAsNavFor ? { groupsToShow: 6, asNavFor: c1 } : {})
+        }"
       >
-          <div :class="$style.slide" v-for="slide of example.slides" :key="slide.text">
-              <img :class="[$style.img, !isMobile && 'no-swipe']" class="img" :src="withBase(slide.img)" />
-              <p :class="[$style.text, !isMobile && 'no-swipe']">{{ slide.text }}</p>
-          </div>
+        <div
+          :class="$style.slide"
+          v-for="slide of example.slides"
+          :key="slide.text"
+        >
+          <img
+            :class="[$style.img, !isMobile && 'no-swipe']"
+            class="img"
+            :src="withBase(slide.img)"
+          />
+          <p :class="[$style.text, !isMobile && 'no-swipe']">
+            {{ slide.text }}
+          </p>
+        </div>
       </VSlickCarousel>
     </div>
-    <h3 :class="$style.heading">Settings</h3>
-    <template v-if="isAsNavFor">
-      <div v-html="asNavForExampleCode1" :class="$style.code"></div>
-      <div v-html="asNavForExampleCode2" :class="$style.code"></div>
-    </template>
-    <template v-else>
-      <div v-html="exampleCode" :class="$style.code"></div>
-    </template>
+  </div>
+  <h3 :class="$style.heading">Settings</h3>
+  <template v-if="isAsNavFor">
+    <div v-html="asNavForExampleCode1" :class="$style.code"></div>
+    <div v-html="asNavForExampleCode2" :class="$style.code"></div>
+  </template>
+  <template v-else>
+    <div v-html="exampleCode" :class="$style.code"></div>
+  </template>
 </template>
 
 <script setup>
@@ -51,16 +74,14 @@ import { ref, onMounted } from 'vue'
 import 'v-slick-carousel/style.css'
 import { VSlickCarousel } from 'v-slick-carousel'
 import { codify, mobileCheck } from '../src/utils'
-import {
-  id as asNavForId,
-  codeC1,
-  codeC2
-} from '../src/examples/as-nav-for'
+import { id as asNavForId, codeC1, codeC2 } from '../src/examples/as-nav-for'
+import { id as flexLayoutId } from '../src/examples/flex-layout'
 
 const { params } = useData()
 const c1 = ref()
 const c2 = ref()
 const isAsNavFor = params.value.id === asNavForId
+const isFlexLayout = params.value.id === flexLayoutId
 const example = Object.values(examples).find((o) => o.id === params.value.id)
 const exampleCode = ref()
 const asNavForExampleCode1 = ref()
@@ -72,23 +93,23 @@ onMounted(async () => {
   if (!example.settings) return
   const highlighter = await createHighlighter({
     themes: ['nord'],
-    langs: ['javascript'],
+    langs: ['javascript']
   })
   if (params.value.id === asNavForId) {
     asNavForExampleCode1.value = highlighter.codeToHtml(codeC1, {
       theme: 'nord',
-      lang: 'javascript',
+      lang: 'javascript'
     })
     asNavForExampleCode2.value = highlighter.codeToHtml(codeC2, {
       theme: 'nord',
-      lang: 'javascript',
+      lang: 'javascript'
     })
     return
   }
   exampleCode.value = highlighter.codeToHtml(codify(example.settings), {
     theme: 'nord',
-    lang: 'javascript',
-  }) 
+    lang: 'javascript'
+  })
 })
 </script>
 
@@ -96,6 +117,13 @@ onMounted(async () => {
 .title {
   font-size: 20px;
   text-align: center;
+}
+.flex {
+  display: flex;
+  gap: 24px;
+  & > * {
+    width: 50%;
+  }
 }
 .carousel {
   margin-top: 24px;

@@ -13,6 +13,7 @@ import autoPlay from './auto-play'
 import vertical from './vertical'
 import rtl from './rtl'
 import asNavFor from './as-nav-for'
+import flexLayout from './flex-layout'
 
 export default makeExamples([
   oneSlideGroupFinite,
@@ -28,7 +29,8 @@ export default makeExamples([
   autoPlay,
   vertical,
   rtl,
-  asNavFor
+  asNavFor,
+  flexLayout
 ])
 
 function makeExamples(examples: Example[]): { [id: string]: OrderedExample } {

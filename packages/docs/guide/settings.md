@@ -316,6 +316,6 @@ In `auto` mode, the carousel dynamically expands to occupy the full width of its
 
 However, `auto` mode may cause the carousel to scale to infinity if the parent element does not have fixed width. This often arises in flex or grid layouts. In such cases, you can fix this problem by either setting a fixed width for the parent element or switching to `manual` mode.
 
-In `manual` mode, a width detection step is executed to determine the carousel's width. This mode ensures that the carousel fills its parent element adequately both on mount and after every window resize event.
+In `manual` mode, a width detection step is executed to determine the carousel's width. This mode ensures that the carousel fills its parent element adequately both on mount and after every window resize event. See [Flex Layout](/examples/flex-layout) for an example.
 
 For additional information on this topic, refer to this [FAQ](/guide/faq#carousel-scales-to-infinity).
