@@ -1,7 +1,7 @@
 <template>
   <div
-    class="v-slick-carousel"
     ref="vSlickCarouselRef"
+    class="v-slick-carousel"
     :style="
       widthDetection === WidthDetection.manual
         ? state.detectingWidth
@@ -42,7 +42,7 @@
           :raw-slide-groups="rawSlideGroups"
           :css-ease="cssEase"
           :current-slide-group-index="state.currentSlideGroupIndex"
-          :detectingWidth="state.detectingWidth"
+          :detecting-width="state.detectingWidth"
           :fade="settings.fade"
           :ignore-prefers-reduced-motion="settings.ignorePrefersReducedMotion"
           :infinite="settings.infinite"
