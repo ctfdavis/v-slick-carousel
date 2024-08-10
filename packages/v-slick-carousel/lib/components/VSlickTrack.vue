@@ -2,7 +2,7 @@
   <div
     class="v-slick-track"
     :class="{ center: centerMode, vertical: vertical }"
-    :style="trackStyle"
+    :style="[trackStyle, detectingWidth ? { width: '0 !important' } : {}]"
   >
     <div
       v-for="(slideGroup, i) in preCloneSlideGroups"

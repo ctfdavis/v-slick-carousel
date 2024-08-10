@@ -26,3 +26,8 @@ export enum SlideNavigation {
   next = 'next',
   previous = 'previous'
 }
+
+export enum WidthDetection {
+  auto = 'auto',
+  manual = 'manual'
+}

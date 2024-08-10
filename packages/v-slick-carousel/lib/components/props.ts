@@ -6,7 +6,8 @@ import {
   Responsive,
   SlideNavigation,
   SliderState,
-  TrackProps
+  TrackProps,
+  WidthDetection
 } from '../types'
 import pick from 'lodash.pick'
 import cloneDeep from 'lodash.clonedeep'
@@ -59,7 +60,8 @@ export const defaultProps = {
   variableWidth: { type: Boolean, default: false },
   vertical: { type: Boolean, default: false },
   verticalSwiping: { type: Boolean, default: false },
-  waitForAnimate: { type: Boolean, default: true }
+  waitForAnimate: { type: Boolean, default: true },
+  widthDetection: { type: String, default: WidthDetection.auto }
 } satisfies VuePropDef<keyof Props>
 
 export const defaultPropValues = Object.keys(defaultProps).reduce<{
@@ -78,6 +80,7 @@ export const defaultSliderState: SliderState = {
   currentDirection: 0,
   currentLeft: null,
   currentSlideGroupIndex: 0,
+  detectingWidth: false,
   direction: 1,
   dragging: false,
   edgeDragged: false,
@@ -114,6 +117,7 @@ export const defaultTrackProps = {
   ]),
   ...{
     currentSlideGroupIndex: { type: Number, default: 0 },
+    detectingWidth: { type: Boolean, default: false },
     lazyLoadedList: {
       type: Array as PropType<Number[]>,
       default: []

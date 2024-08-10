@@ -1,6 +1,12 @@
 import { VNode } from 'vue'
 
-import { LazyLoadType, PlayingType, SlideNavigation, SwipeDirection } from '.'
+import {
+  LazyLoadType,
+  PlayingType,
+  SlideNavigation,
+  SwipeDirection,
+  WidthDetection
+} from '.'
 import {
   Combine,
   MarkRequiredAndPartialKeysWithPartialBase,
@@ -49,6 +55,7 @@ export type Props = {
   vertical: boolean
   verticalSwiping: boolean
   waitForAnimate: boolean
+  widthDetection: WidthDetection | keyof typeof WidthDetection
 }
 
 export type Responsive = {
@@ -71,6 +78,7 @@ export type SliderState = {
   currentDirection: number
   currentLeft: null | number
   currentSlideGroupIndex: number
+  detectingWidth: boolean
   direction: number
   dragging: boolean
   edgeDragged: boolean
@@ -115,6 +123,7 @@ export type TrackProps = Pick<
   Pick<
     SliderState,
     | 'currentSlideGroupIndex'
+    | 'detectingWidth'
     | 'lazyLoadedList'
     | 'listHeight'
     | 'trackStyle'

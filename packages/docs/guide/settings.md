@@ -43,6 +43,7 @@
 | [vertical](#vertical)                                     | Boolean | `false`          | Enable vertical mode.                                    |
 | [verticalSwiping](#verticalswiping)                       | Boolean | `false`          | Enable vertical swiping.                                 |
 | [waitForAnimate](#waitforanimate)                         | Boolean | `true`           | Wait for animation.                                      |
+| [widthDetection](#widthdetection)                         | String  | `auto`           | Use manual or automatic width detection.                 |
 
 ## `accessibility` <Badge type="info" text="boolean" />
 
@@ -304,3 +305,17 @@ Typically used together with [`vertical`](#vertical). When `true`, the swipe dir
 <small>Default: `true`</small>
 
 When `true`, navigation will be disabled until the animation is complete.
+
+## `widthDetection` <Badge type="info" text="string" />
+
+<small>Default: `'auto'`</small>
+
+The `widthDetection` property influences how the carousel adjusts its width. This property supports two modes: `auto` and `manual`.
+
+In `auto` mode, the carousel dynamically expands to occupy the full width of its parent element. This mode ensures the smoothest performance during window resizing events.
+
+However, `auto` mode may cause the carousel to scale to infinity if the parent element does not have fixed width. This often arises in flex or grid layouts. In such cases, you can fix this problem by either setting a fixed width for the parent element or switching to `manual` mode.
+
+In `manual` mode, a width detection step is executed to determine the carousel's width. This mode ensures that the carousel fills its parent element adequately both on mount and after every window resize event. See [Flex Layout](/examples/flex-layout) for an example.
+
+For additional information on this topic, refer to this [FAQ](/guide/faq#carousel-scales-to-infinity).
