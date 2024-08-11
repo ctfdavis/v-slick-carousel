@@ -2,6 +2,7 @@ import { VNode } from 'vue'
 import {
   CloneInfoSpec,
   GoNextSpec,
+  GoPrevSpec,
   LazyInfoSpec,
   NavigableSpec,
   OnSlideSpec,
@@ -606,14 +607,19 @@ export function getTrackLeft(spec: TrackInfoSpec) {
   return targetLeft
 }
 
+export const canGoPrev = (spec: GoPrevSpec) => {
+  return (
+    spec.infinite ||
+    (spec.currentSlideGroupIndex !== 0 &&
+      spec.slideGroupCount > spec.groupsToShow)
+  )
+}
+
 export const canGoNext = (spec: GoNextSpec) => {
   let canGo = true
   if (!spec.infinite) {
-    if (
-      spec.centerMode &&
-      spec.currentSlideGroupIndex >= spec.slideGroupCount - 1
-    ) {
-      canGo = false
+    if (spec.centerMode) {
+      canGo = spec.currentSlideGroupIndex < spec.slideGroupCount - 1
     } else if (
       spec.slideGroupCount <= spec.groupsToShow ||
       spec.currentSlideGroupIndex >= spec.slideGroupCount - spec.groupsToShow
