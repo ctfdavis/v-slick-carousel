@@ -71,6 +71,8 @@ Using `ref` on the component will expose below component's state and methods:
     goto: (index: number) => void; // navigates to the slide group at the given index
     next: () => void; // navigates to the next slide group
     prev: () => void; // navigates to the previous slide group
+    canGoNext: boolean; // true if the next slide group is available
+    canGoPrev: boolean; // true if the previous slide group is available
     play: () => void; // starts autoplay
     pause: () => void; // stops autoplay
     autoPlay: (playType: PlayingType | keyof typeof PlayingType) => void // changes autoplay status
