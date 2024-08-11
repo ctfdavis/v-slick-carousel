@@ -5,7 +5,7 @@
         type="button"
         data-role="none"
         class="v-slick-arrow prev"
-        :class="{ disabled: !clickable }"
+        :class="{ disabled }"
         @click="clickHandler"
       >
         {{ prevArrowLabel }}
@@ -18,7 +18,7 @@
         type="button"
         data-role="none"
         class="v-slick-arrow next"
-        :class="{ disabled: !clickable }"
+        :class="{ disabled }"
         @click="clickHandler"
       >
         {{ nextArrowLabel }}
@@ -33,29 +33,15 @@ import { defaultArrowProps } from './props'
 
 const props = defineProps(defaultArrowProps)
 const emit = defineEmits([SlideNavigation.previous, SlideNavigation.next])
-const clickable = computed(() => {
-  if (props.infinite) return true
-  if (props.type === SlideNavigation.previous)
-    return (
-      props.currentSlideGroupIndex !== 0 &&
-      props.slideGroupCount > props.groupsToShow
-    )
-  return (
-    (!props.centerMode ||
-      props.currentSlideGroupIndex < props.slideGroupCount - 1) &&
-    props.slideGroupCount > props.groupsToShow &&
-    props.currentSlideGroupIndex < props.slideGroupCount - props.groupsToShow
-  )
-})
 const clickHandler = computed(() => () => {
-  if (!clickable.value) return
+  if (props.disabled) return
   emit(props.type)
 })
 const arrowSlotProps = computed<ArrowSlotProps>(() => ({
   currentSlideGroupIndex: props.currentSlideGroupIndex,
   slideGroupCount: props.slideGroupCount,
   onClick: clickHandler.value,
-  disabled: !clickable.value
+  disabled: !props.disabled
 }))
 </script>
 <style scoped>

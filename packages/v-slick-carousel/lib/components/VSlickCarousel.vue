@@ -19,6 +19,7 @@
         :groups-to-show="settings.groupsToShow"
         :slide-group-count="slideGroupCount"
         :current-slide-group-index="state.currentSlideGroupIndex"
+        :disabled="!canGoPrev"
         @previous="handlePrevVSlickArrow"
       >
         <template #prevArrow="arrowSlotProps">
@@ -73,6 +74,7 @@
         :groups-to-show="settings.groupsToShow"
         :slide-group-count="slideGroupCount"
         :current-slide-group-index="state.currentSlideGroupIndex"
+        :disabled="!canGoNext"
         @next="handleNextVSlickArrow"
       >
         <template #nextArrow="arrowSlotProps">
@@ -115,7 +117,6 @@ import {
 import {
   ChildClickPayload,
   DotClickPayload,
-  GoNextSpec,
   LazyLoadType,
   PlayingType,
   Props,
@@ -146,7 +147,8 @@ import VSlickDots from './VSlickDots.vue'
 import cloneDeep from 'lodash.clonedeep'
 import debounce from 'lodash.debounce'
 import {
-  canGoNext,
+  canGoNext as checkCanGoNext,
+  canGoPrev as checkCanGoPrev,
   extractSlides,
   getNavigationOnKeyType,
   getOnDemandLazySlideGroups,
@@ -289,7 +291,7 @@ const play = () => {
     nextIndex =
       state.value.currentSlideGroupIndex - settings.value.groupsToScroll
   } else {
-    if (canGoNext({ ...props, ...state.value } as GoNextSpec)) {
+    if (canGoNext.value) {
       nextIndex =
         state.value.currentSlideGroupIndex + settings.value.groupsToScroll
     } else {
@@ -840,15 +842,38 @@ const settings = computed<Props>(() => {
   return settings
 })
 
+const canGoPrev = computed(() =>
+  checkCanGoPrev({
+    ...settings.value,
+    ...state.value,
+    slideGroupCount: slideGroupCount.value
+  })
+)
+
+const canGoNext = computed(() =>
+  checkCanGoNext({
+    ...settings.value,
+    ...state.value,
+    slideGroupCount: slideGroupCount.value
+  })
+)
+
 const pageCount = computed(() => {
   if (settings.value.infinite) {
     return Math.ceil(slideGroupCount.value / settings.value.groupsToScroll)
   }
-  const pageCount =
+  let pageCount =
     Math.ceil(
-      (slideGroupCount.value - props.groupsToShow) /
+      (slideGroupCount.value - settings.value.groupsToShow) /
         settings.value.groupsToScroll
     ) + 1
+  if (
+    !settings.value.infinite &&
+    settings.value.groupsToShow > 1 &&
+    settings.value.centerMode
+  ) {
+    pageCount++
+  }
   return pageCount < 0 ? 0 : pageCount
 })
 
@@ -1030,6 +1055,8 @@ defineExpose({
       state.value.currentSlideGroupIndex - settings.value.groupsToScroll
     )
   },
+  canGoNext,
+  canGoPrev,
   play,
   pause,
   autoPlay,

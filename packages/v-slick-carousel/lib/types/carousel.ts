@@ -145,6 +145,8 @@ export type ArrowProps = Pick<
   Pick<SliderState, 'currentSlideGroupIndex'> & {
     slideGroupCount: number
     type: SlideNavigation
+  } & {
+    disabled: boolean
   }
 
 export type DotsProps = Pick<
@@ -326,6 +328,11 @@ export type SwipeMoveSpec = Combine<
     swipeDirection: SwipeDirection | keyof typeof SwipeDirection
   ) => void
 }
+
+export type GoPrevSpec = MarkRequiredWithPartialBase<
+  SliderSpec,
+  'currentSlideGroupIndex' | 'groupsToShow' | 'infinite' | 'slideGroupCount'
+>
 
 export type GoNextSpec = MarkRequiredWithPartialBase<
   SliderSpec,

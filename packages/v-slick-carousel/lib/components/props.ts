@@ -141,6 +141,7 @@ export const defaultArrowProps = {
   ]),
   ...{
     currentSlideGroupIndex: { type: Number, default: 0 },
+    disabled: { type: Boolean, default: false },
     slideGroupCount: { type: Number, default: 0 },
     type: { type: String as PropType<SlideNavigation>, default: 'prev' }
   }
