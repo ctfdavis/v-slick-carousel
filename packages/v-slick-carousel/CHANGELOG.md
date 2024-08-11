@@ -1,5 +1,12 @@
 # v-slick-carousel
 
+## 0.3.1
+
+### Patch Changes
+
+- Fix last slide group could not be displayed and navigated to in `centerMode`
+- Share & expose navigation logic (`canGoNext` & `canGoPrev`)
+
 ## 0.3.0
 
 ### Minor Changes
