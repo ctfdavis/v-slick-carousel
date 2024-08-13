@@ -530,7 +530,9 @@ const slideGroupHandler = async (index: number, dontAnimate = false) => {
   await new Promise<void>((resolve) => {
     animationEndCallback = setTimeout(() => {
       const { animating, ...firstBatch } = afterSlidingState!
-      Object.assign(state.value, firstBatch)
+      if (settings.value.waitForAnimate || state.value.currentSlideGroupIndex === slidingState.currentSlideGroupIndex) {
+        Object.assign(state.value, firstBatch)
+      }
       callbackTimers.push(
         setTimeout(() => {
           state.value.animating = animating || false
