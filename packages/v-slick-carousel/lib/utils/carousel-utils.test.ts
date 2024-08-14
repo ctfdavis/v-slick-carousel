@@ -13,7 +13,8 @@ import {
   Fragment as Fragment_3_0,
   defineComponent as defineComponent_3_0
 } from 'vue-v3.0'
-import { extractSlides } from './carousel-utils'
+import { extractSlides, getStatesOnSlide } from './carousel-utils'
+import { OnSlideSpec } from '@lib/types'
 
 describe('extractSlides', () => {
   describe('with Vue 3.2 or above', () => {
@@ -92,3 +93,66 @@ describe('extractSlides', () => {
     })
   })
 })
+
+describe('getStatesOnSlide', () => {
+  it('should be undefined if both `waitForAnimate` and `animating` are true', () => {
+    const spec: OnSlideSpec = {
+      ...onSlideSpecBase,
+      waitForAnimate: true,
+      animating: true
+    }
+    expect(getStatesOnSlide(spec)).toBeUndefined()
+  })
+  it('should be undefined if `fade` is true, `infinite` is false and swiping to the edge on boundaries', () => {
+    const spec: OnSlideSpec = {
+      ...onSlideSpecBase,
+      fade: true,
+      infinite: false,
+      index: -1,
+      currentSlideGroupIndex: 0
+    }
+    expect(getStatesOnSlide(spec)).toBeUndefined()
+  })
+  it('should have empty afterSlidingState if `fade` is true and `useCSSTransitions` is false', () => {
+    const spec: OnSlideSpec = {
+      ...onSlideSpecBase,
+      fade: false,
+      useCSSTransitions: false,
+      animating: false
+    }
+    expect(getStatesOnSlide(spec)?.afterSlidingState).toEqual({})
+  })
+  it('should not be undefined when `waitForAnimate` is false when swiping within the boundaries', () => {
+    const spec: OnSlideSpec = {
+      ...onSlideSpecBase,
+      waitForAnimate: false,
+      animating: false,
+      index: 1,
+      currentSlideGroupIndex: 0
+    }
+    expect(getStatesOnSlide(spec)).not.toBeUndefined()
+  })
+})
+
+const onSlideSpecBase: OnSlideSpec = {
+  animating: false,
+  centerMode: false,
+  centerPadding: '0px',
+  currentSlideGroupIndex: 0,
+  fade: false,
+  groupsToShow: 1,
+  groupsToScroll: 1,
+  index: 0,
+  infinite: false,
+  lazyLoadedList: [],
+  listWidth: 0,
+  rtl: false,
+  slideGroupCount: 1,
+  slideGroupHeight: 0,
+  slideGroupWidth: 0,
+  trackEl: null as any,
+  variableWidth: false,
+  useCSSTransitions: true,
+  vertical: false,
+  waitForAnimate: false
+}
