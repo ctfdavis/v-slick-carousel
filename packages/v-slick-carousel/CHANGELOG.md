@@ -1,5 +1,14 @@
 # v-slick-carousel
 
+## 0.3.2
+
+### Patch Changes
+
+- Fix `waitForAnimate: false` not working properly
+- Fix `lazyLoadedList` not properly mutated
+- Refactor `getStatesOnSlide`
+- Add tests for `getStatesOnSlide`
+
 ## 0.3.1
 
 ### Patch Changes
