@@ -501,7 +501,7 @@ const changeSlideGroup = (
 const slideGroupHandler = async (index: number, dontAnimate = false) => {
   const { asNavFor, speed } = settings.value
   const currentSlideGroupIndex = state.value.currentSlideGroupIndex
-  const { slidingState, afterSlidingState } = getStatesOnSlide({
+  const states = getStatesOnSlide({
     index,
     ...settings.value,
     ...state.value,
@@ -509,7 +509,8 @@ const slideGroupHandler = async (index: number, dontAnimate = false) => {
     trackEl: vSlickTrackRef.value?.$el,
     useCSSTransitions: settings.value.useCSSTransitions && !dontAnimate
   } as OnSlideSpec)
-  if (!slidingState) return
+  if (!states) return
+  const { slidingState, afterSlidingState } = states
   emit(
     'beforeChange',
     currentSlideGroupIndex,

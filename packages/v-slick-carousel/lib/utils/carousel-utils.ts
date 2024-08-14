@@ -631,7 +631,7 @@ export const canGoNext = (spec: GoNextSpec) => {
 }
 
 export const getStatesOnSlide = (spec: OnSlideSpec) => {
-  const {
+  let {
     waitForAnimate,
     animating,
     fade,
@@ -646,19 +646,20 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
     groupsToShow,
     useCSSTransitions
   } = spec
-  if (waitForAnimate && animating) return {}
+  if (
+    (waitForAnimate && animating) ||
+    (fade && !infinite && (index < 0 || index >= slideGroupCount))
+  )
+    return
   let animationSlideGroupIndex = index,
-    finalSlideGroupIndex,
-    animationLeft,
-    finalLeft
+    finalSlideGroupIndex
   let slidingState: Partial<SliderState> = {},
     afterSlidingState: Partial<SliderState> = {}
   if (fade) {
-    if (!infinite && (index < 0 || index >= slideGroupCount)) return {}
     if (index < 0) {
-      animationSlideGroupIndex = index + slideGroupCount
+      animationSlideGroupIndex += slideGroupCount
     } else if (index >= slideGroupCount) {
-      animationSlideGroupIndex = index - slideGroupCount
+      animationSlideGroupIndex -= slideGroupCount
     }
     if (lazyLoad && lazyLoadedList.indexOf(animationSlideGroupIndex) < 0) {
       lazyLoadedList.push(animationSlideGroupIndex)
@@ -669,69 +670,73 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
       lazyLoadedList
     }
     afterSlidingState = { animating: false }
-  } else {
-    finalSlideGroupIndex = animationSlideGroupIndex
-    if (animationSlideGroupIndex < 0) {
-      finalSlideGroupIndex = animationSlideGroupIndex + slideGroupCount
-      if (!infinite) finalSlideGroupIndex = 0
-      else if (slideGroupCount % groupsToScroll !== 0)
-        finalSlideGroupIndex =
-          slideGroupCount - (slideGroupCount % groupsToScroll)
-    } else if (
-      !canGoNext(spec) &&
-      animationSlideGroupIndex > currentSlideGroupIndex
-    ) {
-      animationSlideGroupIndex = finalSlideGroupIndex = currentSlideGroupIndex
-    } else if (centerMode && animationSlideGroupIndex >= slideGroupCount) {
-      animationSlideGroupIndex = infinite
-        ? slideGroupCount
-        : slideGroupCount - 1
-      finalSlideGroupIndex = infinite ? 0 : slideGroupCount - 1
-    } else if (animationSlideGroupIndex >= slideGroupCount) {
-      finalSlideGroupIndex = animationSlideGroupIndex - slideGroupCount
-      if (!infinite) finalSlideGroupIndex = slideGroupCount - groupsToShow
-      else if (slideGroupCount % groupsToScroll !== 0) finalSlideGroupIndex = 0
+    return {
+      slidingState,
+      afterSlidingState
     }
-    finalLeft = getTrackLeft({
-      ...spec,
-      currentSlideGroupIndex: finalSlideGroupIndex
-    })
-    animationLeft = getTrackLeft({
-      ...spec,
-      currentSlideGroupIndex: animationSlideGroupIndex
-    })
-    if (!infinite) {
-      if (animationLeft === finalLeft)
-        animationSlideGroupIndex = finalSlideGroupIndex
-      animationLeft = finalLeft
+  }
+  finalSlideGroupIndex = animationSlideGroupIndex
+  if (animationSlideGroupIndex < 0) {
+    finalSlideGroupIndex = animationSlideGroupIndex + slideGroupCount
+    if (!infinite) finalSlideGroupIndex = 0
+    else if (slideGroupCount % groupsToScroll !== 0)
+      finalSlideGroupIndex =
+        slideGroupCount - (slideGroupCount % groupsToScroll)
+  } else if (
+    !canGoNext(spec) &&
+    animationSlideGroupIndex > currentSlideGroupIndex
+  ) {
+    animationSlideGroupIndex = finalSlideGroupIndex = currentSlideGroupIndex
+  } else if (centerMode && animationSlideGroupIndex >= slideGroupCount) {
+    animationSlideGroupIndex = infinite ? slideGroupCount : slideGroupCount - 1
+    finalSlideGroupIndex = infinite ? 0 : slideGroupCount - 1
+  } else if (animationSlideGroupIndex >= slideGroupCount) {
+    finalSlideGroupIndex = animationSlideGroupIndex - slideGroupCount
+    if (!infinite) finalSlideGroupIndex = slideGroupCount - groupsToShow
+    else if (slideGroupCount % groupsToScroll !== 0) finalSlideGroupIndex = 0
+  }
+  let finalLeft = getTrackLeft({
+    ...spec,
+    currentSlideGroupIndex: finalSlideGroupIndex
+  })
+  let animationLeft = getTrackLeft({
+    ...spec,
+    currentSlideGroupIndex: animationSlideGroupIndex
+  })
+  if (!infinite) {
+    if (animationLeft === finalLeft)
+      animationSlideGroupIndex = finalSlideGroupIndex
+    animationLeft = finalLeft
+  }
+  if (lazyLoad)
+    lazyLoadedList = lazyLoadedList.concat(
+      getOnDemandLazySlideGroups({
+        ...spec,
+        currentSlideGroupIndex: animationSlideGroupIndex
+      })
+    )
+  if (!useCSSTransitions) {
+    slidingState = {
+      currentSlideGroupIndex: finalSlideGroupIndex,
+      trackStyle: getTrackCSS(spec, finalLeft),
+      lazyLoadedList
     }
-    lazyLoad &&
-      lazyLoadedList.concat(
-        getOnDemandLazySlideGroups({
-          ...spec,
-          currentSlideGroupIndex: animationSlideGroupIndex
-        })
-      )
-    if (!useCSSTransitions) {
-      slidingState = {
-        currentSlideGroupIndex: finalSlideGroupIndex,
-        trackStyle: getTrackCSS(spec, finalLeft),
-        lazyLoadedList
-      }
-    } else {
-      slidingState = {
-        animating: true,
-        currentSlideGroupIndex: finalSlideGroupIndex,
-        trackStyle: getTrackAnimateCSS(spec, animationLeft),
-        lazyLoadedList
-      }
-      afterSlidingState = {
-        animating: false,
-        currentSlideGroupIndex: finalSlideGroupIndex,
-        trackStyle: getTrackCSS(spec, finalLeft),
-        swipeLeft: undefined
-      }
+    return {
+      slidingState,
+      afterSlidingState
     }
+  }
+  slidingState = {
+    animating: true,
+    currentSlideGroupIndex: finalSlideGroupIndex,
+    trackStyle: getTrackAnimateCSS(spec, animationLeft),
+    lazyLoadedList
+  }
+  afterSlidingState = {
+    animating: false,
+    currentSlideGroupIndex: finalSlideGroupIndex,
+    trackStyle: getTrackCSS(spec, finalLeft),
+    swipeLeft: undefined
   }
   return { slidingState, afterSlidingState }
 }
