@@ -13,7 +13,7 @@
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm --filter=v-slick-carousel run build",
     "dev": "pnpm --filter=v-slick-carousel run dev",
-    "docs:dev": "pnpm --filter=docs run docs:dev",
+    "docs:dev": "concurrently \"pnpm --filter=v-slick-carousel run build:watch\" \"pnpm --filter=docs run docs:dev\"",
     "docs:build": "pnpm --filter=docs run docs:build",
     "docs:preview": "pnpm --filter=docs run docs:preview",
     "preview": "pnpm --filter=v-slick-carousel run preview",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
+    "concurrently": "^8.2.2",
     "husky": "^9.0.11",
     "prettier": "3.3.2"
   }
