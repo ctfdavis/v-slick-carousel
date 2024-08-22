@@ -81,5 +81,12 @@ export default defineConfig({
     search: {
       provider: 'local'
     }
+  },
+  async transformPageData(pageData) {
+    if (pageData.relativePath.startsWith('examples/')) {
+      return {
+        title: pageData.params.title
+      }
+    }
   }
 })
