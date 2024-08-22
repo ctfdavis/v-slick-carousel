@@ -9,60 +9,71 @@ import {
   TrackProps,
   WidthDetection
 } from '../types'
-import pick from 'lodash.pick'
-import cloneDeep from 'lodash.clonedeep'
 
 type VuePropDef<T extends string> = Record<
   T,
   { type: PropType<unknown>; default: unknown }
 >
 
-export const defaultProps = {
-  accessibility: { type: Boolean, default: true },
-  adaptiveHeight: { type: Boolean, default: false },
-  arrows: { type: Boolean, default: true },
-  asNavFor: {
-    type: Object,
-    default: null
-  },
-  autoplay: { type: Boolean, default: false },
-  autoplaySpeed: { type: Number, default: 3000 },
-  centerMode: { type: Boolean, default: false },
-  centerPadding: { type: String, default: '50px' },
-  cssEase: { type: String, default: 'ease' },
-  dots: { type: Boolean, default: false },
-  dotsClass: { type: String, default: 'v-slick-dots' },
-  draggable: { type: Boolean, default: true },
-  edgeFriction: { type: Number, default: 0.35 },
-  fade: { type: Boolean, default: false },
-  focusOnSelect: { type: Boolean, default: false },
-  ignorePrefersReducedMotion: { type: Boolean, default: false },
-  infinite: { type: Boolean, default: true },
-  initialGroupIndex: { type: Number, default: 0 },
-  lazyLoad: { type: String, default: null },
-  nextArrowLabel: { type: String, default: 'Next' },
-  pauseOnDotsHover: { type: Boolean, default: false },
-  pauseOnFocus: { type: Boolean, default: false },
-  pauseOnHover: { type: Boolean, default: true },
-  prevArrowLabel: { type: String, default: 'Previous' },
-  responsive: { type: Array as PropType<Responsive[]>, default: [] },
-  rtl: { type: Boolean, default: false },
-  slidesPerGroup: { type: Number, default: 1 },
-  groupsToScroll: { type: Number, default: 1 },
-  groupsToShow: { type: Number, default: 1 },
-  speed: { type: Number, default: 500 },
-  swipe: { type: Boolean, default: true },
-  swipeToSlide: { type: Boolean, default: false },
-  touchMove: { type: Boolean, default: true },
-  touchThreshold: { type: Number, default: 5 },
-  useCSSTransitions: { type: Boolean, default: true },
-  useCSSTransform: { type: Boolean, default: true },
-  variableWidth: { type: Boolean, default: false },
-  vertical: { type: Boolean, default: false },
-  verticalSwiping: { type: Boolean, default: false },
-  waitForAnimate: { type: Boolean, default: true },
-  widthDetection: { type: String, default: WidthDetection.auto }
-} satisfies VuePropDef<keyof Props>
+const makeDefaultProps = (selectFields?: string[]) => {
+  const defaultProps = {
+    accessibility: { type: Boolean, default: true },
+    adaptiveHeight: { type: Boolean, default: false },
+    arrows: { type: Boolean, default: true },
+    asNavFor: {
+      type: Object,
+      default: null
+    },
+    autoplay: { type: Boolean, default: false },
+    autoplaySpeed: { type: Number, default: 3000 },
+    centerMode: { type: Boolean, default: false },
+    centerPadding: { type: String, default: '50px' },
+    cssEase: { type: String, default: 'ease' },
+    dots: { type: Boolean, default: false },
+    dotsClass: { type: String, default: 'v-slick-dots' },
+    draggable: { type: Boolean, default: true },
+    edgeFriction: { type: Number, default: 0.35 },
+    fade: { type: Boolean, default: false },
+    focusOnSelect: { type: Boolean, default: false },
+    ignorePrefersReducedMotion: { type: Boolean, default: false },
+    infinite: { type: Boolean, default: true },
+    initialGroupIndex: { type: Number, default: 0 },
+    lazyLoad: { type: String, default: null },
+    nextArrowLabel: { type: String, default: 'Next' },
+    pauseOnDotsHover: { type: Boolean, default: false },
+    pauseOnFocus: { type: Boolean, default: false },
+    pauseOnHover: { type: Boolean, default: true },
+    prevArrowLabel: { type: String, default: 'Previous' },
+    responsive: { type: Array as PropType<Responsive[]>, default: [] },
+    rtl: { type: Boolean, default: false },
+    slidesPerGroup: { type: Number, default: 1 },
+    groupsToScroll: { type: Number, default: 1 },
+    groupsToShow: { type: Number, default: 1 },
+    speed: { type: Number, default: 500 },
+    swipe: { type: Boolean, default: true },
+    swipeToSlide: { type: Boolean, default: false },
+    touchMove: { type: Boolean, default: true },
+    touchThreshold: { type: Number, default: 5 },
+    useCSSTransitions: { type: Boolean, default: true },
+    useCSSTransform: { type: Boolean, default: true },
+    variableWidth: { type: Boolean, default: false },
+    vertical: { type: Boolean, default: false },
+    verticalSwiping: { type: Boolean, default: false },
+    waitForAnimate: { type: Boolean, default: true },
+    widthDetection: { type: String, default: WidthDetection.auto }
+  } satisfies VuePropDef<keyof Props>
+  if (!selectFields) return defaultProps
+  return Object.keys(defaultProps).reduce<{
+    [key: string]: { type: PropType<unknown>; default: unknown }
+  }>((acc, key) => {
+    if (selectFields.includes(key)) {
+      acc[key as keyof Props] = (defaultProps as any)[key]
+    }
+    return acc
+  }, {}) as typeof defaultProps
+}
+
+export const defaultProps = makeDefaultProps() satisfies VuePropDef<keyof Props>
 
 export const defaultPropValues = Object.keys(defaultProps).reduce<{
   [key: string]: unknown
@@ -73,7 +84,7 @@ export const defaultPropValues = Object.keys(defaultProps).reduce<{
   [K in keyof Props]: unknown
 } as Props
 
-export const defaultSliderState: SliderState = {
+export const makeDefaultSliderState: () => SliderState = () => ({
   animating: false,
   autoplaying: null,
   autoplayTimer: null,
@@ -92,15 +103,15 @@ export const defaultSliderState: SliderState = {
   slideGroupHeight: undefined,
   slideGroupWidth: undefined,
   swipeLeft: undefined,
-  swiped: false, // used by swipeEvent. differentites between touch and swipe.
+  swiped: false,
   swiping: false,
   touchObject: { startX: 0, startY: 0, curX: 0, curY: 0, swipeLength: 0 },
   trackStyle: {},
   trackWidth: 0
-}
+})
 
 export const defaultTrackProps = {
-  ...pick(cloneDeep(defaultProps), [
+  ...makeDefaultProps([
     'centerMode',
     'centerPadding',
     'cssEase',
@@ -119,7 +130,7 @@ export const defaultTrackProps = {
     currentSlideGroupIndex: { type: Number, default: 0 },
     detectingWidth: { type: Boolean, default: false },
     lazyLoadedList: {
-      type: Array as PropType<Number[]>,
+      type: Array as PropType<number[]>,
       default: []
     },
     listHeight: { type: Number, default: undefined },
@@ -132,7 +143,7 @@ export const defaultTrackProps = {
 } satisfies VuePropDef<keyof TrackProps>
 
 export const defaultArrowProps = {
-  ...pick(cloneDeep(defaultProps), [
+  ...makeDefaultProps([
     'centerMode',
     'infinite',
     'groupsToShow',
@@ -148,7 +159,7 @@ export const defaultArrowProps = {
 } satisfies VuePropDef<keyof ArrowProps>
 
 export const defaultDotsProps = {
-  ...pick(cloneDeep(defaultProps), [
+  ...makeDefaultProps([
     'dotsClass',
     'infinite',
     'groupsToScroll',
