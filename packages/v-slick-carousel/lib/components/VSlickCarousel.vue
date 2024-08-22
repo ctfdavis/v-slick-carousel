@@ -138,13 +138,16 @@ import {
   filterUndefined,
   getChangedSlideGroupIndex
 } from '@lib/utils'
-import { defaultPropValues, defaultProps, defaultSliderState } from './props'
+import {
+  defaultPropValues,
+  defaultProps,
+  makeDefaultSliderState
+} from './props'
 import enquireJs from '@dcufo/enquire.js'
 import json2mq from 'json2mq'
 import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
 import VSlickDots from './VSlickDots.vue'
-import cloneDeep from 'lodash.clonedeep'
 import debounce from 'lodash.debounce'
 import {
   canGoNext as checkCanGoNext,
@@ -531,7 +534,11 @@ const slideGroupHandler = async (index: number, dontAnimate = false) => {
   await new Promise<void>((resolve) => {
     animationEndCallback = setTimeout(() => {
       const { animating, ...firstBatch } = afterSlidingState!
-      if (settings.value.waitForAnimate || state.value.currentSlideGroupIndex === slidingState.currentSlideGroupIndex) {
+      if (
+        settings.value.waitForAnimate ||
+        state.value.currentSlideGroupIndex ===
+          slidingState.currentSlideGroupIndex
+      ) {
         Object.assign(state.value, firstBatch)
       }
       callbackTimers.push(
@@ -883,7 +890,7 @@ const pageCount = computed(() => {
 const slides = ref<VNode[]>(slots.default ? extractSlides(slots.default()) : [])
 
 const state = ref({
-  ...cloneDeep(defaultSliderState),
+  ...makeDefaultSliderState(),
   currentSlideGroupIndex: settings.value.initialGroupIndex
 })
 
