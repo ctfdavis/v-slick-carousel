@@ -82,6 +82,10 @@ export default defineConfig({
       provider: 'local'
     }
   },
+  srcExclude: ['README.md'],
+  sitemap: {
+    hostname: 'https://lambdadragon.dev/v-slick-carousel/'
+  },
   async transformPageData(pageData) {
     if (pageData.relativePath.startsWith('examples/')) {
       return {
