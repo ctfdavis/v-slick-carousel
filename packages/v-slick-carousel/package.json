@@ -27,6 +27,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --p ./tsconfig.build.json && vite build",
+    "build:watch": "concurrently \"vue-tsc --p ./tsconfig.build.json --watch\" \"vite build --watch\"",
     "clean": "rimraf dist",
     "type": "tsc --noEmit",
     "prepublish": "npm run build",
