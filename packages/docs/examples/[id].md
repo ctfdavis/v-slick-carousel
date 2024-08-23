@@ -70,7 +70,7 @@ editLink: false
 import examples from '../src/examples'
 import { useData, withBase } from 'vitepress'
 import { createHighlighter } from 'shiki'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import 'v-slick-carousel/style.css'
 import { VSlickCarousel } from 'v-slick-carousel'
 import { codify, mobileCheck } from '../src/utils'
@@ -87,14 +87,17 @@ const exampleCode = ref()
 const asNavForExampleCode1 = ref()
 const asNavForExampleCode2 = ref()
 const isMobile = ref(false)
+let highlighter
 
 onMounted(async () => {
   isMobile.value = mobileCheck()
   if (!example.settings) return
-  const highlighter = await createHighlighter({
-    themes: ['nord'],
-    langs: ['javascript']
-  })
+  if(!highlighter) {
+    highlighter = await createHighlighter({
+        themes: ['nord'],
+        langs: ['javascript']
+    })
+  }
   if (params.value.id === asNavForId) {
     asNavForExampleCode1.value = highlighter.codeToHtml(codeC1, {
       theme: 'nord',
@@ -110,6 +113,11 @@ onMounted(async () => {
     theme: 'nord',
     lang: 'javascript'
   })
+})
+
+onBeforeUnmount(() => {
+  highlighter?.dispose()
+  highlighter = null
 })
 </script>
 
