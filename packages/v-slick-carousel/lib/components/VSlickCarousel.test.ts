@@ -21,26 +21,106 @@ const componentSlides = (total) =>
   )
 
 describe('VSlickCarousel', () => {
-  describe('Slide rendering', () => {
-    it('should render basic slides', () => {
-      const wrapper = mount(VSlickCarousel, {
-        slots: {
-          default: basicSlides(20)
-        }
+  describe('Slide group rendering', () => {
+    describe('Content rendering', () => {
+      it('should render basic slides', () => {
+        const wrapper = mount(VSlickCarousel, {
+          slots: {
+            default: basicSlides(20)
+          }
+        })
+        Array.from({ length: 20 }).forEach((_, i) => {
+          expect(wrapper.text()).toContain(`basic slide ${i + 1}`)
+        })
       })
-      Array.from({ length: 20 }).forEach((_, i) => {
-        expect(wrapper.text()).toContain(`basic slide ${i + 1}`)
+
+      it('should render component slides', () => {
+        const wrapper = mount(VSlickCarousel, {
+          slots: {
+            default: componentSlides(20)
+          }
+        })
+        Array.from({ length: 20 }).forEach((_, i) => {
+          expect(wrapper.text()).toContain(`component slide ${i + 1}`)
+        })
       })
     })
-
-    it('should render component slides', () => {
-      const wrapper = mount(VSlickCarousel, {
-        slots: {
-          default: componentSlides(20)
-        }
+    describe('Current & active slide group', () => {
+      function makeWrapper(props) {
+        return mount(VSlickCarousel, {
+          slots: {
+            default: basicSlides(20)
+          },
+          props
+        })
+      }
+      function expectSlideGroupWithClassName(wrapper, indices, className) {
+        Array.from({ length: 20 }).forEach((_, i) => {
+          const exp = expect(
+            wrapper.findAll('.v-slick-slide-group:not(.clone)').at(i).classes()
+          )
+          if (indices.includes(i)) {
+            exp.toContain(className)
+          } else {
+            exp.not.toContain(className)
+          }
+        })
+      }
+      describe('One slide group to show', () => {
+        it('should set the first slide group as current', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 0
+          })
+          expectSlideGroupWithClassName(wrapper, [0], 'current')
+        })
+        it('should set the first slide group as active', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 0
+          })
+          expectSlideGroupWithClassName(wrapper, [0], 'active')
+        })
+        it('should set the the 10th slide group as current', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 9
+          })
+          expectSlideGroupWithClassName(wrapper, [9], 'current')
+        })
+        it('should set the the 10th slide group as active', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 9
+          })
+          expectSlideGroupWithClassName(wrapper, [9], 'active')
+        })
       })
-      Array.from({ length: 20 }).forEach((_, i) => {
-        expect(wrapper.text()).toContain(`component slide ${i + 1}`)
+      describe('Multiple slide groups to show', () => {
+        it('should set the first slide group as current', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 0,
+            groupsToShow: 3
+          })
+          expectSlideGroupWithClassName(wrapper, [0], 'current')
+        })
+        it('should set the first three slide groups as active', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 0,
+            groupsToShow: 3
+          })
+          expectSlideGroupWithClassName(wrapper, [0, 1, 2], 'active')
+        })
+        it('should set the the 10th slide group as current', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 9,
+            groupsToShow: 3
+          })
+          expectSlideGroupWithClassName(wrapper, [9], 'current')
+        })
+        it('should set the the 10th, 11th, 12th slide groups as active', () => {
+          const wrapper = makeWrapper({
+            initialGroupIndex: 9,
+            groupsToShow: 3
+          })
+          expectSlideGroupWithClassName(wrapper, [9, 10, 11], 'active')
+        })
       })
     })
   })
@@ -97,56 +177,7 @@ describe('VSlickCarousel', () => {
     })
   })
 
-  describe('Current slide', () => {
-    function makeWrapper(props) {
-      return mount(VSlickCarousel, {
-        slots: {
-          default: basicSlides(20)
-        },
-        props
-      })
-    }
-    function expectCurrentSlideGroup(wrapper, indices) {
-      Array.from({ length: 20 }).forEach((_, i) => {
-        const exp = expect(
-          wrapper.findAll('.v-slick-slide-group:not(.clone)').at(i).classes()
-        )
-        if (indices.includes(i)) {
-          exp.toContain('current')
-        } else {
-          exp.not.toContain('current')
-        }
-      })
-    }
-    describe('One slide group to show', () => {
-      it('should set the first slide group as current', () => {
-        const wrapper = makeWrapper({
-          initialGroupIndex: 0
-        })
-        expectCurrentSlideGroup(wrapper, [0])
-      })
-      it('should set the the 10th slide group as current', () => {
-        const wrapper = makeWrapper({
-          initialGroupIndex: 9
-        })
-        expectCurrentSlideGroup(wrapper, [9])
-      })
-    })
-    describe('Multiple slide groups to show', () => {
-      it('should set the first slide group as current', () => {
-        const wrapper = makeWrapper({
-          initialGroupIndex: 0,
-          groupsToShow: 3
-        })
-        expectCurrentSlideGroup(wrapper, [0])
-      })
-      it('should set the the 10th slide group as current', () => {
-        const wrapper = makeWrapper({
-          initialGroupIndex: 9,
-          groupsToShow: 3
-        })
-        expectCurrentSlideGroup(wrapper, [9])
-      })
-    })
-  })
+  // describe('Navigation', () => {
+  //
+  // })
 })
