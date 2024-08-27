@@ -177,6 +177,27 @@ describe('VSlickCarousel', () => {
       })
       expect(wrapper.find('.v-slick-dots').exists()).toBe(false)
     })
+    it('should set the correct active dot', async () => {
+      const wrapper = mount(VSlickCarousel, {
+        slots: {
+          default: basicSlides(20)
+        },
+        props: {
+          dots: true,
+          groupsToShow: 1,
+          slidesPerGroup: 1,
+          initialGroupIndex: 5,
+          useCSSTransitions: false
+        }
+      })
+      expect(wrapper.findAll('.v-slick-dots > *').at(5).classes()).toContain(
+        'active'
+      )
+      await wrapper.find('.v-slick-arrow.next').trigger('click')
+      expect(wrapper.findAll('.v-slick-dots > *').at(6).classes()).toContain(
+        'active'
+      )
+    })
   })
 
   describe('Navigation', () => {
