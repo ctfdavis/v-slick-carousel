@@ -54,6 +54,7 @@ describe('VSlickCarousel', () => {
           props
         })
       }
+
       function expectSlideGroupWithClassName(wrapper, indices, className) {
         Array.from({ length: 20 }).forEach((_, i) => {
           const exp = expect(
@@ -66,6 +67,7 @@ describe('VSlickCarousel', () => {
           }
         })
       }
+
       describe('One slide group to show', () => {
         it('should set the first slide group as current', () => {
           const wrapper = makeWrapper({
@@ -177,7 +179,149 @@ describe('VSlickCarousel', () => {
     })
   })
 
-  // describe('Navigation', () => {
-  //
-  // })
+  describe('Navigation', () => {
+    describe('Arrow navigation', () => {
+      it('should navigate to the next slide group when clicking the next arrow', async () => {
+        const wrapper = mount(VSlickCarousel, {
+          slots: {
+            default: basicSlides(20)
+          },
+          props: {
+            arrows: true
+          }
+        })
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 1'
+        )
+        await wrapper.find('.v-slick-arrow.next').trigger('click')
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 2'
+        )
+      })
+      it('should navigate to the previous slide group when clicking the prev arrow', async () => {
+        const wrapper = mount(VSlickCarousel, {
+          slots: {
+            default: basicSlides(20)
+          },
+          props: {
+            arrows: true,
+            initialGroupIndex: 1
+          }
+        })
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 2'
+        )
+        await wrapper.find('.v-slick-arrow.prev').trigger('click')
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 1'
+        )
+      })
+      describe('Edge cases', () => {
+        describe('Finite mode', () => {
+          it('should not navigate to the next slide group when clicking the next arrow at the last slide group', async () => {
+            const wrapper = mount(VSlickCarousel, {
+              slots: {
+                default: basicSlides(20)
+              },
+              props: {
+                arrows: true,
+                initialGroupIndex: 19,
+                infinite: false
+              }
+            })
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 20')
+            await wrapper.find('.v-slick-arrow.next').trigger('click')
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 20')
+          })
+          it('should not navigate to the previous slide group when clicking the prev arrow at the first slide group', async () => {
+            const wrapper = mount(VSlickCarousel, {
+              slots: {
+                default: basicSlides(20)
+              },
+              props: {
+                arrows: true,
+                initialGroupIndex: 0,
+                infinite: false
+              }
+            })
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 1')
+            await wrapper.find('.v-slick-arrow.prev').trigger('click')
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 1')
+          })
+        })
+        describe('Infinite mode', () => {
+          it('should navigate to the first slide group when clicking the next arrow at the last slide group', async () => {
+            const wrapper = mount(VSlickCarousel, {
+              slots: {
+                default: basicSlides(20)
+              },
+              props: {
+                arrows: true,
+                initialGroupIndex: 19,
+                infinite: true
+              }
+            })
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 20')
+            await wrapper.find('.v-slick-arrow.next').trigger('click')
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 1')
+          })
+          it('should navigate to the last slide group when clicking the prev arrow at the first slide group', async () => {
+            const wrapper = mount(VSlickCarousel, {
+              slots: {
+                default: basicSlides(20)
+              },
+              props: {
+                arrows: true,
+                initialGroupIndex: 0,
+                infinite: true
+              }
+            })
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 1')
+            await wrapper.find('.v-slick-arrow.prev').trigger('click')
+            expect(
+              wrapper.find('.v-slick-slide-group.current').text()
+            ).toContain('basic slide 20')
+          })
+        })
+      })
+    })
+    describe('Dot navigation', () => {
+      it('should navigate to the corresponding slide group when clicking a dot', async () => {
+        const wrapper = mount(VSlickCarousel, {
+          slots: {
+            default: basicSlides(20)
+          },
+          props: {
+            dots: true,
+            useCSSTransitions: false
+          }
+        })
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 1'
+        )
+        await wrapper.findAll('.v-slick-dots > *').at(1).trigger('click')
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 2'
+        )
+        await wrapper.findAll('.v-slick-dots > *').at(5).trigger('click')
+        expect(wrapper.find('.v-slick-slide-group.current').text()).toContain(
+          'basic slide 6'
+        )
+      })
+    })
+  })
 })
