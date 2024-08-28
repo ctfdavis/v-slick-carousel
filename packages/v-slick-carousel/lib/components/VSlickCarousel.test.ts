@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import VSlickCarousel from './VSlickCarousel.vue'
 import { expect } from 'vitest'
 
-// hide the unnecessary warning on invoking slot "default" outside of the render function:
+// hide the unnecessary warning on invoking slot "default" outside the render function:
 // https://github.com/vuejs/test-utils/issues/2409
 vi.spyOn(console, 'warn').mockImplementation(() => {})
 
