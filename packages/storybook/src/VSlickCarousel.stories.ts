@@ -1,6 +1,6 @@
 import { VSlickCarousel } from 'v-slick-carousel'
 import 'v-slick-carousel/style.css'
-import './style.css'
+import './style.scss'
 import { h } from 'vue'
 
 export default {
@@ -12,6 +12,10 @@ export default {
     dots: true,
     infinite: false,
     groupsToShow: 1,
+    slidesPerGroup: 1,
+    groupsToScroll: 1,
+    vertical: false,
+    verticalSwiping: false
   },
   argTypes: {
     default: {
@@ -24,13 +28,25 @@ export default {
       }
     },
     dots: {
-      description: 'Show the dots navigation',
+      description: 'Show the dots navigation'
     },
     infinite: {
-      description: 'Infinite loop sliding',
+      description: 'Infinite loop sliding'
     },
     groupsToShow: {
-      description: 'Number of slide groups to show',
+      description: 'Number of slide groups to show'
+    },
+    slidesPerGroup: {
+      description: 'Number of slides to show per group'
+    },
+    groupsToScroll: {
+      description: 'Number of groups to scroll'
+    },
+    vertical: {
+      description: 'Vertical sliding (layout)'
+    },
+    verticalSwiping: {
+      description: 'Vertical swiping'
     }
   }
 }
@@ -42,17 +58,33 @@ export const OneSlideFinite = {
 }
 
 export const OneSlideInfinite = {
-    args: {
-        default: defaultSlides,
-        infinite: true
-    }
+  args: {
+    default: defaultSlides,
+    infinite: true
+  }
 }
 
 export const TwoSlideGroupsFinite = {
-    args: {
-        default: defaultSlides(),
-        groupsToShow: 2
-    }
+  args: {
+    default: defaultSlides(),
+    groupsToShow: 2
+  }
+}
+
+export const TwoSlidesPerGroupThreeGroupsFinite = {
+  args: {
+    default: defaultSlides(20),
+    groupsToShow: 3,
+    slidesPerGroup: 2
+  }
+}
+
+export const Vertical = {
+  args: {
+    default: defaultSlides(),
+    vertical: true,
+    verticalSwiping: true
+  }
 }
 
 function defaultSlides(num = 10) {
@@ -65,8 +97,15 @@ function defaultSlides(num = 10) {
       },
       [
         h('h1', { class: 'no-swipe' }, `Slide ${i + 1}`),
-        h('img', { src: `https://picsum.photos/800/400?random=${i}`, class: 'no-swipe' }),
-        h('p', { class: 'no-swipe' }, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+        h('img', {
+          src: `https://picsum.photos/400/200?random=${i}`,
+          draggable: false
+        }),
+        h(
+          'p',
+          { class: 'no-swipe' },
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        )
       ]
     )
   })
