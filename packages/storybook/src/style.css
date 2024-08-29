@@ -1,0 +1,15 @@
+#storybook-root {
+    padding: 20px;
+}
+
+.v-slick-arrow:before {
+    color: #000;
+}
+
+.slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
