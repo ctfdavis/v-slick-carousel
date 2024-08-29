@@ -17,6 +17,7 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+.eslintcache
 
 node_modules
 **/dist
