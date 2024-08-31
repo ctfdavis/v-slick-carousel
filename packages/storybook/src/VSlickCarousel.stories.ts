@@ -2,6 +2,7 @@ import { VSlickCarousel } from 'v-slick-carousel'
 import 'v-slick-carousel/style.css'
 import './style.scss'
 import { h } from 'vue'
+import { userEvent, waitFor, within } from '@storybook/test'
 
 export default {
   component: VSlickCarousel,
@@ -15,7 +16,8 @@ export default {
     slidesPerGroup: 1,
     groupsToScroll: 1,
     vertical: false,
-    verticalSwiping: false
+    verticalSwiping: false,
+    waitForAnimate: true
   },
   argTypes: {
     default: {
@@ -43,23 +45,40 @@ export default {
       description: 'Number of groups to scroll'
     },
     vertical: {
-      description: 'Vertical sliding (layout)'
+      description: 'Switch to vertical sliding layout'
     },
     verticalSwiping: {
-      description: 'Vertical swiping'
+      description: 'Use vertical swiping'
+    },
+    waitForAnimate: {
+      description: 'Wait for the current slide to animate before changing'
     }
   }
 }
 
 export const OneSlideFinite = {
   args: {
-    default: defaultSlides
+    default: defaultSlides()
+  }
+}
+
+export const OneSlideFiniteInteractionTest = {
+  ...OneSlideFinite,
+  tags: ['!dev', '!autodocs'],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('slide'))
+    await userEvent.keyboard('[ArrowRight]')
+    await waitFor(() => new Promise((resolve) => setTimeout(resolve, 1000)), {
+      timeout: 1001
+    })
+    await userEvent.keyboard('[ArrowRight]')
   }
 }
 
 export const OneSlideInfinite = {
   args: {
-    default: defaultSlides,
+    default: defaultSlides(),
     infinite: true
   }
 }
@@ -93,7 +112,8 @@ function defaultSlides(num = 10) {
       'div',
       {
         key: i,
-        class: 'slide'
+        class: 'slide',
+        role: 'slide'
       },
       [
         h('h1', { class: 'no-swipe' }, `Slide ${i + 1}`),
