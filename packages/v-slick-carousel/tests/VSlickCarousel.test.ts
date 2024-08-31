@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
-import VSlickCarousel from './VSlickCarousel.vue'
+import VSlickCarousel from '../lib/components/VSlickCarousel.vue'
 import { expect } from 'vitest'
 
 // hide the unnecessary warning on invoking slot "default" outside the render function:
