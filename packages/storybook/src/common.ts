@@ -37,7 +37,8 @@ export const argInfo = {
     verticalSwiping: false,
     waitForAnimate: true,
     lazyLoad: undefined,
-    responsive: []
+    responsive: [],
+    focusOnSelect: false
   },
   argTypes: {
     default: {
@@ -92,6 +93,9 @@ export const argInfo = {
           summary: 'Array<{ breakpoint: number; settings: Partial<Settings>; }>'
         }
       }
+    },
+    focusOnSelect: {
+      description: 'Focus on (navigate to) slide when selected'
     }
   }
 }

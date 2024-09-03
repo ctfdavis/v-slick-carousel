@@ -73,3 +73,12 @@ export const Responsive = {
     ]
   }
 }
+
+export const FocusOnSelect = {
+  args: {
+    default: defaultSlides(),
+    groupsToShow: 3,
+    infinite: true,
+    focusOnSelect: true
+  }
+}
