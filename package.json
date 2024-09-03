@@ -19,6 +19,7 @@
     "preview": "pnpm --filter=v-slick-carousel run preview",
     "nuxt:dev": "pnpm --filter=nuxt-app run dev",
     "storybook:dev": "pnpm --filter=storybook run dev",
+    "storybook:test": "pnpm --filter=storybook run test",
     "prepare": "husky",
     "lint": "pnpm --filter=v-slick-carousel run lint",
     "lint:fix": "pnpm --filter=v-slick-carousel run lint:fix",
