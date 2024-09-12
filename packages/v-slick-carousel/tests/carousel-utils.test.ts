@@ -13,8 +13,8 @@ import {
   Fragment as Fragment_3_0,
   defineComponent as defineComponent_3_0
 } from 'vue-v3.0'
-import { extractSlides, getStatesOnSlide } from './carousel-utils'
-import { OnSlideSpec } from '@lib/types'
+import { extractSlides, getStatesOnSlide } from '../lib/utils/carousel-utils'
+import { OnSlideSpec } from '../lib/types'
 
 describe('extractSlides', () => {
   describe('with Vue 3.2 or above', () => {

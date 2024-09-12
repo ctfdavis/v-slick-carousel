@@ -1,0 +1,26 @@
+import { test, expect } from '@playwright/test'
+import { testPath } from '../utils.ts'
+
+test('slide navigation', async ({ page }) => {
+  await page.goto(testPath('one-slide-infinite'))
+  const dots = await page.locator('.v-slick-dots > *')
+  await expect(dots.nth(0)).toHaveClass('active')
+  await page.waitForTimeout(1000)
+  await expect(dots.nth(0)).not.toHaveClass('active')
+  await expect(dots.nth(9)).toHaveClass('active')
+  await page.waitForTimeout(1000)
+  await expect(dots.nth(0)).not.toHaveClass('active')
+  await expect(dots.nth(9)).not.toHaveClass('active')
+  await expect(dots.nth(8)).toHaveClass('active')
+  await page.waitForTimeout(1000)
+  await expect(dots.nth(0)).not.toHaveClass('active')
+  await expect(dots.nth(9)).toHaveClass('active')
+  await expect(dots.nth(8)).not.toHaveClass('active')
+  await page.waitForTimeout(1000)
+  await expect(dots.nth(0)).toHaveClass('active')
+  await expect(dots.nth(9)).not.toHaveClass('active')
+  await expect(dots.nth(8)).not.toHaveClass('active')
+  await page.waitForTimeout(1000)
+  await expect(dots.nth(0)).not.toHaveClass('active')
+  await expect(dots.nth(1)).toHaveClass('active')
+})

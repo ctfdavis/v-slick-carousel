@@ -7,6 +7,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+node_modules
+dist
+dist-ssr
+*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -17,7 +22,7 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
-.eslintcache
 
-node_modules
-**/dist
+*storybook.log
+playwright-report
+test-results
