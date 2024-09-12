@@ -31,9 +31,9 @@ test('lazy load slide', async ({ page }) => {
 
 function getFirstFourSlides(page: Page) {
   return Promise.all([
-    page.getByText('Slide 1'),
-    page.getByText('Slide 2'),
-    page.getByText('Slide 3'),
-    page.getByText('Slide 4')
+    page.getByText('Slide 1', { exact: true }),
+    page.getByText('Slide 2', { exact: true }),
+    page.getByText('Slide 3', { exact: true }),
+    page.getByText('Slide 4', { exact: true })
   ])
 }
