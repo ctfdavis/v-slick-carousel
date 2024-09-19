@@ -12,6 +12,6 @@
   "dependencies": {
     "nuxt": "^3.12.3",
     "vue": "latest",
-    "v-slick-carousel": "workspace:*"
+    "v-slick-carousel": "*"
   }
 }

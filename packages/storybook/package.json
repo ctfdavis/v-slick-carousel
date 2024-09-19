@@ -9,7 +9,7 @@
     "test": "pnpm exec playwright test"
   },
   "dependencies": {
-    "v-slick-carousel": "workspace:*",
+    "v-slick-carousel": "*",
     "vue": "^3.4.37"
   },
   "devDependencies": {
