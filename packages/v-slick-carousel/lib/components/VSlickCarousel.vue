@@ -239,6 +239,11 @@ const makeBreakpoints = () => {
   })
 }
 
+const preventDefault = (e: Event) => {
+  console.debug('preventDefault event')
+  e.preventDefault()
+}
+
 const swipeStart = (e: SwipeEvent) => {
   // setTimout is used here to prevent disabling the scroll prematurely
   setTimeout(() => {
@@ -253,6 +258,8 @@ const swipeStart = (e: SwipeEvent) => {
 }
 
 const swipeEnd = (e: SwipeEvent) => {
+  console.debug('swipeEnd...')
+  document.removeEventListener('touchmove', preventDefault)
   const swipeEndState = getSwipeEndState(e, {
     ...settings.value,
     ...state.value,
@@ -272,6 +279,7 @@ const swipeEnd = (e: SwipeEvent) => {
 }
 
 const swipeMove = (e: SwipeEvent) => {
+  // e.preventDefault()
   clearSelection()
   const { swipeDirection, ...swipeMoveState } =
     getSwipeMoveState(e, {
