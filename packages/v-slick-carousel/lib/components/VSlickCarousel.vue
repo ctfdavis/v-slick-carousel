@@ -33,7 +33,7 @@
         :style="vSlickListStyle"
         @click="handleClickVSlickList"
         @mousedown="handleMouseDownOrTouchStartVSlickList"
-        @touchstart.passive="handleMouseDownOrTouchStartVSlickList"
+        @touchstart="handleMouseDownOrTouchStartVSlickList"
         @keydown="handleKeyDownVSlickList"
       >
         <VSlickTrack
@@ -239,7 +239,15 @@ const makeBreakpoints = () => {
   })
 }
 
+const preventDefault = (e: Event) => {
+  console.debug('preventDefault event')
+  e.preventDefault()
+}
+
 const swipeStart = (e: SwipeEvent) => {
+  console.debug('swipeStart...')
+  e.preventDefault()
+  document.addEventListener('touchmove', preventDefault, { passive: false })
   const swipeStartState = getSwipeStartState(
     e,
     settings.value.swipe,
@@ -249,6 +257,8 @@ const swipeStart = (e: SwipeEvent) => {
 }
 
 const swipeEnd = (e: SwipeEvent) => {
+  console.debug('swipeEnd...')
+  document.removeEventListener('touchmove', preventDefault)
   const swipeEndState = getSwipeEndState(e, {
     ...settings.value,
     ...state.value,
@@ -268,6 +278,7 @@ const swipeEnd = (e: SwipeEvent) => {
 }
 
 const swipeMove = (e: SwipeEvent) => {
+  // e.preventDefault()
   clearSelection()
   const swipeMoveState = getSwipeMoveState(e, {
     ...props,
@@ -1036,7 +1047,12 @@ watch(
     if (!vSlickListRef.value) return
     if (dragging) {
       vSlickListRef.value.onmousemove = handleMouseMoveOrTouchMoveVSlickList
-      vSlickListRef.value.ontouchmove = handleMouseMoveOrTouchMoveVSlickList
+      // vSlickListRef.value.ontouchmove = handleMouseMoveOrTouchMoveVSlickList
+      vSlickListRef.value.addEventListener(
+        'touchmove',
+        handleMouseMoveOrTouchMoveVSlickList,
+        { passive: false }
+      )
       vSlickListRef.value.onmouseup = handleMouseUpOrTouchEndVSlickList
       vSlickListRef.value.ontouchend = handleMouseUpOrTouchEndVSlickList
       vSlickListRef.value.onmouseleave = handleMouseLeaveOrTouchCancelVSlickList
@@ -1044,7 +1060,11 @@ watch(
         handleMouseLeaveOrTouchCancelVSlickList
     } else {
       vSlickListRef.value.onmousemove = null
-      vSlickListRef.value.ontouchmove = null
+      // vSlickListRef.value.ontouchmove = null
+      vSlickListRef.value.removeEventListener(
+        'touchmove',
+        handleMouseMoveOrTouchMoveVSlickList
+      )
       vSlickListRef.value.onmouseup = null
       vSlickListRef.value.ontouchend = null
       vSlickListRef.value.onmouseleave = null
@@ -1154,6 +1174,7 @@ emit('init')
   display: block;
   box-sizing: border-box;
 }
+
 .v-slick-list {
   position: relative;
   display: block;
@@ -1161,9 +1182,11 @@ emit('init')
   margin: 0;
   padding: 0;
   transform: translate3d(0, 0, 0);
+
   &:focus {
     outline: none;
   }
+
   &.dragging {
     cursor: pointer;
     cursor: hand;
