@@ -852,7 +852,8 @@ export const getSwipeMoveState = (
     ...state,
     touchObject,
     swipeLeft,
-    trackStyle: getTrackCSS(spec, swipeLeft)
+    trackStyle: getTrackCSS(spec, swipeLeft),
+    swipeDirection
   }
   if (
     Math.abs(touchObject.curX - touchObject.startX) <

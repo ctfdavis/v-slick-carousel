@@ -1,6 +1,8 @@
-import ResizeObserver from 'resize-observer-polyfill'
-
-global.ResizeObserver = ResizeObserver
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn()
+}))
 
 window.matchMedia =
   window.matchMedia ||
