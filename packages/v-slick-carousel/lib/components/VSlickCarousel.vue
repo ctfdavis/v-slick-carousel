@@ -239,15 +239,11 @@ const makeBreakpoints = () => {
   })
 }
 
-const preventDefault = (e: Event) => {
-  console.debug('preventDefault event')
-  e.preventDefault()
-}
-
 const swipeStart = (e: SwipeEvent) => {
-  console.debug('swipeStart...')
-  e.preventDefault()
-  document.addEventListener('touchmove', preventDefault, { passive: false })
+  // setTimout is used here to prevent disabling the scroll prematurely
+  setTimeout(() => {
+    e.preventDefault()
+  })
   const swipeStartState = getSwipeStartState(
     e,
     settings.value.swipe,
@@ -257,8 +253,6 @@ const swipeStart = (e: SwipeEvent) => {
 }
 
 const swipeEnd = (e: SwipeEvent) => {
-  console.debug('swipeEnd...')
-  document.removeEventListener('touchmove', preventDefault)
   const swipeEndState = getSwipeEndState(e, {
     ...settings.value,
     ...state.value,
@@ -278,20 +272,29 @@ const swipeEnd = (e: SwipeEvent) => {
 }
 
 const swipeMove = (e: SwipeEvent) => {
-  // e.preventDefault()
   clearSelection()
-  const swipeMoveState = getSwipeMoveState(e, {
-    ...props,
-    ...state.value,
-    trackEl: vSlickTrackRef.value?.$el,
-    listEl: vSlickListRef.value,
-    slideGroupIndex: state.value.currentSlideGroupIndex,
-    slideGroupCount: slideGroupCount.value,
-    onEdge: (e: SwipeDirection | keyof typeof SwipeDirection) =>
-      emit('edge', e),
-    swipeEvent: (e: SwipeDirection | keyof typeof SwipeDirection) =>
-      emit('swipe', e)
-  } as SwipeMoveSpec)
+  const { swipeDirection, ...swipeMoveState } =
+    getSwipeMoveState(e, {
+      ...props,
+      ...state.value,
+      trackEl: vSlickTrackRef.value?.$el,
+      listEl: vSlickListRef.value,
+      slideGroupIndex: state.value.currentSlideGroupIndex,
+      slideGroupCount: slideGroupCount.value,
+      onEdge: (e: SwipeDirection | keyof typeof SwipeDirection) =>
+        emit('edge', e),
+      swipeEvent: (e: SwipeDirection | keyof typeof SwipeDirection) =>
+        emit('swipe', e)
+    } as SwipeMoveSpec) || {}
+  if (
+    (settings.value.verticalSwiping && swipeDirection === SwipeDirection.up) ||
+    swipeDirection === SwipeDirection.down ||
+    (!settings.value.verticalSwiping &&
+      swipeDirection === SwipeDirection.left) ||
+    swipeDirection === SwipeDirection.right
+  ) {
+    e.preventDefault()
+  }
   if (!swipeMoveState) return
   if (swipeMoveState.swiping) {
     isVSlickListClickable = false
@@ -1047,7 +1050,6 @@ watch(
     if (!vSlickListRef.value) return
     if (dragging) {
       vSlickListRef.value.onmousemove = handleMouseMoveOrTouchMoveVSlickList
-      // vSlickListRef.value.ontouchmove = handleMouseMoveOrTouchMoveVSlickList
       vSlickListRef.value.addEventListener(
         'touchmove',
         handleMouseMoveOrTouchMoveVSlickList,
@@ -1060,7 +1062,6 @@ watch(
         handleMouseLeaveOrTouchCancelVSlickList
     } else {
       vSlickListRef.value.onmousemove = null
-      // vSlickListRef.value.ontouchmove = null
       vSlickListRef.value.removeEventListener(
         'touchmove',
         handleMouseMoveOrTouchMoveVSlickList

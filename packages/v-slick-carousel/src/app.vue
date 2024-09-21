@@ -10,8 +10,12 @@ const settings: Settings = {
 <template>
   <div class="wrapper">
     <VSlickCarousel v-bind="settings">
-      <div class="slide" v-for="i in 100" :key="i">
-        <h3 class="no-swipe">{{ i }}</h3>
+      <div v-for="i in 100" :key="i" class="slide">
+        <h3>
+          <span class="no-swipe">
+            {{ i }}
+          </span>
+        </h3>
       </div>
     </VSlickCarousel>
   </div>
