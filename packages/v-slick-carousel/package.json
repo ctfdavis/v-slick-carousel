@@ -26,10 +26,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --p ./tsconfig.build.json && vite build",
-    "build:watch": "concurrently \"vue-tsc --p ./tsconfig.build.json --watch\" \"vite build --watch\"",
+    "build": "pnpm typecheck && vite build",
+    "build:watch": "concurrently \"pnpm typecheck -- --watch\" \"vite build --watch\"",
     "clean": "rimraf dist",
-    "type": "tsc --noEmit",
+    "typecheck": "vue-tsc --p ./tsconfig.build.json ",
     "prepublish": "npm run build",
     "lint": "eslint 'lib/**/*.{js,ts,vue}'",
     "lint:fix": "npm run lint -- --fix",

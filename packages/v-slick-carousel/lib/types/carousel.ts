@@ -369,7 +369,7 @@ export type SwipeMoveState = {
   edgeDragged?: boolean
   swiped?: boolean
   swiping?: boolean
-  swipeDirection: SwipeDirection | keyof typeof SwipeDirection
+  swipeDirection?: SwipeDirection | keyof typeof SwipeDirection
 }
 
 export type SliderStateInfoSpec = MarkRequiredAndPartialKeysWithPartialBase<
