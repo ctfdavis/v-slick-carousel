@@ -24,7 +24,8 @@
     "lint": "pnpm --filter=v-slick-carousel run lint",
     "lint:fix": "pnpm --filter=v-slick-carousel run lint:fix",
     "format": "pnpm --filter=v-slick-carousel run format",
-    "test": "pnpm --filter=v-slick-carousel run test"
+    "test": "pnpm --filter=v-slick-carousel run test",
+    "typecheck": "pnpm --filter=v-slick-carousel run typecheck"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",

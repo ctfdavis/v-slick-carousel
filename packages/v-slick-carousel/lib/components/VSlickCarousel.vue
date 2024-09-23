@@ -285,7 +285,7 @@ const swipeMove = (e: SwipeEvent) => {
         emit('edge', e),
       swipeEvent: (e: SwipeDirection | keyof typeof SwipeDirection) =>
         emit('swipe', e)
-    } as SwipeMoveSpec) || {}
+    } as SwipeMoveSpec) || ({} as any)
   if (
     (settings.value.verticalSwiping && swipeDirection === SwipeDirection.up) ||
     swipeDirection === SwipeDirection.down ||
