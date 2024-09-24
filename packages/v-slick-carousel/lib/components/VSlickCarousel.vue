@@ -89,7 +89,6 @@
       :slide-group-count="slideGroupCount"
       :groups-to-scroll="settings.groupsToScroll"
       :groups-to-show="settings.groupsToShow"
-      :dots-class="settings.dotsClass"
       :page-count="pageCount"
       @dot-click="handleClickDot"
       @dots-over="handleOverDots"
