@@ -31,8 +31,8 @@
     "clean": "rimraf dist",
     "typecheck": "vue-tsc --p ./tsconfig.build.json ",
     "prepublish": "npm run build",
-    "lint": "eslint 'lib/**/*.{js,ts,vue}'",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "eslint \"**/*.{js,ts,vue}\"",
+    "lint:fix": "pnpm lint --fix",
     "lint-staged": "lint-staged",
     "format": "prettier --write \"**/*.{json,js,ts,vue,html,css,scss}\"",
     "test": "vitest"
