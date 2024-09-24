@@ -1,7 +1,6 @@
 {
-  "name": "storybook",
+  "name": "storybook-app",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "storybook dev -p 9009",
@@ -23,9 +22,9 @@
     "@storybook/test": "^8.2.9",
     "@storybook/vue3": "^8.2.9",
     "@storybook/vue3-vite": "^8.2.9",
+    "storybook": "^8.2.9",
     "@vitejs/plugin-vue": "^5.1.2",
     "playwright": "^1.46.1",
-    "storybook": "^8.2.9",
     "typescript": "^5.5.3",
     "vite": "^5.4.1",
     "vue-tsc": "^2.0.29"

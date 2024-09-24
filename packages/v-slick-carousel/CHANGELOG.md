@@ -1,5 +1,13 @@
 # v-slick-carousel
 
+## 0.4.0
+
+### Minor Changes
+
+- Fix scroll not locking when swiping on mobile
+- Add e2e tests
+- Remove `dotsClass` setting
+
 ## 0.3.3
 
 ### Patch Changes
@@ -52,7 +60,8 @@
 
 ### Minor Changes
 
-- Add an option `ignorePrefersReducedMotion` to force CSS transition animation by overriding the settings in `prefers-reduced-motion` media query.
+- Add an option `ignorePrefersReducedMotion` to force CSS transition animation by overriding the settings in
+  `prefers-reduced-motion` media query.
 
 ## 0.1.2
 
