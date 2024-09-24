@@ -27,7 +27,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm typecheck && vite build",
-    "build:watch": "concurrently \"pnpm typecheck -- --watch\" \"vite build --watch\"",
+    "build:watch": "concurrently \"pnpm typecheck --watch\" \"vite build --watch\"",
     "clean": "rimraf dist",
     "typecheck": "vue-tsc --p ./tsconfig.build.json ",
     "prepublish": "npm run build",
