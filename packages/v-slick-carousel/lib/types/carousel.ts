@@ -25,7 +25,6 @@ export type Props = {
   centerPadding: string
   cssEase: string
   dots: boolean
-  dotsClass: string
   draggable: boolean
   edgeFriction: number
   fade: boolean
@@ -151,7 +150,7 @@ export type ArrowProps = Pick<
 
 export type DotsProps = Pick<
   Props,
-  'dotsClass' | 'infinite' | 'groupsToScroll' | 'groupsToShow'
+  'infinite' | 'groupsToScroll' | 'groupsToShow'
 > &
   Pick<SliderState, 'currentSlideGroupIndex'> & {
     slideGroupCount: number

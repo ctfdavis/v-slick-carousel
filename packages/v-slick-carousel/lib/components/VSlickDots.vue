@@ -1,6 +1,6 @@
 <template>
   <ul
-    :class="dotsClass"
+    class="v-slick-dots"
     style="display: block"
     @mouseenter="$emit('dotsLeave')"
     @mouseleave="$emit('dotsLeave')"
@@ -26,6 +26,7 @@
 <script setup lang="ts">
 import { DotClickPayload } from '@lib/types'
 import { defaultDotsProps } from './props'
+
 defineEmits<{
   dotClick: [payload: DotClickPayload]
   dotsOver: []

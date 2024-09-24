@@ -30,7 +30,6 @@ const makeDefaultProps = (selectFields?: string[]) => {
     centerPadding: { type: String, default: '50px' },
     cssEase: { type: String, default: 'ease' },
     dots: { type: Boolean, default: false },
-    dotsClass: { type: String, default: 'v-slick-dots' },
     draggable: { type: Boolean, default: true },
     edgeFriction: { type: Number, default: 0.35 },
     fade: { type: Boolean, default: false },
@@ -159,12 +158,7 @@ export const defaultArrowProps = {
 } satisfies VuePropDef<keyof ArrowProps>
 
 export const defaultDotsProps = {
-  ...makeDefaultProps([
-    'dotsClass',
-    'infinite',
-    'groupsToScroll',
-    'groupsToShow'
-  ]),
+  ...makeDefaultProps(['infinite', 'groupsToScroll', 'groupsToShow']),
   ...{
     currentSlideGroupIndex: { type: Number, default: 0 },
     slideGroupCount: { type: Number, default: 0 },
