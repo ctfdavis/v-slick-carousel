@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import examples from '../src/examples'
+import { pagefindPlugin } from 'vitepress-plugin-pagefind'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -86,11 +87,7 @@ export default defineConfig({
   sitemap: {
     hostname: 'https://lambdadragon.dev/v-slick-carousel/'
   },
-  async transformPageData(pageData) {
-    if (pageData.relativePath.startsWith('examples/')) {
-      return {
-        title: pageData.params.title
-      }
-    }
+  vite: {
+    plugins: [pagefindPlugin()]
   }
 })
