@@ -90,7 +90,7 @@
     "vite-plugin-dts": "^3.9.1",
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^2.0.5",
-    "vue": "^3.5.7",
+    "vue": "3.5.12",
     "vue-tsc": "^2.0.6",
     "vue-v3.0": "npm:vue@3.0",
     "vue-v3.1": "npm:vue@3.1"
