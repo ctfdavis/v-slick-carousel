@@ -245,7 +245,6 @@ export type TrackInfoSpec = MarkRequiredWithPartialBase<
   SliderSpec,
   | 'currentSlideGroupIndex'
   | 'centerPadding'
-  | 'trackEl'
   | 'infinite'
   | 'centerMode'
   | 'slideGroupCount'
