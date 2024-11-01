@@ -531,7 +531,7 @@ export function getTrackLeft(spec: TrackInfoSpec) {
 
   let slideGroupOffset = 0
   let targetLeft
-  let targetSlide: HTMLElement
+  let targetSlide: HTMLElement | undefined
   let verticalOffset = 0
 
   if (fade || slideGroupCount === 1) {
@@ -588,17 +588,18 @@ export function getTrackLeft(spec: TrackInfoSpec) {
       targetSlideIndex = infinite
         ? currentSlideGroupIndex + getTotalPreClones(spec)
         : currentSlideGroupIndex
-      targetSlide =
-        trackEl && (trackEl.children[targetSlideIndex] as HTMLElement)
       targetLeft = 0
-      for (let slide = 0; slide < targetSlideIndex; slide++) {
-        targetLeft -=
-          trackEl &&
-          trackEl.children[slide] &&
-          (trackEl.children[slide] as HTMLElement).offsetWidth
+      if (trackEl) {
+        targetSlide = trackEl.children[targetSlideIndex] as HTMLElement
+        for (let slide = 0; slide < targetSlideIndex; slide++) {
+          if (!trackEl.children[slide]) continue
+          targetLeft -= (trackEl.children[slide] as HTMLElement).offsetWidth
+        }
       }
       targetLeft -= parseInt(centerPadding)
-      targetLeft += targetSlide && (listWidth - targetSlide.offsetWidth) / 2
+      if (targetSlide) {
+        targetLeft += listWidth - targetSlide.offsetWidth / 2
+      }
     }
   }
 
