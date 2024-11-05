@@ -274,7 +274,7 @@ const swipeMove = (e: SwipeEvent) => {
   clearSelection()
   const { swipeDirection, ...swipeMoveState } =
     getSwipeMoveState(e, {
-      ...props,
+      ...settings.value,
       ...state.value,
       trackEl: vSlickTrackRef.value?.$el,
       listEl: vSlickListRef.value,
@@ -575,7 +575,7 @@ const updateState = (shouldSetTrackStyle?: boolean) => {
     slides: slides.value
   })
   const spec: TrackInfoSpec = {
-    ...props,
+    ...settings.value,
     ...state,
     ...updatedState,
     trackEl: vSlickTrackRef.value?.$el,
