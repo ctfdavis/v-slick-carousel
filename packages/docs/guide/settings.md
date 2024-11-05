@@ -214,14 +214,14 @@ For example, if you want to make the carousel show more groups above 480px, you 
 
 ```ts
 {
-    groupsToShow: 2,
+    groupsToShow: 1,
         responsive
 :
     [
         {
-            breakpoint: 480, // 480px or less will use the below settings
+            breakpoint: 480, // i.e. (min-width: 480px); 480px or more will use the below settings
             settings: {
-                groupsToShow: 1
+                groupsToShow: 2
             }
         }
     ]

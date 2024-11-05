@@ -1,4 +1,5 @@
 export * from './carousel-utils'
+export * from './match-media'
 
 export const canUseDOM = () =>
   !!(
@@ -22,4 +23,15 @@ export function clearSelection() {
   } else if (window.getSelection()?.removeAllRanges) {
     window.getSelection()!.removeAllRanges()
   }
+}
+
+export function json2mq(obj: Record<string, any>) {
+  const conditions = Object.keys(obj).map((key) => {
+    let value = obj[key]
+    if (Array.isArray(value)) {
+      value = value.join(' and ')
+    }
+    return `(${key}: ${value})`
+  })
+  return conditions.join(' and ')
 }

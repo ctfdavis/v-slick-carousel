@@ -135,15 +135,15 @@ import {
   canUseDOM,
   clearSelection,
   filterUndefined,
-  getChangedSlideGroupIndex
+  getChangedSlideGroupIndex,
+  json2mq,
+  MatchMedia
 } from '@lib/utils'
 import {
   defaultPropValues,
   defaultProps,
   makeDefaultSliderState
 } from './props'
-import enquireJs from '@dcufo/enquire.js'
-import json2mq from 'json2mq'
 import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
 import VSlickDots from './VSlickDots.vue'
@@ -181,7 +181,7 @@ const emit = defineEmits([
 ])
 
 const slots = useSlots()
-const enquire = canUseDOM() ? enquireJs : undefined
+const enquire = canUseDOM() ? new MatchMedia() : undefined
 
 const DEBOUNCE_RESIZE_DURATION = 50
 
@@ -200,14 +200,26 @@ let ro: ResizeObserver | null = null
 
 let responsiveMediaHandlers: {
   query: string
-  handler: () => void
+  handler: (predicate: { matches: boolean }) => void
 }[] = []
 
-const media = (query: string, handler: () => void) => {
+const media = (
+  query: string,
+  handler: () => void,
+  previousHandler: () => void
+) => {
   if (!enquire) return
 
-  enquire.register(query, handler)
-  responsiveMediaHandlers.push({ query, handler })
+  const newHandler = (predicate: { matches: boolean }) => {
+    if (predicate.matches) {
+      handler()
+    } else {
+      previousHandler()
+    }
+  }
+
+  enquire.register(query, newHandler)
+  responsiveMediaHandlers.push({ query, handler: newHandler })
 }
 
 const clearBreakpoints = () => {
@@ -223,18 +235,17 @@ const makeBreakpoints = () => {
   breakpoints.sort((a, b) => a - b)
   breakpoints.forEach((_breakpoint, index) => {
     const mediaQuery = json2mq({
-      minWidth: index === 0 ? 0 : breakpoints[index - 1] + 1,
-      maxWidth: _breakpoint
+      'min-width': `${_breakpoint}px`
     })
-    media(mediaQuery, () => {
-      breakpoint.value = _breakpoint
-    })
-  })
-  const query = json2mq({
-    minWidth: breakpoints.slice(-1)[0]
-  })
-  media(query, () => {
-    breakpoint.value = undefined
+    media(
+      mediaQuery,
+      () => {
+        breakpoint.value = _breakpoint
+      },
+      () => {
+        breakpoint.value = index === 0 ? undefined : breakpoints[index - 1]
+      }
+    )
   })
 }
 
@@ -930,7 +941,7 @@ const rawSlideGroups = computed<VNode[][]>(() => {
 })
 
 watch(
-  () => props,
+  () => props.responsive,
   () => {
     clearBreakpoints()
     makeBreakpoints()
