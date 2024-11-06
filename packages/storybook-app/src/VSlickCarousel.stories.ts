@@ -57,6 +57,7 @@ export const Responsive = {
   args: {
     default: defaultSlides(),
     groupsToShow: 3,
+    infinite: true,
     responsive: [
       {
         breakpoint: 1024,
