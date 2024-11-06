@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.4.1
+
+### Patch Changes
+
+- Fix different `groupsToShow` responsive values in `infinite` mode would cause incorrect slide groups to display
+
 ## 0.4.0
 
 ### Minor Changes
