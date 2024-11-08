@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.4.2
+
+### Patch Changes
+
+- Fixed edge cases when switching between infinite and finite via responsive settings
+
 ## 0.4.1
 
 ### Patch Changes
