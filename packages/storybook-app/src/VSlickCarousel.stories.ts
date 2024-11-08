@@ -83,3 +83,20 @@ export const FocusOnSelect = {
     focusOnSelect: true
   }
 }
+
+export const ResponsiveInfiniteFiniteEdgeCases = {
+  args: {
+    default: defaultSlides(20),
+    groupsToShow: 3,
+    infinite: true,
+    responsive: [
+      {
+        breakpoint: 600,
+        settings: {
+          groupsToShow: 2,
+          infinite: false
+        }
+      }
+    ]
+  }
+}

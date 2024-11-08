@@ -1073,6 +1073,15 @@ watch(
   }
 )
 
+watch(
+  () => pageCount.value <= state.value.currentSlideGroupIndex,
+  (o) => {
+    if (o) {
+      state.value.currentSlideGroupIndex = 0
+    }
+  }
+)
+
 defineExpose({
   goTo: slideGroupHandler,
   next: () => {
