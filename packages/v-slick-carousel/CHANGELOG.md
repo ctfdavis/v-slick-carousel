@@ -1,5 +1,15 @@
 # v-slick-carousel
 
+## 0.5.0
+
+### Minor Changes
+
+- Removed all dependencies:
+    - `lodash.debounce`
+    - `@dcufo/enquire.js`
+    - `json2mq`
+- Switched responsive settings to use min-width queries
+
 ## 0.4.2
 
 ### Patch Changes
