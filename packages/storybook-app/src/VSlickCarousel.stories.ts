@@ -56,19 +56,19 @@ export const LazyLoadOnDemand = {
 export const Responsive = {
   args: {
     default: defaultSlides(),
-    groupsToShow: 3,
+    groupsToShow: 1,
     infinite: true,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          groupsToShow: 2
+          groupsToShow: 3
         }
       },
       {
         breakpoint: 600,
         settings: {
-          groupsToShow: 1
+          groupsToShow: 2
         }
       }
     ]
@@ -87,14 +87,14 @@ export const FocusOnSelect = {
 export const ResponsiveInfiniteFiniteEdgeCases = {
   args: {
     default: defaultSlides(20),
-    groupsToShow: 3,
-    infinite: true,
+    groupsToShow: 2,
+    infinite: false,
     responsive: [
       {
         breakpoint: 600,
         settings: {
-          groupsToShow: 2,
-          infinite: false
+          groupsToShow: 3,
+          infinite: true
         }
       }
     ]

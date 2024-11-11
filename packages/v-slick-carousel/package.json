@@ -94,10 +94,5 @@
     "vue-tsc": "^2.0.6",
     "vue-v3.0": "npm:vue@3.0",
     "vue-v3.1": "npm:vue@3.1"
-  },
-  "dependencies": {
-    "@dcufo/enquire.js": "^2.1.8",
-    "json2mq": "^0.2.0",
-    "lodash.debounce": "^4.0.8"
   }
 }

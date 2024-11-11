@@ -10,7 +10,7 @@ const settings: Settings = {
   dots: true,
   infinite: false,
   groupsToScroll: 1,
-  groupsToShow: 5,
+  groupsToShow: 1,
   slidesPerGroup: 1,
   swipe: true,
   ignorePrefersReducedMotion: true,
@@ -18,25 +18,25 @@ const settings: Settings = {
     {
       breakpoint: 480,
       settings: {
-        groupsToShow: 1
+        groupsToShow: 2
       }
     },
     {
       breakpoint: 680,
       settings: {
-        groupsToShow: 2
+        groupsToShow: 3
       }
     },
     {
       breakpoint: 1080,
       settings: {
-        groupsToShow: 3
+        groupsToShow: 4
       }
     },
     {
       breakpoint: 1400,
       settings: {
-        groupsToShow: 4
+        groupsToShow: 5
       }
     }
   ]
