@@ -94,8 +94,5 @@
     "vue-tsc": "^2.0.6",
     "vue-v3.0": "npm:vue@3.0",
     "vue-v3.1": "npm:vue@3.1"
-  },
-  "dependencies": {
-    "lodash.debounce": "^4.0.8"
   }
 }

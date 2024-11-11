@@ -35,3 +35,11 @@ export function json2mq(obj: Record<string, any>) {
   })
   return conditions.join(' and ')
 }
+
+export function debounce(
+  callback: () => Promise<void>,
+  wait: number
+): { cancel: () => void } {
+  const timeoutId = setTimeout(callback, wait)
+  return { cancel: () => clearTimeout(timeoutId) }
+}

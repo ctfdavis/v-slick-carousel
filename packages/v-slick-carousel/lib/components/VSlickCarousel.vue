@@ -137,7 +137,8 @@ import {
   filterUndefined,
   getChangedSlideGroupIndex,
   json2mq,
-  MatchMedia
+  MatchMedia,
+  debounce
 } from '@lib/utils'
 import {
   defaultPropValues,
@@ -147,7 +148,6 @@ import {
 import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
 import VSlickDots from './VSlickDots.vue'
-import debounce from 'lodash.debounce'
 import {
   canGoNext as checkCanGoNext,
   canGoPrev as checkCanGoPrev,
@@ -632,7 +632,6 @@ const onResize = (options?: {
 }) => {
   debouncedResize?.cancel()
   debouncedResize = debounce(() => resize(options), DEBOUNCE_RESIZE_DURATION)
-  debouncedResize()
 }
 
 const onResizeEventListener = () =>
