@@ -1,30 +1,32 @@
 <template>
-  <template v-if="type === SlideNavigation.previous">
-    <slot name="prevArrow" v-bind="arrowSlotProps">
-      <button
-        type="button"
-        data-role="none"
-        class="v-slick-arrow prev"
-        :class="{ disabled }"
-        @click="clickHandler"
-      >
-        {{ prevArrowLabel }}
-      </button>
-    </slot>
-  </template>
-  <template v-else>
-    <slot name="nextArrow" v-bind="arrowSlotProps">
-      <button
-        type="button"
-        data-role="none"
-        class="v-slick-arrow next"
-        :class="{ disabled }"
-        @click="clickHandler"
-      >
-        {{ nextArrowLabel }}
-      </button>
-    </slot>
-  </template>
+  <div @mouseleave="$emit('leave')" @mouseover="$emit('over')">
+    <template v-if="type === SlideNavigation.previous">
+      <slot name="prevArrow" v-bind="arrowSlotProps">
+        <button
+          type="button"
+          data-role="none"
+          class="v-slick-arrow prev"
+          :class="{ disabled }"
+          @click="clickHandler"
+        >
+          {{ prevArrowLabel }}
+        </button>
+      </slot>
+    </template>
+    <template v-else>
+      <slot name="nextArrow" v-bind="arrowSlotProps">
+        <button
+          type="button"
+          data-role="none"
+          class="v-slick-arrow next"
+          :class="{ disabled }"
+          @click="clickHandler"
+        >
+          {{ nextArrowLabel }}
+        </button>
+      </slot>
+    </template>
+  </div>
 </template>
 <script setup lang="ts">
 import { ArrowSlotProps, SlideNavigation } from '@lib/types'
@@ -32,7 +34,12 @@ import { computed } from 'vue'
 import { defaultArrowProps } from './props'
 
 const props = defineProps(defaultArrowProps)
-const emit = defineEmits([SlideNavigation.previous, SlideNavigation.next])
+const emit = defineEmits([
+  SlideNavigation.previous,
+  SlideNavigation.next,
+  'over',
+  'leave'
+])
 const clickHandler = computed(() => () => {
   if (props.disabled) return
   emit(props.type)

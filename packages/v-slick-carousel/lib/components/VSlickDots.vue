@@ -2,9 +2,8 @@
   <ul
     class="v-slick-dots"
     style="display: block"
-    @mouseenter="$emit('dotsLeave')"
-    @mouseleave="$emit('dotsLeave')"
-    @mouseover="$emit('dotsOver')"
+    @mouseleave="$emit('leave')"
+    @mouseover="$emit('over')"
   >
     <li
       v-for="i in pageCount"
@@ -29,8 +28,8 @@ import { defaultDotsProps } from './props'
 
 defineEmits<{
   dotClick: [payload: DotClickPayload]
-  dotsOver: []
-  dotsLeave: []
+  over: []
+  leave: []
 }>()
 const props = defineProps(defaultDotsProps)
 const isActive = (i: number) => {

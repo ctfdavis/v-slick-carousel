@@ -35,6 +35,7 @@ export type Props = {
   lazyLoad?: LazyLoadType | keyof typeof LazyLoadType
   nextArrowLabel?: string
   pauseOnDotsHover: boolean
+  pauseOnArrowsHover: boolean
   pauseOnFocus: boolean
   pauseOnHover: boolean
   prevArrowLabel?: string

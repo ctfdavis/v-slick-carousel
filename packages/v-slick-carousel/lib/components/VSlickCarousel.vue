@@ -21,6 +21,8 @@
         :current-slide-group-index="state.currentSlideGroupIndex"
         :disabled="!canGoPrev"
         @previous="handlePrevVSlickArrow"
+        @over="handleOverArrows"
+        @leave="handleLeaveArrows"
       >
         <template #prevArrow="arrowSlotProps">
           <slot name="prevArrow" v-bind="arrowSlotProps" />
@@ -60,9 +62,8 @@
           :track-style="state.trackStyle"
           :variable-width="settings.variableWidth"
           :vertical="settings.vertical"
-          @mouseenter="handleMouseEnterOrOverVSlickTrack"
           @mouseleave="handleMouseLeaveVSlickTrack"
-          @mouseover="handleMouseEnterOrOverVSlickTrack"
+          @mouseover="handleMouseOverVSlickTrack"
           @child-click="handleChildClickVSlickTrack"
         />
       </div>
@@ -75,6 +76,8 @@
         :slide-group-count="slideGroupCount"
         :current-slide-group-index="state.currentSlideGroupIndex"
         :disabled="!canGoNext"
+        @over="handleOverArrows"
+        @leave="handleLeaveArrows"
         @next="handleNextVSlickArrow"
       >
         <template #nextArrow="arrowSlotProps">
@@ -91,8 +94,8 @@
       :groups-to-show="settings.groupsToShow"
       :page-count="pageCount"
       @dot-click="handleClickDot"
-      @dots-over="handleOverDots"
-      @dots-leave="handleLeaveDots"
+      @over="handleOverDots"
+      @leave="handleLeaveDots"
     >
       <template #customPaging="paging">
         <slot name="customPaging" v-bind="paging" />
@@ -462,7 +465,7 @@ const handleMouseLeaveOrTouchCancelVSlickList = (e: SwipeEvent) => {
   swipeEnd(e)
 }
 
-const handleMouseEnterOrOverVSlickTrack = () => {
+const handleMouseOverVSlickTrack = () => {
   if (!settings.value.pauseOnHover) return
   onTrackOver()
 }
@@ -479,6 +482,19 @@ const handleOverDots = () => {
 const handleLeaveDots = () => {
   if (
     settings.value.pauseOnDotsHover &&
+    settings.value.autoplay &&
+    state.value.autoplaying === PlayingType.hovered
+  )
+    autoPlay(PlayingType.leave)
+}
+
+const handleOverArrows = () => {
+  if (settings.value.pauseOnArrowsHover && settings.value.autoplay)
+    pause(PlayingType.hovered)
+}
+const handleLeaveArrows = () => {
+  if (
+    settings.value.pauseOnArrowsHover &&
     settings.value.autoplay &&
     state.value.autoplaying === PlayingType.hovered
   )
