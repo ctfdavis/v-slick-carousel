@@ -466,12 +466,12 @@ const handleMouseLeaveOrTouchCancelVSlickList = (e: SwipeEvent) => {
 }
 
 const handleMouseOverVSlickTrack = () => {
-  if (!settings.value.pauseOnHover) return
+  if (!settings.value.pauseOnHover || !settings.value.pauseOnTrackHover) return
   onTrackOver()
 }
 
 const handleMouseLeaveVSlickTrack = () => {
-  if (!settings.value.pauseOnHover) return
+  if (!settings.value.pauseOnHover || !settings.value.pauseOnTrackHover) return
   onTrackLeave()
 }
 

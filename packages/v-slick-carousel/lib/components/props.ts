@@ -41,6 +41,7 @@ const makeDefaultProps = (selectFields?: string[]) => {
     nextArrowLabel: { type: String, default: 'Next' },
     pauseOnArrowsHover: { type: Boolean, default: true },
     pauseOnDotsHover: { type: Boolean, default: true },
+    pauseOnTrackHover: { type: Boolean, default: true },
     pauseOnFocus: { type: Boolean, default: false },
     pauseOnHover: { type: Boolean, default: true },
     prevArrowLabel: { type: String, default: 'Previous' },

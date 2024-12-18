@@ -36,6 +36,7 @@ export type Props = {
   nextArrowLabel?: string
   pauseOnDotsHover: boolean
   pauseOnArrowsHover: boolean
+  pauseOnTrackHover: boolean
   pauseOnFocus: boolean
   pauseOnHover: boolean
   prevArrowLabel?: string
