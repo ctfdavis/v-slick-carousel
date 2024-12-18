@@ -1,32 +1,34 @@
 <template>
-  <div @mouseleave="$emit('leave')" @mouseover="$emit('over')">
-    <template v-if="type === SlideNavigation.previous">
-      <slot name="prevArrow" v-bind="arrowSlotProps">
-        <button
-          type="button"
-          data-role="none"
-          class="v-slick-arrow prev"
-          :class="{ disabled }"
-          @click="clickHandler"
-        >
-          {{ prevArrowLabel }}
-        </button>
-      </slot>
-    </template>
-    <template v-else>
-      <slot name="nextArrow" v-bind="arrowSlotProps">
-        <button
-          type="button"
-          data-role="none"
-          class="v-slick-arrow next"
-          :class="{ disabled }"
-          @click="clickHandler"
-        >
-          {{ nextArrowLabel }}
-        </button>
-      </slot>
-    </template>
-  </div>
+  <template v-if="type === SlideNavigation.previous">
+    <slot name="prevArrow" v-bind="arrowSlotProps">
+      <button
+        type="button"
+        data-role="none"
+        class="v-slick-arrow prev"
+        :class="{ disabled }"
+        @click="clickHandler"
+        @mouseover="$emit('over')"
+        @mouseleave="$emit('leave')"
+      >
+        {{ prevArrowLabel }}
+      </button>
+    </slot>
+  </template>
+  <template v-else>
+    <slot name="nextArrow" v-bind="arrowSlotProps">
+      <button
+        type="button"
+        data-role="none"
+        class="v-slick-arrow next"
+        :class="{ disabled }"
+        @click="clickHandler"
+        @mouseover="$emit('over')"
+        @mouseleave="$emit('leave')"
+      >
+        {{ nextArrowLabel }}
+      </button>
+    </slot>
+  </template>
 </template>
 <script setup lang="ts">
 import { ArrowSlotProps, SlideNavigation } from '@lib/types'
@@ -48,6 +50,8 @@ const arrowSlotProps = computed<ArrowSlotProps>(() => ({
   currentSlideGroupIndex: props.currentSlideGroupIndex,
   slideGroupCount: props.slideGroupCount,
   onClick: clickHandler.value,
+  onMouseover: () => emit('over'),
+  onMouseleave: () => emit('leave'),
   disabled: !props.disabled
 }))
 </script>
