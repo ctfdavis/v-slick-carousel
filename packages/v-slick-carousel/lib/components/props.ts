@@ -53,6 +53,7 @@ const makeDefaultProps = (selectFields?: string[]) => {
     swipeToSlide: { type: Boolean, default: false },
     touchMove: { type: Boolean, default: true },
     touchThreshold: { type: Number, default: 5 },
+    unslick: { type: Boolean, default: false },
     useCSSTransitions: { type: Boolean, default: true },
     useCSSTransform: { type: Boolean, default: true },
     variableWidth: { type: Boolean, default: false },
@@ -162,6 +163,7 @@ export const defaultDotsProps = {
   ...{
     currentSlideGroupIndex: { type: Number, default: 0 },
     slideGroupCount: { type: Number, default: 0 },
-    pageCount: { type: Number, default: 0 }
+    pageCount: { type: Number, default: 0 },
+    currentPage: { type: Number, default: 0 }
   }
 } satisfies VuePropDef<keyof DotsProps>

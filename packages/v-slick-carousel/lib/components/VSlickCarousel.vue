@@ -12,7 +12,7 @@
   >
     <div class="v-slick-slider" :dir="settings.rtl ? 'rtl' : 'ltr'">
       <VSlickArrow
-        v-if="settings.arrows"
+        v-if="settings.arrows && !settings.unslick"
         :type="SlideNavigation.previous"
         :center-mode="settings.centerMode"
         :infinite="settings.infinite"
@@ -67,7 +67,7 @@
         />
       </div>
       <VSlickArrow
-        v-if="settings.arrows"
+        v-if="settings.arrows && !settings.unslick"
         :type="SlideNavigation.next"
         :center-mode="settings.centerMode"
         :infinite="settings.infinite"
@@ -83,13 +83,14 @@
       </VSlickArrow>
     </div>
     <VSlickDots
-      v-if="settings.dots"
+      v-if="settings.dots && !settings.unslick"
       :current-slide-group-index="state.currentSlideGroupIndex"
       :infinite="settings.infinite"
       :slide-group-count="slideGroupCount"
       :groups-to-scroll="settings.groupsToScroll"
       :groups-to-show="settings.groupsToShow"
       :page-count="pageCount"
+      :current-page="currentPage"
       @dot-click="handleClickDot"
       @dots-over="handleOverDots"
       @dots-leave="handleLeaveDots"
@@ -149,8 +150,6 @@ import VSlickArrow from './VSlickArrow.vue'
 import VSlickTrack from './VSlickTrack.vue'
 import VSlickDots from './VSlickDots.vue'
 import {
-  canGoNext as checkCanGoNext,
-  canGoPrev as checkCanGoPrev,
   extractSlides,
   getNavigationOnKeyType,
   getOnDemandLazySlideGroups,
@@ -294,7 +293,8 @@ const swipeMove = (e: SwipeEvent) => {
       onEdge: (e: SwipeDirection | keyof typeof SwipeDirection) =>
         emit('edge', e),
       swipeEvent: (e: SwipeDirection | keyof typeof SwipeDirection) =>
-        emit('swipe', e)
+        emit('swipe', e),
+      canGoNext: canGoNext.value
     } as SwipeMoveSpec) || ({} as any)
   if (
     (settings.value.verticalSwiping && swipeDirection === SwipeDirection.up) ||
@@ -420,7 +420,7 @@ const handleClickVSlickList = (e: Event) => {
 }
 
 const handleChildClickVSlickTrack = ({ index }: ChildClickPayload) => {
-  if (!settings.value.focusOnSelect) return
+  if (!settings.value.focusOnSelect || settings.value.unslick) return
   changeSlideGroup({
     message: 'children',
     index
@@ -428,7 +428,7 @@ const handleChildClickVSlickTrack = ({ index }: ChildClickPayload) => {
 }
 
 const handleKeyDownVSlickList = (e: KeyboardEvent) => {
-  if (!settings.value.accessibility) return
+  if (!settings.value.accessibility || settings.value.unslick) return
   const navigation = getNavigationOnKeyType(
     e,
     settings.value.accessibility,
@@ -439,36 +439,46 @@ const handleKeyDownVSlickList = (e: KeyboardEvent) => {
 }
 
 const handleMouseDownOrTouchStartVSlickList = (e: SwipeEvent) => {
-  if (!settings.value.touchMove) return
+  if (!settings.value.touchMove || settings.value.unslick) return
   const target = e.target as HTMLElement | null
   if (target?.classList.contains('no-swipe')) return
   swipeStart(e)
 }
 
 const handleMouseMoveOrTouchMoveVSlickList = (e: SwipeEvent) => {
-  if (!state.value.dragging || !settings.value.touchMove) return
+  if (
+    !state.value.dragging ||
+    !settings.value.touchMove ||
+    settings.value.unslick
+  )
+    return
   const target = e.target as HTMLElement | null
   if (target?.classList.contains('no-swipe')) return
   swipeMove(e)
 }
 
 const handleMouseUpOrTouchEndVSlickList = (e: SwipeEvent) => {
-  if (!settings.value.touchMove) return
+  if (!settings.value.touchMove || settings.value.unslick) return
   swipeEnd(e)
 }
 
 const handleMouseLeaveOrTouchCancelVSlickList = (e: SwipeEvent) => {
-  if (!state.value.dragging || !settings.value.touchMove) return
+  if (
+    !state.value.dragging ||
+    !settings.value.touchMove ||
+    settings.value.unslick
+  )
+    return
   swipeEnd(e)
 }
 
 const handleMouseEnterOrOverVSlickTrack = () => {
-  if (!settings.value.pauseOnHover) return
+  if (!settings.value.pauseOnHover || settings.value.unslick) return
   onTrackOver()
 }
 
 const handleMouseLeaveVSlickTrack = () => {
-  if (!settings.value.pauseOnHover) return
+  if (!settings.value.pauseOnHover || settings.value.unslick) return
   onTrackLeave()
 }
 
@@ -511,7 +521,9 @@ const changeSlideGroup = (
   const spec = {
     ...settings.value,
     ...state.value,
-    slideGroupCount: slideGroupCount.value
+    slideGroupCount: slideGroupCount.value,
+    pivotSlideGroupIndices: pivotSlideGroupIndices.value,
+    currentPage: currentPage.value
   }
   const targetSlideGroupIndex = getChangedSlideGroupIndex(
     spec as SlideGroupChangeSpec,
@@ -534,7 +546,8 @@ const slideGroupHandler = async (index: number, dontAnimate = false) => {
     ...state.value,
     slideGroupCount: slideGroupCount.value,
     trackEl: vSlickTrackRef.value?.$el,
-    useCSSTransitions: settings.value.useCSSTransitions && !dontAnimate
+    useCSSTransitions: settings.value.useCSSTransitions && !dontAnimate,
+    canGoNext: canGoNext.value
   } as OnSlideSpec)
   if (!states) return
   const { slidingState, afterSlidingState } = states
@@ -872,43 +885,26 @@ const settings = computed<Props>(() => {
     settings.rtl = false
   }
 
+  if (settings.groupsToScroll > settings.groupsToShow) {
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `groupsToScroll (${settings.groupsToScroll}) can be at most groupsToShow (${settings.groupsToShow})`
+      )
+    }
+    settings.groupsToScroll = settings.groupsToShow
+  }
+
   return settings
 })
 
-const canGoPrev = computed(() =>
-  checkCanGoPrev({
-    ...settings.value,
-    ...state.value,
-    slideGroupCount: slideGroupCount.value
-  })
+const canGoPrev = computed(
+  () => settings.value.infinite || currentPage.value > 0
 )
 
-const canGoNext = computed(() =>
-  checkCanGoNext({
-    ...settings.value,
-    ...state.value,
-    slideGroupCount: slideGroupCount.value
-  })
+const canGoNext = computed(
+  () => settings.value.infinite || pageCount.value > currentPage.value + 1
 )
-
-const pageCount = computed(() => {
-  if (settings.value.infinite) {
-    return Math.ceil(slideGroupCount.value / settings.value.groupsToScroll)
-  }
-  let pageCount =
-    Math.ceil(
-      (slideGroupCount.value - settings.value.groupsToShow) /
-        settings.value.groupsToScroll
-    ) + 1
-  if (
-    !settings.value.infinite &&
-    settings.value.groupsToShow > 1 &&
-    settings.value.centerMode
-  ) {
-    pageCount++
-  }
-  return pageCount < 0 ? 0 : pageCount
-})
 
 const slides = ref<VNode[]>(slots.default ? extractSlides(slots.default()) : [])
 
@@ -926,6 +922,39 @@ const currentGroupsToShow = computed(() => settings.value.groupsToShow)
 const slideGroupCount = computed(() =>
   getSlideGroupCount(slides.value.length, settings.value.slidesPerGroup)
 )
+
+const pageCount = computed(() => {
+  return (
+    Math.ceil(
+      Math.max(
+        slideGroupCount.value -
+          settings.value.groupsToShow +
+          (settings.value.centerMode
+            ? Math.floor(settings.value.groupsToShow / 2)
+            : 0),
+        0
+      ) / settings.value.groupsToScroll
+    ) + 1
+  )
+})
+
+const pivotSlideGroupIndices = computed(() => {
+  return Array.from({ length: pageCount.value }, (_, i) => {
+    if (i !== pageCount.value - 1) return i * settings.value.groupsToScroll
+    const r =
+      (slideGroupCount.value - (i - 1) * settings.value.groupsToScroll) %
+      settings.value.groupsToScroll
+    if (r === 0) return i * settings.value.groupsToScroll
+    return (i - 1) * settings.value.groupsToScroll + r
+  })
+})
+
+const currentPage = computed(() => {
+  const nextPivotIndex = pivotSlideGroupIndices.value.findIndex(
+    (i) => i > currentSlideGroupIndex.value
+  )
+  return nextPivotIndex === -1 ? pageCount.value - 1 : nextPivotIndex - 1
+})
 
 const rawSlideGroups = computed<VNode[][]>(() => {
   const slideGroups: VNode[][] = []
@@ -1036,24 +1065,6 @@ watch(
 )
 
 watch(
-  () => [
-    settings.value.infinite,
-    state.value.currentSlideGroupIndex,
-    settings.value.groupsToShow,
-    slideGroupCount.value
-  ],
-  ([infinite, groupsIndex, groupToShow, slideGroupCount]) => {
-    if (
-      infinite ||
-      (groupsIndex as number) <=
-        (slideGroupCount as number) - (groupToShow as number) + 1
-    )
-      return
-    slideGroupHandler(pageCount.value - 1)
-  }
-)
-
-watch(
   () => state.value.dragging,
   (dragging) => {
     if (!vSlickListRef.value) return
@@ -1083,27 +1094,10 @@ watch(
   }
 )
 
-watch(
-  () => pageCount.value <= state.value.currentSlideGroupIndex,
-  (o) => {
-    if (o) {
-      state.value.currentSlideGroupIndex = 0
-    }
-  }
-)
-
 defineExpose({
   goTo: slideGroupHandler,
-  next: () => {
-    slideGroupHandler(
-      state.value.currentSlideGroupIndex + settings.value.groupsToScroll
-    )
-  },
-  prev: () => {
-    slideGroupHandler(
-      state.value.currentSlideGroupIndex - settings.value.groupsToScroll
-    )
-  },
+  next: () => changeSlideGroup({ message: SlideNavigation.next }),
+  prev: () => changeSlideGroup({ message: SlideNavigation.previous }),
   canGoNext,
   canGoPrev,
   play,
