@@ -1,13 +1,20 @@
 # v-slick-carousel
 
+## 0.6.0
+
+### Minor Changes
+
+- Added `unslick` option
+- Fixed pagination and navigation logic to properly handle edge cases in various modes
+
 ## 0.5.0
 
 ### Minor Changes
 
 - Removed all dependencies:
-    - `lodash.debounce`
-    - `@dcufo/enquire.js`
-    - `json2mq`
+  - `lodash.debounce`
+  - `@dcufo/enquire.js`
+  - `json2mq`
 - Switched responsive settings to use min-width queries
 
 ## 0.4.2
