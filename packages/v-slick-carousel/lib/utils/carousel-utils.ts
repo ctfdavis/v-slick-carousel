@@ -59,6 +59,7 @@ export const getChangedSlideGroupIndex = (
 ) => {
   let targetSlideGroupIndex
   const {
+    centerMode,
     groupsToShow,
     groupsToScroll,
     slideGroupCount,
@@ -73,16 +74,24 @@ export const getChangedSlideGroupIndex = (
       targetSlideGroupIndex = pivotSlideGroupIndices[currentPage]
     } else {
       if (currentPage === 0) {
-        targetSlideGroupIndex = -groupsToShow
+        if (centerMode) {
+          targetSlideGroupIndex = currentSlideGroupIndex - 1
+        } else {
+          targetSlideGroupIndex = -groupsToShow
+        }
       } else {
         targetSlideGroupIndex = pivotSlideGroupIndices[currentPage - 1]
       }
     }
   } else if (options.message === SlideNavigation.next) {
     if (currentPage === pivotSlideGroupIndices.length - 1) {
-      targetSlideGroupIndex =
-        slideGroupCount +
-        (slideGroupCount % groupsToScroll === 0 ? 0 : groupsToShow)
+      if (centerMode) {
+        targetSlideGroupIndex = currentSlideGroupIndex + 1
+      } else {
+        targetSlideGroupIndex =
+          slideGroupCount +
+          (slideGroupCount % groupsToScroll === 0 ? 0 : groupsToShow)
+      }
     } else {
       targetSlideGroupIndex = pivotSlideGroupIndices[currentPage + 1]
     }

@@ -930,7 +930,9 @@ const pageCount = computed(() => {
         slideGroupCount.value -
           settings.value.groupsToShow +
           (settings.value.centerMode
-            ? Math.floor(settings.value.groupsToShow / 2)
+            ? settings.value.infinite
+              ? settings.value.groupsToShow - 1
+              : Math.floor(settings.value.groupsToShow / 2)
             : 0),
         0
       ) / settings.value.groupsToScroll
@@ -940,7 +942,11 @@ const pageCount = computed(() => {
 
 const pivotSlideGroupIndices = computed(() => {
   return Array.from({ length: pageCount.value }, (_, i) => {
-    if (i !== pageCount.value - 1) return i * settings.value.groupsToScroll
+    if (
+      i !== pageCount.value - 1 ||
+      (settings.value.infinite && settings.value.centerMode)
+    )
+      return i * settings.value.groupsToScroll
     const r =
       (slideGroupCount.value - (i - 1) * settings.value.groupsToScroll) %
       settings.value.groupsToShow
