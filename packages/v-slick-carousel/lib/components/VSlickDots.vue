@@ -33,12 +33,5 @@ defineEmits<{
   dotsLeave: []
 }>()
 const props = defineProps(defaultDotsProps)
-const isActive = (i: number) => {
-  const leftBound = i * props.groupsToScroll
-  const rightBound = leftBound + props.groupsToScroll - 1
-  return (
-    props.currentSlideGroupIndex >= leftBound &&
-    props.currentSlideGroupIndex <= rightBound
-  )
-}
+const isActive = (i: number) => i === props.currentPage
 </script>

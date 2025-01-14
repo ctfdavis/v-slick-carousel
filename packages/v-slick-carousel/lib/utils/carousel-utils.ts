@@ -1,8 +1,6 @@
 import { VNode } from 'vue'
 import {
   CloneInfoSpec,
-  GoNextSpec,
-  GoPrevSpec,
   LazyInfoSpec,
   NavigableSpec,
   OnSlideSpec,
@@ -59,44 +57,38 @@ export const getChangedSlideGroupIndex = (
   spec: SlideGroupChangeSpec,
   options: SlideGroupChangeOptions
 ) => {
-  let indexOffset,
-    previousInt,
-    slideGroupOffset,
-    unevenOffset,
-    targetSlideGroupIndex
+  let targetSlideGroupIndex
   const {
-    groupsToScroll,
     groupsToShow,
+    groupsToScroll,
     slideGroupCount,
     currentSlideGroupIndex,
-    lazyLoad,
-    infinite
+    infinite,
+    pivotSlideGroupIndices,
+    currentPage
   } = spec
-  unevenOffset = slideGroupCount % groupsToScroll !== 0
-  indexOffset = unevenOffset
-    ? 0
-    : (slideGroupCount - currentSlideGroupIndex) % groupsToScroll
 
   if (options.message === SlideNavigation.previous) {
-    slideGroupOffset =
-      indexOffset === 0 ? groupsToScroll : groupsToShow - indexOffset
-    targetSlideGroupIndex = currentSlideGroupIndex - slideGroupOffset
-    if (lazyLoad && !infinite) {
-      previousInt = currentSlideGroupIndex - slideGroupOffset
-      targetSlideGroupIndex =
-        previousInt === -1 ? slideGroupCount - 1 : previousInt
+    if (pivotSlideGroupIndices[currentPage] !== currentSlideGroupIndex) {
+      targetSlideGroupIndex = pivotSlideGroupIndices[currentPage]
+    } else {
+      if (currentPage === 0) {
+        targetSlideGroupIndex = -groupsToShow
+      } else {
+        targetSlideGroupIndex = pivotSlideGroupIndices[currentPage - 1]
+      }
     }
   } else if (options.message === SlideNavigation.next) {
-    slideGroupOffset = indexOffset === 0 ? groupsToScroll : indexOffset
-    targetSlideGroupIndex = currentSlideGroupIndex + slideGroupOffset
-    if (lazyLoad && !infinite) {
+    if (currentPage === pivotSlideGroupIndices.length - 1) {
       targetSlideGroupIndex =
-        ((currentSlideGroupIndex + groupsToScroll) % slideGroupCount) +
-        indexOffset
+        slideGroupCount +
+        (slideGroupCount % groupsToScroll === 0 ? 0 : groupsToShow)
+    } else {
+      targetSlideGroupIndex = pivotSlideGroupIndices[currentPage + 1]
     }
   } else if (options.message === 'dots') {
     // Click on dots
-    targetSlideGroupIndex = (options.index || 0) * groupsToScroll
+    targetSlideGroupIndex = pivotSlideGroupIndices[options.index || 0]
     if (targetSlideGroupIndex === currentSlideGroupIndex) {
       return null
     }
@@ -578,13 +570,15 @@ export function getTrackLeft(spec: TrackInfoSpec) {
       verticalOffset
   }
 
-  if (variableWidth === true) {
+  if (variableWidth) {
     let targetSlideIndex
     targetSlideIndex = currentSlideGroupIndex + getTotalPreClones(spec)
-    targetSlide =
-      trackEl && (trackEl.childNodes[targetSlideIndex] as HTMLElement)
+    const trackSlides = Array.from(trackEl?.childNodes || []).filter((child) =>
+      (child as HTMLElement)?.classList?.contains('v-slick-slide-group')
+    )
+    targetSlide = trackEl && (trackSlides[targetSlideIndex] as HTMLElement)
     targetLeft = targetSlide ? targetSlide.offsetLeft * -1 : 0
-    if (centerMode === true) {
+    if (centerMode) {
       targetSlideIndex = infinite
         ? currentSlideGroupIndex + getTotalPreClones(spec)
         : currentSlideGroupIndex
@@ -606,29 +600,6 @@ export function getTrackLeft(spec: TrackInfoSpec) {
   if (rtl) targetLeft = -targetLeft
 
   return targetLeft
-}
-
-export const canGoPrev = (spec: GoPrevSpec) => {
-  return (
-    spec.infinite ||
-    (spec.currentSlideGroupIndex !== 0 &&
-      spec.slideGroupCount > spec.groupsToShow)
-  )
-}
-
-export const canGoNext = (spec: GoNextSpec) => {
-  let canGo = true
-  if (!spec.infinite) {
-    if (spec.centerMode) {
-      canGo = spec.currentSlideGroupIndex < spec.slideGroupCount - 1
-    } else if (
-      spec.slideGroupCount <= spec.groupsToShow ||
-      spec.currentSlideGroupIndex >= spec.slideGroupCount - spec.groupsToShow
-    ) {
-      canGo = false
-    }
-  }
-  return canGo
 }
 
 export const getStatesOnSlide = (spec: OnSlideSpec) => {
@@ -684,7 +655,7 @@ export const getStatesOnSlide = (spec: OnSlideSpec) => {
       finalSlideGroupIndex =
         slideGroupCount - (slideGroupCount % groupsToScroll)
   } else if (
-    !canGoNext(spec) &&
+    !spec.canGoNext &&
     animationSlideGroupIndex > currentSlideGroupIndex
   ) {
     animationSlideGroupIndex = finalSlideGroupIndex = currentSlideGroupIndex
@@ -823,7 +794,7 @@ export const getSwipeMoveState = (
     if (
       (currentSlideGroupIndex === 0 && swipeDirection === 'right') ||
       (currentSlideGroupIndex + 1 >= dotCount && swipeDirection === 'left') ||
-      (!canGoNext(spec) && swipeDirection === 'left')
+      (!spec.canGoNext && swipeDirection === 'left')
     ) {
       touchSwipeLength = Math.round(touchObject.swipeLength * edgeFriction)
       if (edgeDragged === false && onEdge) {

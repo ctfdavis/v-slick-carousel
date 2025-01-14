@@ -48,6 +48,7 @@ export type Props = {
   swipeToSlide: boolean
   touchMove: boolean
   touchThreshold: number
+  unslick: boolean
   useCSSTransitions: boolean
   useCSSTransform: boolean
   variableWidth: boolean
@@ -239,7 +240,10 @@ export type SlideGroupChangeSpec = MarkRequiredWithPartialBase<
   | 'infinite'
   | 'centerMode'
   | 'centerPadding'
->
+> & {
+  pivotSlideGroupIndices: number[]
+  currentPage: number
+}
 
 export type TrackInfoSpec = MarkRequiredWithPartialBase<
   SliderSpec,
@@ -272,6 +276,7 @@ export type OnSlideSpec = Combine<
   >
 > & {
   index: number
+  canGoNext: boolean
 }
 
 // @ts-ignore
@@ -325,21 +330,8 @@ export type SwipeMoveSpec = Combine<
   onEdge?: (
     swipeDirection: SwipeDirection | keyof typeof SwipeDirection
   ) => void
+  canGoNext: boolean
 }
-
-export type GoPrevSpec = MarkRequiredWithPartialBase<
-  SliderSpec,
-  'currentSlideGroupIndex' | 'groupsToShow' | 'infinite' | 'slideGroupCount'
->
-
-export type GoNextSpec = MarkRequiredWithPartialBase<
-  SliderSpec,
-  | 'infinite'
-  | 'centerMode'
-  | 'currentSlideGroupIndex'
-  | 'slideGroupCount'
-  | 'groupsToShow'
->
 
 export type LazyInfoSpec = MarkRequiredWithPartialBase<
   SliderSpec,
