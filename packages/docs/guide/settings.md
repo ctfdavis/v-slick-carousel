@@ -36,6 +36,7 @@
 | [swipeToSlide](#swipetoslide)                             | Boolean | `true`       | Enable swipe to slide.                                   |
 | [touchMove](#touchmove)                                   | Boolean | `true`       | Enable touch move.                                       |
 | [touchThreshold](#touchthreshold)                         | Number  | `5`          | Touch threshold.                                         |
+| [unslick](#unslick)                                       | Boolean | `false`      | Unslick the carousel.                                    |
 | [useCSSTransitions](#usecsstransitions)                   | Boolean | `true`       | Use CSS transitions.                                     |
 | [useCSSTransform](#usecsstransform)                       | Boolean | `true`       | Use CSS transform.                                       |
 | [variableWidth](#variablewidth)                           | Boolean | `false`      | Enable variable width.                                   |
@@ -272,6 +273,12 @@ Enable dragging by touch. See also [`draggable`](#draggable) and [`swipe`](#swip
 <small>Default: `5`</small>
 
 The bigger the number is, the more sensitive the touch move will be.
+
+## `unslick` <Badge type="info" text="boolean" />
+
+<small>Default: `false`</small>
+
+When `true`, the carousel functionality will be disabled. This is useful when you want to show the carousel as a static display.
 
 ## `useCSSTransitions` <Badge type="info" text="boolean" />
 
