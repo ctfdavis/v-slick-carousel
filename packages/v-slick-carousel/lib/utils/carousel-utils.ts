@@ -59,6 +59,7 @@ export const getChangedSlideGroupIndex = (
 ) => {
   let targetSlideGroupIndex
   const {
+    groupsToShow,
     groupsToScroll,
     slideGroupCount,
     currentSlideGroupIndex,
@@ -72,7 +73,7 @@ export const getChangedSlideGroupIndex = (
       targetSlideGroupIndex = pivotSlideGroupIndices[currentPage]
     } else {
       if (currentPage === 0) {
-        targetSlideGroupIndex = -groupsToScroll
+        targetSlideGroupIndex = -groupsToShow
       } else {
         targetSlideGroupIndex = pivotSlideGroupIndices[currentPage - 1]
       }
@@ -80,7 +81,8 @@ export const getChangedSlideGroupIndex = (
   } else if (options.message === SlideNavigation.next) {
     if (currentPage === pivotSlideGroupIndices.length - 1) {
       targetSlideGroupIndex =
-        pivotSlideGroupIndices[currentPage] + groupsToScroll
+        slideGroupCount +
+        (slideGroupCount % groupsToScroll === 0 ? 0 : groupsToShow)
     } else {
       targetSlideGroupIndex = pivotSlideGroupIndices[currentPage + 1]
     }

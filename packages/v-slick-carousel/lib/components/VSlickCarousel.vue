@@ -943,7 +943,7 @@ const pivotSlideGroupIndices = computed(() => {
     if (i !== pageCount.value - 1) return i * settings.value.groupsToScroll
     const r =
       (slideGroupCount.value - (i - 1) * settings.value.groupsToScroll) %
-      settings.value.groupsToScroll
+      settings.value.groupsToShow
     if (r === 0) return i * settings.value.groupsToScroll
     return (i - 1) * settings.value.groupsToScroll + r
   })
