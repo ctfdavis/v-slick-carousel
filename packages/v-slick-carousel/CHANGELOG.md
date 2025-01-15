@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.6.1
+
+### Patch Changes
+
+- Fixed slides missing if slide group count is less than groups to show
+
 ## 0.6.0
 
 ### Minor Changes
