@@ -463,12 +463,14 @@ export function getTrackCSS(spec: TrackInfoSpec, left: number) {
     transition: ''
   }
   if (spec.useCSSTransform) {
-    let transform = !spec.vertical
-      ? 'translate3d(' + left + 'px, 0px, 0px)'
-      : 'translate3d(0px, ' + left + 'px, 0px)'
-    style = {
-      ...style,
-      transform
+    if (spec.slideGroupCount > spec.groupsToShow) {
+      let transform = !spec.vertical
+        ? 'translate3d(' + left + 'px, 0px, 0px)'
+        : 'translate3d(0px, ' + left + 'px, 0px)'
+      style = {
+        ...style,
+        transform
+      }
     }
   } else {
     if (spec.vertical) {
