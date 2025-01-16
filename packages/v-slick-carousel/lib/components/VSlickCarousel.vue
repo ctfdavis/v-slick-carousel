@@ -851,6 +851,9 @@ const settings = computed<Props>(() => {
       )
     }
     settings.groupsToScroll = 1
+    if (settings.infinite) {
+      settings.infiniteLoopOnEdge = true
+    }
   }
   // force showing one group and scrolling by one if `fade` is enabled
   if (settings.fade) {
