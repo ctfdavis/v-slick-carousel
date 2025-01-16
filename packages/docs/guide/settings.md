@@ -22,6 +22,7 @@
 | [groupsToShow](#groupstoshow)                             | Number  | `1`          | Number of groups to show.                                |
 | [ignorePrefersReducedMotion](#ignoreprefersreducedmotion) | Boolean | `false`      | Ignore `prefers-reduced-motion` .                        |
 | [infinite](#infinite)                                     | Boolean | `true`       | Enable infinite mode.                                    |
+| [infiniteLoopOnEdge](#infinitelooponedge)                 | Boolean | `false`      | Enable infinite loop on edge.                            |
 | [initialGroupIndex](#initialgroupindex)                   | Number  | `0`          | Initial group index.                                     |
 | [lazyLoad](#lazyload)                                     | String  | `'ondemand'` | Lazy load mode. Can be `'ondemand'`, or `'progressive'`. |
 | [nextArrowLabel](#nextarrowlabel)                         | String  | `'Next'`     | Next arrow label.                                        |
@@ -158,6 +159,12 @@ adding `!important` to the CSS transitions for the animation to show as expected
 
 When `true`, the carousel will be in infinite mode. See [One Slide Group Infinite](/examples/one-slide-group-infinite)
 example.
+
+## `infiniteLoopOnEdge` <Badge type="info" text="boolean" />
+
+<small>Default: `false`</small>
+
+When `true`, the carousel will loop infinitely on the edge. See [Infinite Loop On Edge](/examples/infinite-loop-on-edge)
 
 ## `initialGroupIndex` <Badge type="info" text="number" />
 

@@ -65,6 +65,7 @@ export const getChangedSlideGroupIndex = (
     slideGroupCount,
     currentSlideGroupIndex,
     infinite,
+    infiniteLoopOnEdge,
     pivotSlideGroupIndices,
     currentPage
   } = spec
@@ -74,7 +75,7 @@ export const getChangedSlideGroupIndex = (
       targetSlideGroupIndex = pivotSlideGroupIndices[currentPage]
     } else {
       if (currentPage === 0) {
-        if (centerMode) {
+        if (centerMode || infiniteLoopOnEdge) {
           targetSlideGroupIndex = currentSlideGroupIndex - 1
         } else {
           targetSlideGroupIndex = -groupsToShow
@@ -85,7 +86,7 @@ export const getChangedSlideGroupIndex = (
     }
   } else if (options.message === SlideNavigation.next) {
     if (currentPage === pivotSlideGroupIndices.length - 1) {
-      if (centerMode) {
+      if (centerMode || infiniteLoopOnEdge) {
         targetSlideGroupIndex = currentSlideGroupIndex + 1
       } else {
         targetSlideGroupIndex =
@@ -463,7 +464,10 @@ export function getTrackCSS(spec: TrackInfoSpec, left: number) {
     transition: ''
   }
   if (spec.useCSSTransform) {
-    if (spec.slideGroupCount > spec.groupsToShow) {
+    if (
+      spec.slideGroupCount > spec.groupsToShow ||
+      (spec.infinite && spec.infiniteLoopOnEdge)
+    ) {
       let transform = !spec.vertical
         ? 'translate3d(' + left + 'px, 0px, 0px)'
         : 'translate3d(0px, ' + left + 'px, 0px)'

@@ -47,6 +47,7 @@
           :fade="settings.fade"
           :ignore-prefers-reduced-motion="settings.ignorePrefersReducedMotion"
           :infinite="settings.infinite"
+          :infinite-loop-on-edge="settings.infiniteLoopOnEdge"
           :lazy-load="settings.lazyLoad"
           :lazy-loaded-list="state.lazyLoadedList"
           :list-height="state.listHeight"
@@ -850,6 +851,9 @@ const settings = computed<Props>(() => {
       )
     }
     settings.groupsToScroll = 1
+    if (settings.infinite) {
+      settings.infiniteLoopOnEdge = true
+    }
   }
   // force showing one group and scrolling by one if `fade` is enabled
   if (settings.fade) {
@@ -867,6 +871,20 @@ const settings = computed<Props>(() => {
     }
     settings.groupsToShow = 1
     settings.groupsToScroll = 1
+  }
+  if (settings.infiniteLoopOnEdge) {
+    if (!settings.infinite && process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `infiniteLoopOnEdge is enabled: infinite needs to be enabled for this option to work`
+      )
+    }
+    if (settings.groupsToScroll > 1 && process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `infiniteLoopOnEdge is enabled: groupsToScroll needs to be 1 for this option to work; you are using ${settings.groupsToScroll}`
+      )
+    }
   }
   // force disabling `variableWidth` if `slidesPerGroup` is bigger than 1
   if (settings.slidesPerGroup > 1) {
@@ -899,11 +917,19 @@ const settings = computed<Props>(() => {
 })
 
 const canGoPrev = computed(
-  () => settings.value.infinite || currentPage.value > 0
+  () =>
+    (settings.value.infinite &&
+      (settings.value.infiniteLoopOnEdge ||
+        slideGroupCount.value > settings.value.groupsToShow)) ||
+    currentPage.value > 0
 )
 
 const canGoNext = computed(
-  () => settings.value.infinite || pageCount.value > currentPage.value + 1
+  () =>
+    (settings.value.infinite &&
+      (settings.value.infiniteLoopOnEdge ||
+        slideGroupCount.value > settings.value.groupsToShow)) ||
+    pageCount.value > currentPage.value + 1
 )
 
 const slides = ref<VNode[]>(slots.default ? extractSlides(slots.default()) : [])
@@ -924,27 +950,30 @@ const slideGroupCount = computed(() =>
 )
 
 const pageCount = computed(() => {
-  return (
-    Math.ceil(
-      Math.max(
-        slideGroupCount.value -
-          settings.value.groupsToShow +
-          (settings.value.centerMode
-            ? settings.value.infinite
-              ? settings.value.groupsToShow - 1
-              : Math.floor(settings.value.groupsToShow / 2)
-            : 0),
-        0
-      ) / settings.value.groupsToScroll
-    ) + 1
-  )
+  return settings.value.infinite &&
+    settings.value.infiniteLoopOnEdge &&
+    settings.value.groupsToScroll === 1
+    ? slideGroupCount.value
+    : Math.ceil(
+        Math.max(
+          slideGroupCount.value -
+            settings.value.groupsToShow +
+            (settings.value.centerMode
+              ? settings.value.infinite
+                ? settings.value.groupsToShow - 1
+                : Math.floor(settings.value.groupsToShow / 2)
+              : 0),
+          0
+        ) / settings.value.groupsToScroll
+      ) + 1
 })
 
 const pivotSlideGroupIndices = computed(() => {
   return Array.from({ length: pageCount.value }, (_, i) => {
     if (
       i !== pageCount.value - 1 ||
-      (settings.value.infinite && settings.value.centerMode)
+      (settings.value.infinite &&
+        (settings.value.centerMode || settings.value.infiniteLoopOnEdge))
     )
       return i * settings.value.groupsToScroll
     const r =

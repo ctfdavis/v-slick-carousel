@@ -3,6 +3,8 @@ import oneSlideGroupFinite from './one-slide-group-finite'
 import twoSlideGroupsFinite from './two-slide-groups-finite'
 import oneSlideGroupInfinite from './one-slide-group-infinite'
 import threeGroupsTwoRows from './three-groups-two-rows'
+import infiniteLoopOnEdge from './infinite-loop-on-edge'
+import noInfiniteLoopOnEdge from './no-infinite-loop-on-edge'
 import swipeToSlide from './swipe-to-slide'
 import responsive from './responsive'
 import focusOnSelect from './focus-on-select'
@@ -20,6 +22,8 @@ export default makeExamples([
   twoSlideGroupsFinite,
   oneSlideGroupInfinite,
   threeGroupsTwoRows,
+  infiniteLoopOnEdge,
+  noInfiniteLoopOnEdge,
   swipeToSlide,
   responsive,
   focusOnSelect,
