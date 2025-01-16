@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.6.2
+
+### Patch Changes
+
+- Added `infiniteLoopOnEdge` option
+
 ## 0.6.1
 
 ### Patch Changes
