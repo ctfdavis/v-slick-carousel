@@ -31,6 +31,7 @@ export type Props = {
   focusOnSelect: boolean
   ignorePrefersReducedMotion: boolean
   infinite: boolean
+  infiniteLoopOnEdge: boolean
   initialGroupIndex: number
   lazyLoad?: LazyLoadType | keyof typeof LazyLoadType
   nextArrowLabel?: string
@@ -112,6 +113,7 @@ export type TrackProps = Pick<
   | 'fade'
   | 'ignorePrefersReducedMotion'
   | 'infinite'
+  | 'infiniteLoopOnEdge'
   | 'lazyLoad'
   | 'rtl'
   | 'groupsToScroll'
@@ -238,6 +240,7 @@ export type SlideGroupChangeSpec = MarkRequiredWithPartialBase<
   | 'currentSlideGroupIndex'
   | 'lazyLoad'
   | 'infinite'
+  | 'infiniteLoopOnEdge'
   | 'centerMode'
   | 'centerPadding'
 > & {

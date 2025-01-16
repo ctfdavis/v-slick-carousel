@@ -202,7 +202,7 @@ const preCloneSlideGroups = computed<SlideGroup[]>(() => {
   if (
     !props.infinite ||
     props.fade ||
-    props.slideGroupCount <= props.groupsToShow
+    (props.slideGroupCount <= props.groupsToShow && !props.infiniteLoopOnEdge)
   ) {
     return []
   }
@@ -244,7 +244,7 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   if (
     !props.infinite ||
     props.fade ||
-    props.slideGroupCount <= props.groupsToShow
+    (props.slideGroupCount <= props.groupsToShow && !props.infiniteLoopOnEdge)
   ) {
     return []
   }
