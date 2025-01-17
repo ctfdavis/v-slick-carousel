@@ -1043,7 +1043,7 @@ watch(
       })
     }
     if (newSettings.autoplay) {
-      autoPlay(PlayingType.update)
+      autoPlay(PlayingType.play)
     } else {
       pause(PlayingType.paused)
     }
