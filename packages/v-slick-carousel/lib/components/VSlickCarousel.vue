@@ -633,7 +633,7 @@ const resize = async (
       (settings.value.widthDetection === WidthDetection.manual &&
         options.isWindowResize)
   )
-  if (props.autoplay) {
+  if (settings.value.autoplay) {
     autoPlay(PlayingType.update)
   } else {
     pause()
@@ -911,6 +911,16 @@ const settings = computed<Props>(() => {
       )
     }
     settings.groupsToScroll = settings.groupsToShow
+  }
+
+  if (settings.unslick) {
+    settings.dots = false
+    settings.arrows = false
+    settings.autoplay = false
+    settings.infinite = false
+    settings.draggable = false
+    settings.fade = false
+    settings.centerMode = false
   }
 
   return settings
