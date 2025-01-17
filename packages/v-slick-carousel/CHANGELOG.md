@@ -1,5 +1,13 @@
 # v-slick-carousel
 
+## 0.6.3
+
+### Patch Changes
+
+- Fixed responsive autoplay not resuming
+- Fixed `unslick` should display autoplay and certain settings
+- Fixed `infiniteLoopOnEdge` not working properly with slide group counts less than groups to show
+
 ## 0.6.2
 
 ### Patch Changes
