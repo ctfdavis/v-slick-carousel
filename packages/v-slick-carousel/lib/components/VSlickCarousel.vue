@@ -919,7 +919,8 @@ const settings = computed<Props>(() => {
 const canGoPrev = computed(
   () =>
     (settings.value.infinite &&
-      (settings.value.infiniteLoopOnEdge ||
+      ((settings.value.infiniteLoopOnEdge &&
+        slideGroupCount.value >= settings.value.groupsToShow) ||
         slideGroupCount.value > settings.value.groupsToShow)) ||
     currentPage.value > 0
 )
@@ -927,7 +928,8 @@ const canGoPrev = computed(
 const canGoNext = computed(
   () =>
     (settings.value.infinite &&
-      (settings.value.infiniteLoopOnEdge ||
+      ((settings.value.infiniteLoopOnEdge &&
+        slideGroupCount.value >= settings.value.groupsToShow) ||
         slideGroupCount.value > settings.value.groupsToShow)) ||
     pageCount.value > currentPage.value + 1
 )
@@ -952,7 +954,8 @@ const slideGroupCount = computed(() =>
 const pageCount = computed(() => {
   return settings.value.infinite &&
     settings.value.infiniteLoopOnEdge &&
-    settings.value.groupsToScroll === 1
+    settings.value.groupsToScroll === 1 &&
+    slideGroupCount.value >= settings.value.groupsToShow
     ? slideGroupCount.value
     : Math.ceil(
         Math.max(

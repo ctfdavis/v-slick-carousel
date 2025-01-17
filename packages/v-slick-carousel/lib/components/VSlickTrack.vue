@@ -198,12 +198,17 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
   return slideGroups
 })
 
+const shouldClone = computed<boolean>(() => {
+  return (
+    props.infinite &&
+    !props.fade &&
+    (props.slideGroupCount > props.groupsToShow ||
+      (props.infiniteLoopOnEdge && props.slideGroupCount >= props.groupsToShow))
+  )
+})
+
 const preCloneSlideGroups = computed<SlideGroup[]>(() => {
-  if (
-    !props.infinite ||
-    props.fade ||
-    (props.slideGroupCount <= props.groupsToShow && !props.infiniteLoopOnEdge)
-  ) {
+  if (!shouldClone.value) {
     return []
   }
   const slideGroups = props.rawSlideGroups
@@ -241,11 +246,7 @@ const preCloneSlideGroups = computed<SlideGroup[]>(() => {
 })
 
 const postCloneSlideGroups = computed<SlideGroup[]>(() => {
-  if (
-    !props.infinite ||
-    props.fade ||
-    (props.slideGroupCount <= props.groupsToShow && !props.infiniteLoopOnEdge)
-  ) {
+  if (!shouldClone.value) {
     return []
   }
   const slideGroups = props.rawSlideGroups.map((rawSlideGroup, index) => {
@@ -294,24 +295,30 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
   left: 0;
   display: flex;
   transform: translate3d(0, 0, 0);
+
   &.center {
     margin-left: auto;
     margin-right: auto;
   }
+
   &.vertical {
     flex-direction: column;
+
     .v-slick-slide-group {
       flex-direction: row;
       height: auto;
+
       & > * {
         flex-grow: 1;
       }
     }
   }
+
   &.dragging img {
     pointer-events: none;
   }
 }
+
 .v-slick-slide-group {
   display: flex;
   flex-direction: column;
