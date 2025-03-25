@@ -342,7 +342,7 @@ export const getSwipeEndState = (
     rtl
   } = spec
   if (!dragging) {
-    if (swipe) e.preventDefault()
+    if (swipe && e.cancelable) e.preventDefault()
     return
   }
   let minSwipe = verticalSwiping
@@ -373,7 +373,9 @@ export const getSwipeEndState = (
     return state
   }
   if (touchObject.swipeLength > minSwipe) {
-    e.preventDefault()
+    if (e.cancelable) {
+      e.preventDefault()
+    }
     if (onSwipe) {
       onSwipe(swipeDirection)
     }
@@ -772,10 +774,13 @@ export const getSwipeMoveState = (
   } = spec
   if (scrolling) return
   if (animating) {
-    e.preventDefault()
+    if (e.cancelable) {
+      e.preventDefault()
+    }
     return
   }
-  if (vertical && swipeToSlide && verticalSwiping) e.preventDefault()
+  if (vertical && swipeToSlide && verticalSwiping && e.cancelable)
+    e.preventDefault()
   let swipeLeft,
     state: SwipeMoveState = {}
   let curLeft = getTrackLeft(spec)
@@ -850,7 +855,9 @@ export const getSwipeMoveState = (
   }
   if (touchObject.swipeLength > 10) {
     state.swiping = true
-    e.preventDefault()
+    if (e.cancelable) {
+      e.preventDefault()
+    }
   }
   return state
 }
