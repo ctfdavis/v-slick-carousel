@@ -1,5 +1,12 @@
 # v-slick-carousel
 
+## 0.6.4
+
+### Patch Changes
+
+- Fix: change touch end and cancel event listeners to non-passive
+- Fix: add event cancelable checks
+
 ## 0.6.3
 
 ### Patch Changes
@@ -32,9 +39,9 @@
 ### Minor Changes
 
 - Removed all dependencies:
-  - `lodash.debounce`
-  - `@dcufo/enquire.js`
-  - `json2mq`
+    - `lodash.debounce`
+    - `@dcufo/enquire.js`
+    - `json2mq`
 - Switched responsive settings to use min-width queries
 
 ## 0.4.2
