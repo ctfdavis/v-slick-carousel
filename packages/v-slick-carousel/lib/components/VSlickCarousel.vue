@@ -33,7 +33,7 @@
         :style="vSlickListStyle"
         @click="handleClickVSlickList"
         @mousedown="handleMouseDownOrTouchStartVSlickList"
-        @touchstart="handleMouseDownOrTouchStartVSlickList"
+        @touchstart.passive="handleMouseDownOrTouchStartVSlickList"
         @keydown="handleKeyDownVSlickList"
       >
         <VSlickTrack
@@ -252,7 +252,9 @@ const makeBreakpoints = () => {
 const swipeStart = (e: SwipeEvent) => {
   // setTimout is used here to prevent disabling the scroll prematurely
   setTimeout(() => {
-    e.preventDefault()
+    if (e.cancelable) {
+      e.preventDefault()
+    }
   })
   const swipeStartState = getSwipeStartState(
     e,
@@ -298,11 +300,12 @@ const swipeMove = (e: SwipeEvent) => {
       canGoNext: canGoNext.value
     } as SwipeMoveSpec) || ({} as any)
   if (
-    (settings.value.verticalSwiping && swipeDirection === SwipeDirection.up) ||
-    swipeDirection === SwipeDirection.down ||
-    (!settings.value.verticalSwiping &&
-      swipeDirection === SwipeDirection.left) ||
-    swipeDirection === SwipeDirection.right
+    ((settings.value.verticalSwiping && swipeDirection === SwipeDirection.up) ||
+      swipeDirection === SwipeDirection.down ||
+      (!settings.value.verticalSwiping &&
+        swipeDirection === SwipeDirection.left) ||
+      swipeDirection === SwipeDirection.right) &&
+    e.cancelable
   ) {
     e.preventDefault()
   }
@@ -1124,10 +1127,17 @@ watch(
         { passive: false }
       )
       vSlickListRef.value.onmouseup = handleMouseUpOrTouchEndVSlickList
-      vSlickListRef.value.ontouchend = handleMouseUpOrTouchEndVSlickList
+      vSlickListRef.value.addEventListener(
+        'touchend',
+        handleMouseUpOrTouchEndVSlickList,
+        { passive: false }
+      )
       vSlickListRef.value.onmouseleave = handleMouseLeaveOrTouchCancelVSlickList
-      vSlickListRef.value.ontouchcancel =
-        handleMouseLeaveOrTouchCancelVSlickList
+      vSlickListRef.value.addEventListener(
+        'touchcancel',
+        handleMouseLeaveOrTouchCancelVSlickList,
+        { passive: false }
+      )
     } else {
       vSlickListRef.value.onmousemove = null
       vSlickListRef.value.removeEventListener(
@@ -1135,9 +1145,15 @@ watch(
         handleMouseMoveOrTouchMoveVSlickList
       )
       vSlickListRef.value.onmouseup = null
-      vSlickListRef.value.ontouchend = null
+      vSlickListRef.value.removeEventListener(
+        'touchend',
+        handleMouseUpOrTouchEndVSlickList
+      )
       vSlickListRef.value.onmouseleave = null
-      vSlickListRef.value.ontouchcancel = null
+      vSlickListRef.value.removeEventListener(
+        'touchcancel',
+        handleMouseLeaveOrTouchCancelVSlickList
+      )
     }
   }
 )
