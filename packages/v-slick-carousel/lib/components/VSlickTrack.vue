@@ -177,7 +177,7 @@ const originalSlideGroups = computed<SlideGroup[]>(() => {
       style,
       attrs: {
         'data-index': index,
-        'aria-hidden': `${!classes.includes('active')}`
+        ...(!classes.includes('active') ? { inert: 'true' } : {})
       },
       onClick: () => {
         emit('childClick', {
@@ -223,7 +223,7 @@ const preCloneSlideGroups = computed<SlideGroup[]>(() => {
         style: getSlideGroupStyle(index),
         attrs: {
           'data-index': key,
-          'aria-hidden': 'true'
+          inert: 'true'
         },
         onClick: () => {
           emit('childClick', {
@@ -258,15 +258,14 @@ const postCloneSlideGroups = computed<SlideGroup[]>(() => {
       style: getSlideGroupStyle(index),
       attrs: {
         'data-index': key,
-        'aria-hidden':
-          props.infinite &&
-          props.slideGroupCount - props.currentSlideGroupIndex <
-            props.groupsToShow &&
-          index <
-            props.groupsToShow -
-              (props.slideGroupCount - props.currentSlideGroupIndex)
-            ? 'false'
-            : 'true'
+        ...(props.infinite &&
+        props.slideGroupCount - props.currentSlideGroupIndex <
+          props.groupsToShow &&
+        index <
+          props.groupsToShow -
+            (props.slideGroupCount - props.currentSlideGroupIndex)
+          ? {}
+          : { inert: 'true' })
       },
       onClick: () => {
         emit('childClick', {
