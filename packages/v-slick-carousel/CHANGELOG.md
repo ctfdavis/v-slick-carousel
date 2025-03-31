@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.6.5
+
+### Patch Changes
+
+- Fix: use `inert` attribute instead of `aria-hidden` for slides to allow better interactivity on screen readers
+
 ## 0.6.4
 
 ### Patch Changes
