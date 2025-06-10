@@ -68,7 +68,7 @@ Using `ref` on the component will expose below component's state and methods:
 
 ```ts
 {
-    goto: (index: number) => void; // navigates to the slide group at the given index
+    goTo: (index: number) => void; // navigates to the slide group at the given index
     next: () => void; // navigates to the next slide group
     prev: () => void; // navigates to the previous slide group
     canGoNext: boolean; // true if the next slide group is available
