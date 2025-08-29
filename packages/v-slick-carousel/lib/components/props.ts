@@ -45,6 +45,10 @@ const makeDefaultProps = (selectFields?: string[]) => {
     pauseOnHover: { type: Boolean, default: true },
     prevArrowLabel: { type: String, default: 'Previous' },
     responsive: { type: Array as PropType<Responsive[]>, default: [] },
+    responsiveBehavior: {
+      type: String as PropType<'mobile-first' | 'desktop-first'>,
+      default: 'mobile-first'
+    },
     rtl: { type: Boolean, default: false },
     slidesPerGroup: { type: Number, default: 1 },
     groupsToScroll: { type: Number, default: 1 },

@@ -231,20 +231,35 @@ const clearBreakpoints = () => {
 
 const makeBreakpoints = () => {
   if (!props.responsive.length) return
+
+  let mediaQueryLimit: string = 'min-width'
+  if (props.responsiveBehavior === 'desktop-first') {
+    mediaQueryLimit = 'max-width'
+  }
+
   const breakpoints = props.responsive.map((item) => item.breakpoint)
   breakpoints.sort((a, b) => a - b)
   breakpoints.forEach((_breakpoint, index) => {
     const mediaQuery = json2mq({
-      'min-width': `${_breakpoint}px`
+      [mediaQueryLimit]: `${_breakpoint}px`
     })
+
+    const desktopPreviousHandler = () => {
+      breakpoint.value =
+        index === breakpoints.length - 1 ? undefined : breakpoints[index + 1]
+    }
+    const mobilePreviousHandler = () => {
+      breakpoint.value = index === 0 ? undefined : breakpoints[index + 1]
+    }
+
     media(
       mediaQuery,
       () => {
         breakpoint.value = _breakpoint
       },
-      () => {
-        breakpoint.value = index === 0 ? undefined : breakpoints[index - 1]
-      }
+      props.responsiveBehavior === 'desktop-first'
+        ? desktopPreviousHandler
+        : mobilePreviousHandler
     )
   })
 }
