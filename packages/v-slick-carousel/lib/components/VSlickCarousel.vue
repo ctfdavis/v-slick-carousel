@@ -238,28 +238,23 @@ const makeBreakpoints = () => {
   }
 
   const breakpoints = props.responsive.map((item) => item.breakpoint)
+  breakpoints.sort((a, b) =>
+    props.responsiveBehavior === 'desktop-first' ? b - a : a - b
+  )
   breakpoints.sort((a, b) => a - b)
   breakpoints.forEach((_breakpoint, index) => {
     const mediaQuery = json2mq({
       [mediaQueryLimit]: `${_breakpoint}px`
     })
 
-    const desktopPreviousHandler = () => {
-      breakpoint.value =
-        index === breakpoints.length - 1 ? undefined : breakpoints[index + 1]
-    }
-    const mobilePreviousHandler = () => {
-      breakpoint.value = index === 0 ? undefined : breakpoints[index + 1]
-    }
-
     media(
       mediaQuery,
       () => {
         breakpoint.value = _breakpoint
       },
-      props.responsiveBehavior === 'desktop-first'
-        ? desktopPreviousHandler
-        : mobilePreviousHandler
+      () => {
+        breakpoint.value = index === 0 ? undefined : breakpoints[index - 1]
+      }
     )
   })
 }

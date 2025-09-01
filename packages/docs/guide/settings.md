@@ -29,7 +29,7 @@
 | [pauseOnFocus](#pauseonfocus)                             | Boolean | `true`       | Pause autoplay on focus.                                 |
 | [pauseOnHover](#pauseonhover)                             | Boolean | `true`       | Pause autoplay on hover.                                 |
 | [prevArrowLabel](#prevarrowlabel)                         | String  | `'Previous'` | Previous arrow label.                                    |
-| [responsiveBehavior](#responsiveBehavior)                 | String  | `'mobile-first'`| How responsive queries behave                         |
+| [responsiveBehavior](#responsivebehavior)                 | String  | `'mobile-first'`| How responsive queries behave                         |
 | [responsive](#responsive)                                 | Array   | `[]`         | Responsive settings.                                     |
 | [rtl](#rtl)                                               | Boolean | `false`      | Enable right-to-left mode.                               |
 | [slidesPerGroup](#slidespergroup)                         | Number  | `1`          | Number of slides per group.                              |
@@ -206,7 +206,7 @@ Pause autoplay on hover. See [Auto Play](/examples/auto-play) example.
 
 Previous arrow label (for accessibility).
 
-## `responsiveBehavior` <Badge type="info" text="array" />
+## `responsiveBehavior` <Badge type="info" text="string" />
 
 <small>Default: `'mobile-first'`</small>
 
