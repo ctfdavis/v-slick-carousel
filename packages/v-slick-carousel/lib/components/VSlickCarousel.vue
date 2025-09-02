@@ -241,7 +241,6 @@ const makeBreakpoints = () => {
   breakpoints.sort((a, b) =>
     props.responsiveBehavior === 'desktop-first' ? b - a : a - b
   )
-  breakpoints.sort((a, b) => a - b)
   breakpoints.forEach((_breakpoint, index) => {
     const mediaQuery = json2mq({
       [mediaQueryLimit]: `${_breakpoint}px`
