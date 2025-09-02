@@ -212,7 +212,7 @@ Previous arrow label (for accessibility).
 
 Defines how to apply responsive settings.
 
-With `'mobile-first'` the default settings are for mobile view and the responsive options apply for the repestive breakpoints as a `'min-width'` rule.
+With `'mobile-first'` the default settings are for mobile view and the responsive options apply for the repesctive breakpoints as a `'min-width'` rule.
 With `'desktop-first'` the default settings are for desktop view and the responsive options apply for the respective breakpoints as a `'max-width'` rule.
 
 ## `responsive` <Badge type="info" text="array" />
