@@ -39,6 +39,7 @@ export type Props = {
   pauseOnFocus: boolean
   pauseOnHover: boolean
   prevArrowLabel?: string
+  responsiveBehavior: 'mobile-first' | 'desktop-first'
   responsive: Responsive[]
   rtl: boolean
   slidesPerGroup: number

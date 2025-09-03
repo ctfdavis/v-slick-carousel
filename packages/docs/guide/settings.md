@@ -29,6 +29,7 @@
 | [pauseOnFocus](#pauseonfocus)                             | Boolean | `true`       | Pause autoplay on focus.                                 |
 | [pauseOnHover](#pauseonhover)                             | Boolean | `true`       | Pause autoplay on hover.                                 |
 | [prevArrowLabel](#prevarrowlabel)                         | String  | `'Previous'` | Previous arrow label.                                    |
+| [responsiveBehavior](#responsivebehavior)                 | String  | `'mobile-first'`| How responsive queries behave                         |
 | [responsive](#responsive)                                 | Array   | `[]`         | Responsive settings.                                     |
 | [rtl](#rtl)                                               | Boolean | `false`      | Enable right-to-left mode.                               |
 | [slidesPerGroup](#slidespergroup)                         | Number  | `1`          | Number of slides per group.                              |
@@ -204,6 +205,15 @@ Pause autoplay on hover. See [Auto Play](/examples/auto-play) example.
 <small>Default: `'Previous'`</small>
 
 Previous arrow label (for accessibility).
+
+## `responsiveBehavior` <Badge type="info" text="string" />
+
+<small>Default: `'mobile-first'`</small>
+
+Defines how to apply responsive settings.
+
+With `'mobile-first'` the default settings are for mobile view and the responsive options apply for the respective breakpoints as a `'min-width'` rule.
+With `'desktop-first'` the default settings are for desktop view and the responsive options apply for the respective breakpoints as a `'max-width'` rule.
 
 ## `responsive` <Badge type="info" text="array" />
 
