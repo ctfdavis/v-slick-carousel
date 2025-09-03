@@ -1,5 +1,11 @@
 # v-slick-carousel
 
+## 0.7.0
+
+### Minor Changes
+
+- Added `responsiveBehavior` option to configure responsive behavior to either `desktop-first` or `mobile-first` (default)
+
 ## 0.6.5
 
 ### Patch Changes
@@ -45,9 +51,9 @@
 ### Minor Changes
 
 - Removed all dependencies:
-    - `lodash.debounce`
-    - `@dcufo/enquire.js`
-    - `json2mq`
+  - `lodash.debounce`
+  - `@dcufo/enquire.js`
+  - `json2mq`
 - Switched responsive settings to use min-width queries
 
 ## 0.4.2
