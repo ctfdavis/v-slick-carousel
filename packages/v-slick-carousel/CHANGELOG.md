@@ -1,5 +1,12 @@
 # v-slick-carousel
 
+## 0.7.1
+
+### Patch Changes
+
+- Fixed SSR hydration issues
+- Fixed keyboard navigation broken after a key navigation
+
 ## 0.7.0
 
 ### Minor Changes
