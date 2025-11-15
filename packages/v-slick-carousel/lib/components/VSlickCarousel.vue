@@ -836,6 +836,7 @@ const ssrInit = () => {
 }
 
 const breakpoint = ref<number>()
+const isMounted = ref(false)
 
 const vSlickCarouselRef = ref<HTMLElement>()
 const vSlickCarouselStyle = ref({})
@@ -845,7 +846,7 @@ const vSlickTrackRef = ref<InstanceType<typeof VSlickTrack>>()
 const settings = computed<Props>(() => {
   const definedProps = filterUndefined(props)
   let settings = { ...defaultPropValues, ...definedProps }
-  if (breakpoint.value) {
+  if (isMounted.value && breakpoint.value) {
     const newProps = props.responsive.find(
       (item) => item.breakpoint === breakpoint.value
     )
@@ -1183,6 +1184,7 @@ defineExpose({
 })
 
 onMounted(async () => {
+  isMounted.value = true
   window.addEventListener('resize', onResizeEventListener)
   if (settings.value.widthDetection === WidthDetection.manual) {
     await detectWidth()
