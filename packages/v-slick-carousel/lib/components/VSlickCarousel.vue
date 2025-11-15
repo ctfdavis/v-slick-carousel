@@ -113,7 +113,8 @@ import {
   getCurrentInstance,
   onMounted,
   onBeforeUnmount,
-  onUpdated
+  onUpdated,
+  nextTick
 } from 'vue'
 import {
   ChildClickPayload,
@@ -189,6 +190,7 @@ let triggerSlideGroupHandler: number | undefined
 let animationEndCallback: NodeJS.Timeout | null = null
 let lazyLoadTimer: NodeJS.Timeout | null = null
 let callbackTimers: NodeJS.Timeout[] = []
+let lastNavigationWasKeyboard = false
 
 const vSlickListStyle = ref({
   ...(getCurrentInstance()?.vnode?.props?.style || {})
@@ -448,6 +450,7 @@ const handleKeyDownVSlickList = (e: KeyboardEvent) => {
     settings.value.rtl
   )
   if (!navigation) return
+  lastNavigationWasKeyboard = true
   changeSlideGroup({ message: navigation as SlideNavigation })
 }
 
@@ -596,6 +599,19 @@ const slideGroupHandler = async (index: number, dontAnimate = false) => {
           state.value.animating = animating || false
         })
       )
+      if (lastNavigationWasKeyboard) {
+        lastNavigationWasKeyboard = false
+        nextTick().then(() => {
+          const targetIndex = state.value.currentSlideGroupIndex
+          const listEl = vSlickListRef.value
+          if (!listEl) return
+          const selector = `.v-slick-slide-group[data-index="${targetIndex}"]`
+          const targetSlideGroup = listEl.querySelector<HTMLElement>(selector)
+          if (targetSlideGroup) {
+            targetSlideGroup.focus()
+          }
+        })
+      }
       emit('afterChange', slidingState.currentSlideGroupIndex)
       animationEndCallback = null
       resolve()
