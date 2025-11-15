@@ -17,7 +17,7 @@
     "docs:build": "pnpm --filter=docs run docs:build",
     "docs:preview": "pnpm --filter=docs run docs:preview",
     "preview": "pnpm --filter=v-slick-carousel run preview",
-    "nuxt:dev": "pnpm --filter=nuxt-app run dev",
+    "nuxt:dev": "concurrently \"pnpm --filter=v-slick-carousel run build:watch\" \"pnpm --filter=nuxt-app run dev\"",
     "storybook:dev": "pnpm --filter=storybook-app run dev",
     "storybook:test": "pnpm --filter=storybook-app run test",
     "prepare": "husky",
